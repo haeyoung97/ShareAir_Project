@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">ShareAir</string>
+    <string name="title_send">Send</string>
+    <string name="title_receive">Receive</string>
+    <string name="title_history">History</string>
+    <string name="send_tab_recent">최근</string>
+    <string name="send_tab_album">앨범</string>
+    <string name="send_tab_photo">사진</string>
+    <string name="send_tab_video">영상</string>
+    <string name="send_tab_file">파일</string>
+</resources>

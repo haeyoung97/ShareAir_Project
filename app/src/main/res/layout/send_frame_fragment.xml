@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/send_frame_tablayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        app:tabIndicatorColor="#424242">
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/send_tabitem_recent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/send_tab_recent"/>
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/send_tabitem_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/send_tab_photo"/>
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/send_tabitem_album"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/send_tab_album"/>
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/send_tabitem_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/send_tab_video"/>
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/send_tabitem_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/send_tab_file"/>
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/send_frame_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/send_frame_tablayout"
+        android:layout_marginTop="10dp"/>
+</RelativeLayout>

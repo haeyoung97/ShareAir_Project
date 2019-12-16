@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:gom="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/navigation_send"
+        android:title="@string/title_send"
+        android:icon="@drawable/send"
+        gom:showAsAction="withText"/>
+
+    <item
+        android:id="@+id/navigation_receive"
+        android:title="@string/title_receive"
+        android:icon="@drawable/receive"
+        gom:showAsAction="withText"/>
+
+    <item
+        android:id="@+id/navigation_history"
+        android:title="@string/title_history"
+        android:icon="@drawable/history"
+        gom:showAsAction="withText"/>
+
+</menu>
