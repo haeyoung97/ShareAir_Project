@@ -4,9 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class SendTabViewPagerAdapter extends FragmentStatePagerAdapter {
     private int mPageCount;
+
+    private SendTabRecentFragment recentFragment;
 
 
     public SendTabViewPagerAdapter(@NonNull FragmentManager fm, int mPageCount) {
@@ -21,7 +24,8 @@ public class SendTabViewPagerAdapter extends FragmentStatePagerAdapter {
         {
             case 0:
                 //최근 탭
-                return null;
+                recentFragment = new SendTabRecentFragment();
+                return recentFragment;
             case 1:
                 //사진 탭
                 return null;
