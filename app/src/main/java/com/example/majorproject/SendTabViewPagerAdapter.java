@@ -1,21 +1,32 @@
 package com.example.majorproject;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
+import java.util.ArrayList;
+
 public class SendTabViewPagerAdapter extends FragmentStatePagerAdapter {
     private int mPageCount;
 
+    private ArrayList<File> imageFile;
     private SendTabRecentFragment recentFragment;
-
+    private SendTabPhotoFragment photoFragment;
+    private SendTabAlbumFragment albumFragment;
+    private SendTabVideoFragment videoFragment;
+    private SendTabFileFragment fileFragment;
 
     public SendTabViewPagerAdapter(@NonNull FragmentManager fm, int mPageCount) {
         super(fm, mPageCount);
         this.mPageCount = mPageCount;
+        Log.d("mPageCount : ", Integer.toString(mPageCount));
     }
+
 
     @NonNull
     @Override
@@ -28,16 +39,20 @@ public class SendTabViewPagerAdapter extends FragmentStatePagerAdapter {
                 return recentFragment;
             case 1:
                 //사진 탭
-                return null;
+                photoFragment = new SendTabPhotoFragment();
+                return photoFragment;
             case 2:
                 //앨범 탭
-                return null;
+                albumFragment = new SendTabAlbumFragment();
+                return albumFragment;
             case 3:
                 //영상 탭
-                return null;
+                videoFragment = new SendTabVideoFragment();
+                return videoFragment;
             case 4:
                 //파일 탭
-                return null;
+                fileFragment = new SendTabFileFragment();
+                return fileFragment;
             default:
                     return null;
         }
@@ -45,6 +60,6 @@ public class SendTabViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getCount() {
-        return 0;
+        return mPageCount;
     }
 }

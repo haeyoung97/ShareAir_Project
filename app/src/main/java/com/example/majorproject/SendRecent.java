@@ -5,15 +5,19 @@ import android.net.Uri;
 import android.widget.ImageView;
 
 public class SendRecent {
-    private Uri imageUri;
+    private String imagePath;
     private boolean check;
 
-    public Uri getImageUri() {
-        return imageUri;
+    public SendRecent(String imagePath) {
+        this.imagePath = imagePath;
     }
 
-    public void setImageUri(Uri imageUri) {
-        this.imageUri = imageUri;
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public boolean isCheck() {

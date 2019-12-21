@@ -1,6 +1,7 @@
 package com.example.majorproject;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,17 +25,26 @@ public class SendTabFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.send_frame_fragment, container, false);
 
+
+//        Log.d("TAG: ", thread.getImagefiles().get(1).getAbsolutePath());
+
         tabLayout = (TabLayout)view.findViewById(R.id.send_frame_tablayout);
         viewPager = (ViewPager)view.findViewById(R.id.send_frame_viewpager);
 
-        SendTabViewPagerAdapter adapter = new SendTabViewPagerAdapter(getActivity().getSupportFragmentManager(), tabLayout.getTabCount());
+        SendTabViewPagerAdapter adapter = new SendTabViewPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
+        if(adapter == null){
+            Log.d("adapter null? : ", "null!");
+        }
         viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(0);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
+       // tabLayout.setupWithViewPager(viewPager);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 resizePager(tab.getPosition());
+               viewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
