@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     FragmentManager fragmentManager;
 
     static ArrayList<File> imageList = new ArrayList<>();
+    static ArrayList<File> selectList = new ArrayList<>();
     private SendTabFragment sendTabFragment = new SendTabFragment();
     private FragmentTransaction transaction;
 

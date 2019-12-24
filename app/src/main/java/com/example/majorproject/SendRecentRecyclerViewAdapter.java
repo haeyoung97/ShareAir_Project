@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRecentRecyclerViewAdapter.ViewHolder> {
@@ -57,6 +58,7 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
 
         }
         holder.imageView.setImageBitmap(resizeBitmap);
+        holder.checkBox.setChecked(false);
     }
 
     @Override
@@ -76,11 +78,29 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
             cardView = (CardView)itemView.findViewById(R.id.send_recent_cardview);
             checkBox = (CheckBox)itemView.findViewById(R.id.send_recent_cardview_check);
             imageView = (ImageView)itemView.findViewById(R.id.send_recent_cardview_image);
+
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-
+            int pos = getAdapterPosition();
+            Log.d("clickListener", "listen!");
+            if(pos != RecyclerView.NO_POSITION){
+                Log.d("aa", "god");
+                if(!checkBox.isChecked()) {
+                    checkBox.setChecked(true);
+                    sendRecents.get(pos).setCheck(true);
+                    MainActivity.selectList.add(MainActivity.imageList.get(sendRecents.get(pos).getIndex()));
+                }
+                else{
+                    checkBox.setChecked(false);
+                    sendRecents.get(pos).setCheck(false);
+                    MainActivity.selectList.remove(MainActivity.imageList.get(sendRecents.get(pos).getIndex()));
+                }
+                Log.d("image?List", MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getName());
+                Log.d("selectList ", MainActivity.selectList.get(0).getName());
+            }
         }
     }
 }

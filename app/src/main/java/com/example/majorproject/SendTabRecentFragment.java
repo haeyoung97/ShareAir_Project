@@ -43,9 +43,14 @@ public class SendTabRecentFragment extends Fragment {
     }
 
     private void imageData(){
+        if(imageFile.size() == 0){
+            return;
+        }
         for(int i = 0; i < 20; i++){
             Log.d("imageData : ", imageFile.get(i).getAbsolutePath());
             sendRecentArrayList.add(new SendRecent(imageFile.get(i).getAbsolutePath()));
+           // sendRecentArrayList.get(i).setImagePath(imageFile.get(i).getAbsolutePath());
+            sendRecentArrayList.get(i).setIndex(i);
             Log.d("sendarray ", sendRecentArrayList.get(i).getImagePath());
         }
     }

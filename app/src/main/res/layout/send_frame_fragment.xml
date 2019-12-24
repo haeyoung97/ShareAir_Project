@@ -38,10 +38,30 @@
 
     </com.google.android.material.tabs.TabLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/send_frame_frameLayout"
+        android:layout_below="@+id/send_frame_tablayout"
+        android:layout_marginTop="2dp">
+
+        <Button
+            android:id="@+id/send_frame_transferButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="SEND"
+            android:textSize="15dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="5dp"
+            />
+
+    </FrameLayout>
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/send_frame_viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/send_frame_tablayout"
-        android:layout_marginTop="10dp"/>
+        android:layout_below="@+id/send_frame_frameLayout"
+        android:layout_marginTop="5dp"/>
 </RelativeLayout>
