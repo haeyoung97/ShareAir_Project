@@ -18,8 +18,10 @@ package com.example.majorproject;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
@@ -29,6 +31,7 @@ import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -103,6 +106,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
             }
         });
 
+
         mContentView.findViewById(R.id.btn_disconnect).setOnClickListener(
                 new View.OnClickListener() {
 
@@ -119,11 +123,20 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
                     public void onClick(View v) {
                         // Allow user to pick an image from Gallery or other
                         // registered apps
-                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                        intent.setType("image/*");
-                        startActivityForResult(intent, CHOOSE_FILE_RESULT_CODE);
+//                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//                        intent.setType("image/*");
+//                        startActivityForResult(intent, CHOOSE_FILE_RESULT_CODE);
+                        if(ButtonEventListener.isSendOrRecvBtn == 1) {
+                            onConnectionInfoAvailable(info);
+                            startFileTransfer();
+                        }
+
+
+
+
                     }
                 });
+
 
         return mContentView;
     }
@@ -148,6 +161,34 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         fileTransferService.connectionSocket();
 
     }
+    public Uri getUriFromPath(String filepath){
+        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, "_data ='" + filepath + "'", null, null);
+        cursor.moveToNext();
+        int id = cursor.getInt(cursor.getColumnIndex("_id"));
+        Uri uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+
+        return uri;
+    }
+    public void startFileTransfer(){
+        String filepath = MainActivity.selectList.get(0).getAbsolutePath();
+        Uri uri = getUriFromPath(filepath);
+        TextView statusText = (TextView) mContentView.findViewById(R.id.status_text);
+        statusText.setText("Sending: " + uri);
+//        statusText.setText("Sending: " + filepath);
+        Log.d(WiFiDirectActivity.TAG, "Intent----------- " + uri);
+//        Log.d(WiFiDirectActivity.TAG, "Intent----------- " + filepath);
+        FileTransferService fileTransferService = new FileTransferService(context);
+        //sshConnectService.setActionSendFile();
+        fileTransferService.setEXTRAS_FILE_PATH(uri.toString());
+//        fileTransferService.setEXTRAS_FILE_PATH(filepath);
+        Log.e("JSch-Path", uri.toString());
+//        Log.e("JSch-Path", filepath);
+        fileTransferService.setEXTRAS_GROUP_OWNER_ADDRESS(info.groupOwnerAddress.getHostAddress());
+        Log.e("JSch-Address", info.groupOwnerAddress.getHostAddress());
+        fileTransferService.setEXTRAS_GROUP_OWNER_PORT("8988");
+        Log.e("JSch-port", "22");
+        fileTransferService.connectionSocket();
+    }
 
     @Override
     public void onConnectionInfoAvailable(final WifiP2pInfo info) {
@@ -155,7 +196,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
             progressDialog.dismiss();
         }
         this.info = info;
-        this.getView().setVisibility(View.VISIBLE);
+        this.mContentView.setVisibility(View.VISIBLE);
 
         // The owner IP is now known.
         TextView view = (TextView) mContentView.findViewById(R.id.group_owner);
@@ -192,7 +233,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
      */
     public void showDetails(WifiP2pDevice device) {
         this.device = device;
-        this.getView().setVisibility(View.VISIBLE);
+        this.mContentView.setVisibility(View.VISIBLE);
         TextView view = (TextView) mContentView.findViewById(R.id.device_address);
         view.setText(device.deviceAddress);
         view = (TextView) mContentView.findViewById(R.id.device_info);
@@ -313,7 +354,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
                 Log.e("provider : ", result);
                 File f = new File(result);
 
-                intent.setDataAndType(FileProvider.getUriForFile(context,"com.example.example.fileprovider", f), "image/*");
+                intent.setDataAndType(FileProvider.getUriForFile(context,"com.example.majorproject.fileprovider", f), "image/*");
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 context.startActivity(intent);

@@ -23,7 +23,7 @@ import java.net.Socket;
 public class FileTransferService extends IntentService {
 
     private static final int SOCKET_TIMEOUT = 10000;
-    public String ACTION_SEND_FILE = "com.example.android.wifidirectactivity.SEND_FILE";
+//    public String ACTION_SEND_FILE = "com.example.android.wifidirectactivity.SEND_FILE";
     public String EXTRAS_FILE_PATH = "file_url";
     public String EXTRAS_GROUP_OWNER_ADDRESS = "go_host";
     public String EXTRAS_GROUP_OWNER_PORT = "go_port";
