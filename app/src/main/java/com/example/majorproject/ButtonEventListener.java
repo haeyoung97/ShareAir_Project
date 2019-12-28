@@ -23,6 +23,7 @@ public class ButtonEventListener implements View.OnClickListener {
     private MainActivity mainActivity;
     private Context context;
     private WiFiDirectActivity wiFiDirectActivity;
+    static int isSendOrRecvBtn = 0;
 //    private Fragment fragment;
 //    public ButtonEventListener(MainActivity mainActivity) {
 //        this.mainActivity = mainActivity;
@@ -48,11 +49,19 @@ public class ButtonEventListener implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.send_frame_transferButton:
                 // 전송 버튼
-                Intent intent = new Intent(context, WiFiDirectActivity.class);
-                mainActivity.startActivity(intent);
+                isSendOrRecvBtn = 1;
+                Intent sendIntent = new Intent(context, WiFiDirectActivity.class);
+                mainActivity.startActivity(sendIntent);
                 mainActivity.finish();
 
                 break;
+            case R.id.recv_frame_transferButton:
+                isSendOrRecvBtn = 15;
+                Intent recvIntent = new Intent(context, WiFiDirectActivity.class);
+                mainActivity.startActivity(recvIntent);
+                mainActivity.finish();
+                break;
+
             case R.id.wifi_direct_onoff_btn:
                 // wifi direct on/off 버튼
 
@@ -78,7 +87,7 @@ public class ButtonEventListener implements View.OnClickListener {
                     Log.d("getChan", "null");
                 }
                 if (wiFiDirectActivity.getManager() != null && wiFiDirectActivity.getChannel() != null) {
-                    mainActivity.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+                    wiFiDirectActivity.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
                 } else {
                     Log.e(wiFiDirectActivity.TAG, "channel or manager is null");
                 }

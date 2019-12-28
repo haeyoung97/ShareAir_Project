@@ -77,6 +77,12 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
             @Override
             public void onClick(View v) {
                 WifiP2pConfig config = new WifiP2pConfig();
+                if(ButtonEventListener.isSendOrRecvBtn == 15){
+                    config.groupOwnerIntent = 15;
+                }
+                else{
+                    config.groupOwnerIntent = 1;
+                }
                 config.deviceAddress = device.deviceAddress;
                 config.wps.setup = WpsInfo.PBC;
                 if (progressDialog != null && progressDialog.isShowing()) {
@@ -307,7 +313,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
                 Log.e("provider : ", result);
                 File f = new File(result);
 
-                intent.setDataAndType(FileProvider.getUriForFile(context,"com.example.android.wifidirectactivity.fileprovider", f), "image/*");
+                intent.setDataAndType(FileProvider.getUriForFile(context,"com.example.example.fileprovider", f), "image/*");
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 context.startActivity(intent);

@@ -23,6 +23,7 @@ public class SendTabFragment extends Fragment {
     private MainActivity mainActivity;
     private Context context;
     private Button sendButton;
+    private Button recvButton;
     private ButtonEventListener buttonEventListener;
 
     public SendTabFragment(MainActivity mainActivity) {
@@ -40,11 +41,14 @@ public class SendTabFragment extends Fragment {
 
 
         sendButton = (Button)view.findViewById(R.id.send_frame_transferButton);
+        recvButton = (Button)view.findViewById(R.id.recv_frame_transferButton);
+
         tabLayout = (TabLayout)view.findViewById(R.id.send_frame_tablayout);
         viewPager = (ViewPager)view.findViewById(R.id.send_frame_viewpager);
 
         buttonEventListener = new ButtonEventListener(mainActivity, context);
         sendButton.setOnClickListener(buttonEventListener);
+        recvButton.setOnClickListener(buttonEventListener);
 
         SendTabViewPagerAdapter adapter = new SendTabViewPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
         if(adapter == null){

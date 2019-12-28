@@ -55,6 +55,15 @@
             android:layout_marginTop="2dp"
             android:layout_marginRight="5dp"
             />
+        <Button
+            android:id="@+id/recv_frame_transferButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RECV"
+            android:textSize="15dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginLeft="5dp"
+            />
 
     </FrameLayout>
 
