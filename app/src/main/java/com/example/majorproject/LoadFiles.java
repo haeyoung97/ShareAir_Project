@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class LoadFiles extends Thread {
     private ArrayList<File> imagefiles;
     private File file;
-    private String externalPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
+    private String externalPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Screenshots";
     private int imagecnt = 0;
 
     public LoadFiles() {
@@ -19,6 +19,7 @@ public class LoadFiles extends Thread {
     @Override
     public void run() {
         super.run();
+        Log.d("path : ", externalPath);
         ImagePathArrayCount(externalPath);
         Log.d("imageCnt : ", Integer.toString(imagecnt));
 
@@ -28,7 +29,12 @@ public class LoadFiles extends Thread {
         int cnt = 0;
 
         file = new File(path);
+        if(file.isDirectory()){
+            Log.d("filed", "dir");
+        }
         File [] files = file.listFiles();
+        Log.d("filed", files[0].getName());
+
         String innerpath;
 
 
