@@ -1,10 +1,12 @@
 package com.example.majorproject;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
@@ -18,7 +20,14 @@ public class SendTabFragment extends Fragment {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private MainActivity mainActivity;
+    private Context context;
+    private Button sendButton;
+    private ButtonEventListener buttonEventListener;
 
+    public SendTabFragment(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
+    }
 
     @Nullable
     @Override
@@ -27,9 +36,15 @@ public class SendTabFragment extends Fragment {
 
 
 //        Log.d("TAG: ", thread.getImagefiles().get(1).getAbsolutePath());
+        this.context = mainActivity.getApplicationContext();
 
+
+        sendButton = (Button)view.findViewById(R.id.send_frame_transferButton);
         tabLayout = (TabLayout)view.findViewById(R.id.send_frame_tablayout);
         viewPager = (ViewPager)view.findViewById(R.id.send_frame_viewpager);
+
+        buttonEventListener = new ButtonEventListener(mainActivity, context);
+        sendButton.setOnClickListener(buttonEventListener);
 
         SendTabViewPagerAdapter adapter = new SendTabViewPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
         if(adapter == null){

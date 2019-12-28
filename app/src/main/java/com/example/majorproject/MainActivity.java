@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.MenuItem;
+import android.widget.Button;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -24,9 +25,10 @@ public class MainActivity extends AppCompatActivity {
 
     static ArrayList<File> imageList = new ArrayList<>();
     static ArrayList<File> selectList = new ArrayList<>();
-    private SendTabFragment sendTabFragment = new SendTabFragment();
+    private SendTabFragment sendTabFragment = new SendTabFragment(this);
     private FragmentTransaction transaction;
 
+    private ButtonEventListener buttonEventListener;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -59,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         BottomNavigationView bottomNavView = findViewById(R.id.bottom_nav_view);
+
+//        buttonEventListener = new ButtonEventListener();
+//
+//        Button wifiOnOffBtn = findViewById(R.id.wifi_direct_onoff_btn);
+//        wifiOnOffBtn.setOnClickListener(buttonEventListener);
 
         fragmentManager = getSupportFragmentManager();
 

@@ -1,15 +1,27 @@
 package com.example.majorproject;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.wifi.aware.WifiAwareManager;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 
+import java.nio.channels.AcceptPendingException;
+
 public class ButtonEventListener implements View.OnClickListener {
-    @Override
+
 //
 //    private FragmentManager fragmentManager;
 //    private FragmentTransaction transaction;
-//    private MainActivity mainActivity;
+    private MainActivity mainActivity;
+    private Context context;
+    private WiFiDirectActivity wiFiDirectActivity;
+    private Activity activity;
 //    private Fragment fragment;
 //    public ButtonEventListener(MainActivity mainActivity) {
 //        this.mainActivity = mainActivity;
@@ -20,11 +32,44 @@ public class ButtonEventListener implements View.OnClickListener {
 //        this.fragment = fragment;
 //    }
 //
+
+    public ButtonEventListener(MainActivity mainActivity, Context context) {
+        this.mainActivity = mainActivity;
+        this.context = context;
+    }
+
+    public ButtonEventListener(WiFiDirectActivity wiFiDirectActivity){
+        this.wiFiDirectActivity = wiFiDirectActivity;
+    }
+
+
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.send_frame_transferButton :
-                // 받기 버튼
+                // 전송 버튼
+                Intent intent = new Intent(context, WiFiDirectActivity.class);
+                mainActivity.startActivity(intent);
+                mainActivity.finish();
+
                 break;
+            case R.id.wifi_direct_onoff_btn :
+                // wifi direct on/off 버튼
+
+                if(wiFiDirectActivity.getManager() == null){
+                    Log.d("getman", "null");
+                }
+                if(wiFiDirectActivity.getChannel() == null){
+                    Log.d("getChan", "null");
+                }
+                if(wiFiDirectActivity.getManager() != null && wiFiDirectActivity.getChannel() != null){
+                    mainActivity.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+                }
+                else
+                {
+                    Log.e(wiFiDirectActivity.TAG, "channel or manager is null");
+                }
+                break;
+
 
 //            굳이 메인 화면의 탭뷰로 구현하지 않고, 버튼 추가해서 버튼 이벤트 처리로 구현도 가능~~
 //            이건 그냥 입맛대로 하믄 될듯?

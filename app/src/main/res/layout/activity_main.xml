@@ -26,12 +26,12 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/top_nav_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="end"
-        android:orientation="horizontal">
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/name"
@@ -41,8 +41,18 @@
             android:textSize="25sp"
             android:textColor="#000000"
             android:text="SHARE AIR" />
+        <Button
+            android:id="@+id/wifi_direct_onoff_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:adjustViewBounds="true"
+            android:background="@drawable/wifi_direct_onoffbtn"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="3dp"
+            />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     </FrameLayout>
 
