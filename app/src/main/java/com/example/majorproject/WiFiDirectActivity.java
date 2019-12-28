@@ -37,6 +37,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -62,11 +63,17 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Dev
     private Channel channel;
     private BroadcastReceiver receiver = null;
 
+    private ButtonEventListener enableButtonEventListener;
+    private ButtonEventListener discoverButtonEventListener;
     /**
      * @param isWifiP2pEnabled the isWifiP2pEnabled to set
      */
     public void setIsWifiP2pEnabled(boolean isWifiP2pEnabled) {
         this.isWifiP2pEnabled = isWifiP2pEnabled;
+    }
+
+    public boolean getIsWifiP2pEnabled() {
+        return isWifiP2pEnabled;
     }
 
     public Context getContext(){
@@ -107,6 +114,19 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Dev
         manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
 
         channel = manager.initialize(this, getMainLooper(), null);
+
+        int result = 0;
+
+        enableButtonEventListener = new ButtonEventListener(this);
+        discoverButtonEventListener = new ButtonEventListener(this);
+
+        Button enable = (Button)findViewById(R.id.atn_direct_enable);
+        enable.setOnClickListener(enableButtonEventListener);
+
+        Button discover = (Button)findViewById(R.id.atn_direct_discover);
+        discover.setOnClickListener(discoverButtonEventListener);
+
+
 
     }
 
