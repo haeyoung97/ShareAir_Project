@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class LoadFiles extends Thread {
     private ArrayList<File> imagefiles;
     private File file;
-    private String externalPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath() + "/Screenshots";
+    private String externalPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
     private int imagecnt = 0;
 
     public LoadFiles() {

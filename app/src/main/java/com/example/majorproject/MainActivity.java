@@ -30,12 +30,6 @@ public class MainActivity extends AppCompatActivity {
     static ArrayList<File> selectList = new ArrayList<>();
     private SendTabFragment sendTabFragment = new SendTabFragment(this);
     private FragmentTransaction transaction;
-    private int permissioncheck = 1;
-    private String[] permissionArr = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-    };
 
 
     private ButtonEventListener buttonEventListener;
@@ -61,31 +55,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        checkPermission();
-//        checkExternalAvailable();
-        LoadFiles thread;
-        thread = new LoadFiles();
-        if(!hasPermissions(this, permissionArr)){
-            ActivityCompat.requestPermissions(this, permissionArr, permissioncheck);
-        }
-        else{
-            thread.start();
-        }
-//
-//        LoadFiles thread;
-//        thread = new LoadFiles();
-//        thread.start();
-//        while(true) {
-//            if(permissioncheck == PackageManager.PERMISSION_GRANTED) {
-//                thread = new LoadFiles();
-//                thread.start();
-//                break;
-//            }
-//            checkPermission();
-//        }
-
-        imageList = thread.getImagefiles();
-
         setContentView(R.layout.activity_main);
         BottomNavigationView bottomNavView = findViewById(R.id.bottom_nav_view);
 
@@ -101,70 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-
-    }
-    public boolean hasPermissions(Context context, String...permissionArr){
-        if(context != null && permissionArr !=null){
-            for(String permission : permissionArr){
-                if(ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED){
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    private void getPermission(){
-        ActivityCompat.requestPermissions(this, new String[]{
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        }, 1000);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(Build.VERSION.SDK_INT >= 23){
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Log.d("permission", permissionArr[0] + "was " + grantResults[0]);
-            }
-            else
-            {
-                Log.d("permission", "denied");
-            }
-        }
-    }
-
-    public void checkPermission(){
-        permissioncheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-        if(permissioncheck != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)){
-
-            }
-            else
-            {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                permissioncheck = PackageManager.PERMISSION_GRANTED;
-            }
-        }
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-
-            }
-            else
-            {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            }
-        }
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)){
-
-            }
-            else
-            {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-            }
-        }
 
     }
 
