@@ -6,13 +6,13 @@ import android.net.Uri;
 public class SendAlbum {
     private String imageName;
     private int imageSum;
-    private Uri imageUri;
+    private String imagePath;
     private boolean imageCheck;
 
-    public SendAlbum(String imageName, int imageSum, Uri imageUri, boolean imageCheck) {
+    public SendAlbum(String imageName, int imageSum, String imagePath, boolean imageCheck) {
         this.imageName = imageName;
         this.imageSum = imageSum;
-        this.imageUri = imageUri;
+        this.imagePath = imagePath;
         this.imageCheck = imageCheck;
     }
 
@@ -32,12 +32,12 @@ public class SendAlbum {
         this.imageSum = imageSum;
     }
 
-    public Uri getImageUri() {
-        return imageUri;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImageUri(Uri imageUri) {
-        this.imageUri = imageUri;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public boolean isImageCheck() {

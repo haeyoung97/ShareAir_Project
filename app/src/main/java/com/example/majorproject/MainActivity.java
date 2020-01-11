@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     static ArrayList<File> imageList = new ArrayList<>();
     static ArrayList<File> selectList = new ArrayList<>();
+    static ArrayList<LoadFiles.AlbumNode> albumList = new ArrayList<>();
     private SendTabFragment sendTabFragment = new SendTabFragment(this);
     private FragmentTransaction transaction;
 

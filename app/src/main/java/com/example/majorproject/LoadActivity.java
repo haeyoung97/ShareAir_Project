@@ -42,7 +42,8 @@ public class LoadActivity extends Activity {
             while (true){
                 if (!thread.isAlive()) {
                     MainActivity.imageList = thread.getImagefiles();
-                    hd.postDelayed(new splashhandler(), 5000);
+                    MainActivity.albumList = thread.getAlbumList();
+                    hd.postDelayed(new splashhandler(), 10000);
                     break;
                 }
             }
