@@ -5,22 +5,30 @@ import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 
 //image file load thread
 
-public class LoadFiles extends Thread {
+public class LoadImageFiles extends Thread {
     private ArrayList<File> imagefiles;
     private ArrayList<AlbumNode> albumList;
     private File file;
     private String externalPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
+    private String DocumentPath = Environment.getExternalStorageDirectory().getAbsolutePath();
     private int imagecnt = 0;
     private int AlbumIdx = 0;
+    private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
 
-    public LoadFiles() {
+    public LoadImageFiles() {
         imagefiles = new ArrayList<>();
         albumList = new ArrayList<AlbumNode>();
+        Log.d("DocumentPath : ", DocumentPath);
     }
 
     @Override
@@ -28,7 +36,23 @@ public class LoadFiles extends Thread {
         super.run();
         Log.d("path : ", externalPath);
         ImagePathArrayCount(externalPath);
+
+
+        Log.d("imagefirst : ", sdf.format(imagefiles.get(0).lastModified()));
+        Log.d("imageSecond : ", sdf.format(imagefiles.get(1).lastModified()));
+
+
+//        Collections.sort(imagefiles, new Comparator<File>() {
+//            @Override
+//            public int compare(File o1, File o2) {
+//                Date d1 = new Date(o1.lastModified());
+//                Date d2 = new Date(o2.lastModified());
+//                return -(d1.compareTo(d2));
+//            }
+//        });
         Log.d("imageCnt : ", Integer.toString(imagecnt));
+        Log.d("imagefirst : ", sdf.format(imagefiles.get(0).lastModified()));
+        Log.d("imageSecond : ", sdf.format(imagefiles.get(1).lastModified()));
 
     }
 
@@ -80,6 +104,7 @@ public class LoadFiles extends Thread {
         //Log.d("filed", files[0].getName());
 
         String innerpath;
+        Log.d("file length : ", Integer.toString(files.length));
 
 
         for(int i = 0; i < files.length; i++){
@@ -89,9 +114,11 @@ public class LoadFiles extends Thread {
                 int tmp = imagecnt;
                 imagecnt += ImagePathArrayCount(innerpath);
                 Log.d("i : ", Integer.toString(i));
+                Log.d("imageCntAlbum : ", Integer.toString(imagecnt));
                 if(imagecnt - tmp == 0){
                     continue;
                 }
+                Log.d("imageAlbumName : ", files[i].getName());
                 albumList.add(new AlbumNode(files[AlbumIdx].getName(), imagecnt-tmp, imagecnt));
 
                 Log.d("innercnt : ", Integer.toString(imagecnt));
@@ -104,9 +131,12 @@ public class LoadFiles extends Thread {
             }
             else{
                 if(files[i].isFile()) {
-                    imagefiles.add(files[i]);
-                    Log.d("file " + i + " : ", files[i].getName());
-                    cnt++;
+                    if(files[i].getName().endsWith(".jpg") || files[i].getName().endsWith(".png") || files[i].getName().endsWith(".gif")) {
+                        imagefiles.add(files[i]);
+                        Log.d("file " + i + " : ", files[i].getName());
+                        Log.d("fileDate " + i + " : ", sdf.format(files[i].lastModified()));
+                        cnt++;
+                    }
                 }
             }
         }

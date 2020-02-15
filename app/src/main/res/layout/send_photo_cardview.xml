@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/send_photo_cardview"
+    android:layout_width="128dp"
+    android:layout_height="128dp"
+    android:layout_marginBottom="2dp"
+    android:layout_marginRight="2dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginTop="2dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/send_photo_cardview_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#aabdbdbd"/>
+
+        <CheckBox
+            android:id="@+id/send_photo_cardview_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/listChoiceIndicatorMultiple"
+            android:layout_marginLeft="2dp"/>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

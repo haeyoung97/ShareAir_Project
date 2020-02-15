@@ -2,20 +2,12 @@ package com.example.majorproject;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Button;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -28,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     static ArrayList<File> imageList = new ArrayList<>();
     static ArrayList<File> selectList = new ArrayList<>();
-    static ArrayList<LoadFiles.AlbumNode> albumList = new ArrayList<>();
+    static ArrayList<LoadImageFiles.AlbumNode> albumList = new ArrayList<>();
     private SendTabFragment sendTabFragment = new SendTabFragment(this);
     private FragmentTransaction transaction;
 

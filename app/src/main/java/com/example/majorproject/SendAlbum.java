@@ -8,12 +8,13 @@ public class SendAlbum {
     private int imageSum;
     private String imagePath;
     private boolean imageCheck;
+    private int index;
 
-    public SendAlbum(String imageName, int imageSum, String imagePath, boolean imageCheck) {
+
+    public SendAlbum(String imageName, int imageSum, String imagePath) {
         this.imageName = imageName;
         this.imageSum = imageSum;
         this.imagePath = imagePath;
-        this.imageCheck = imageCheck;
     }
 
     public String getImageName() {
@@ -46,5 +47,13 @@ public class SendAlbum {
 
     public void setImageCheck(boolean imageCheck) {
         this.imageCheck = imageCheck;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

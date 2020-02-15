@@ -14,7 +14,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class LoadActivity extends Activity {
 
@@ -31,8 +33,8 @@ public class LoadActivity extends Activity {
         setContentView(R.layout.activity_load);
         Handler hd = new Handler();
 
-        LoadFiles thread;
-        thread = new LoadFiles();
+        LoadImageFiles thread;
+        thread = new LoadImageFiles();
 
         if(!hasPermissions(this, permissionArr)){
             ActivityCompat.requestPermissions(this, permissionArr, permissioncheck);
@@ -43,6 +45,10 @@ public class LoadActivity extends Activity {
                 if (!thread.isAlive()) {
                     MainActivity.imageList = thread.getImagefiles();
                     MainActivity.albumList = thread.getAlbumList();
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+                    Log.d("Activity imagefirst : ", sdf.format(MainActivity.imageList.get(0).lastModified()));
+                    Log.d("Activity imageSecond : ", sdf.format(MainActivity.imageList.get(1).lastModified()));
                     hd.postDelayed(new splashhandler(), 10000);
                     break;
                 }

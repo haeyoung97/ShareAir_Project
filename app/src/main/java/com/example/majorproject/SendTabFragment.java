@@ -63,6 +63,7 @@ public class SendTabFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 resizePager(tab.getPosition());
+                Log.d("tabLayout : ", String.valueOf(tab.getPosition()));
                viewPager.setCurrentItem(tab.getPosition());
             }
 
@@ -73,6 +74,7 @@ public class SendTabFragment extends Fragment {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
 
             }
         });
