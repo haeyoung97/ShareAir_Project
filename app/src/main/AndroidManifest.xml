@@ -49,6 +49,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".LoadFilesActivity"></activity>
         <activity android:name=".MainActivity" android:launchMode="singleTask"></activity>
         <activity android:name=".WiFiDirectActivity"></activity>
 

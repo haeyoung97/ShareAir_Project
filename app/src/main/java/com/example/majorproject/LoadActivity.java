@@ -15,8 +15,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 public class LoadActivity extends Activity {
 
@@ -33,26 +38,49 @@ public class LoadActivity extends Activity {
         setContentView(R.layout.activity_load);
         Handler hd = new Handler();
 
-        LoadImageFiles thread;
-        thread = new LoadImageFiles();
+        LoadImageFiles imageThread;
+        imageThread = new LoadImageFiles();
 
         if(!hasPermissions(this, permissionArr)){
             ActivityCompat.requestPermissions(this, permissionArr, permissioncheck);
         }
         else{
-            thread.start();
-            while (true){
-                if (!thread.isAlive()) {
-                    MainActivity.imageList = thread.getImagefiles();
-                    MainActivity.albumList = thread.getAlbumList();
+            imageThread.start();
 
-                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
-                    Log.d("Activity imagefirst : ", sdf.format(MainActivity.imageList.get(0).lastModified()));
-                    Log.d("Activity imageSecond : ", sdf.format(MainActivity.imageList.get(1).lastModified()));
-                    hd.postDelayed(new splashhandler(), 10000);
-                    break;
-                }
+            try {
+                imageThread.join();
+                MainActivity.imageList = imageThread.getImagefiles();
+                MainActivity.albumList = imageThread.getAlbumList();
+                hd.postDelayed(new splashhandler(), 10000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+
+//            while (true){
+//                if (!imageThread.isAlive() && !documentThread.isAlive()) {
+//                    MainActivity.imageList = imageThread.getImagefiles();
+//                    MainActivity.albumList = imageThread.getAlbumList();
+//                    MainActivity.documentList = documentThread.getDocumentFiles();
+//                    MainActivity.sortedFileList = imageThread.getImagefiles();
+//                    MainActivity.sortedFileList.addAll(documentThread.getDocumentFiles());
+//
+//                    Collections.sort(MainActivity.sortedFileList, new Comparator<File>() {
+//                        @Override
+//                        public int compare(File o1, File o2) {
+//                            Date d1 = new Date(o1.lastModified());
+//                            Date d2 = new Date(o2.lastModified());
+//                            return -(d1.compareTo(d2));
+//                        }
+//                    });
+//
+//                    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+//                    Log.d("Activity imagefirst : ", sdf.format(MainActivity.sortedFileList.get(0).lastModified()));
+//                    Log.d("Activity imageSecond : ", sdf.format(MainActivity.sortedFileList.get(1).lastModified()));
+//                    Log.d("sortedLength : ", Integer.toString(MainActivity.sortedFileList.size()));
+//                    hd.postDelayed(new splashhandler(), 10000);
+//                    break;
+//                }
+//            }
         }
 
 
@@ -128,7 +156,7 @@ public class LoadActivity extends Activity {
 
         @Override
         public void run() {
-            startActivity(new Intent(getApplication(), MainActivity.class));
+            startActivity(new Intent(getApplication(), LoadFilesActivity.class));
             LoadActivity.this.finish();
         }
     }

@@ -44,32 +44,8 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
 
     @Override
     public void onBindViewHolder(@NonNull SendRecentRecyclerViewAdapter.ViewHolder holder, int position) {
-        Log.d("BindHolder : ", sendRecents.get(position).getImagePath());
-//        Calendar c = Calendar.getInstance();
-//        SimpleDateFormat dateformat = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss aa");
-//        String datetime = dateformat.format(c.getTime());
-//        Log.d("prevTime : ", datetime);
+        Log.d("RecentBindHolder : ", sendRecents.get(position).getImagePath());
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 3;
-        Bitmap bitmap = BitmapFactory.decodeFile(sendRecents.get(position).getImagePath());
-        Bitmap resizeBitmap;
-
-        if(bitmap.getWidth() > bitmap.getHeight()){
-            Matrix matrix = new Matrix();
-            matrix.postRotate(90);
-            resizeBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-        }
-        else{
-            resizeBitmap = Bitmap.createScaledBitmap(bitmap, 130, 140, true);
-
-        }
-        Calendar c1 = Calendar.getInstance();
-        SimpleDateFormat dateformat1 = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss aa");
-        String datetime1 = dateformat1.format(c1.getTime());
-        Log.d("TimeNow : ", datetime1);
-        holder.imageView.setImageBitmap(resizeBitmap);
-        holder.checkBox.setChecked(false);
     }
 
     @Override

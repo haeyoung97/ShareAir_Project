@@ -20,7 +20,6 @@ public class LoadImageFiles extends Thread {
     private ArrayList<AlbumNode> albumList;
     private File file;
     private String externalPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
-    private String DocumentPath = Environment.getExternalStorageDirectory().getAbsolutePath();
     private int imagecnt = 0;
     private int AlbumIdx = 0;
     private SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
@@ -28,7 +27,6 @@ public class LoadImageFiles extends Thread {
     public LoadImageFiles() {
         imagefiles = new ArrayList<>();
         albumList = new ArrayList<AlbumNode>();
-        Log.d("DocumentPath : ", DocumentPath);
     }
 
     @Override

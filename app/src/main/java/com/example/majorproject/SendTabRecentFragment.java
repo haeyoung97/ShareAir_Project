@@ -32,7 +32,7 @@ public class SendTabRecentFragment extends Fragment {
         imageFile = MainActivity.imageList;
         sendRecentArrayList = new ArrayList<SendRecent>();
 
-        imageData();
+        //imageData();
        recentRecyclerview = (RecyclerView) view.findViewById(R.id.send_recyclerview);
        // layoutManager = new LinearLayoutManager(this.getContext());
         layoutManager = new GridLayoutManager(this.getContext(), 3);
@@ -47,11 +47,11 @@ public class SendTabRecentFragment extends Fragment {
             return;
         }
         for(int i = 0; i < 20; i++){
-            Log.d("imageData : ", imageFile.get(i).getAbsolutePath());
+            Log.d("RecentData : ", imageFile.get(i).getAbsolutePath());
             sendRecentArrayList.add(new SendRecent(imageFile.get(i).getAbsolutePath()));
            // sendRecentArrayList.get(i).setImagePath(imageFile.get(i).getAbsolutePath());
             sendRecentArrayList.get(i).setIndex(i);
-            Log.d("sendarray ", sendRecentArrayList.get(i).getImagePath());
+            Log.d("sendRecentarray ", sendRecentArrayList.get(i).getImagePath());
         }
     }
 }
