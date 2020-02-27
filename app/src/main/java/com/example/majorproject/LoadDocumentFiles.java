@@ -10,12 +10,13 @@ import java.util.ArrayList;
 
 public class LoadDocumentFiles extends Thread {
 
-    private ArrayList<File> documentFiles;
+    private ArrayList<FileNode> documentFiles;
     private File file;
     private String ExternalDocumentPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
     private String ExternalDownloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
     private String ExternalPath = Environment.getExternalStorageDirectory().getAbsolutePath();
     private int fileCnt;
+    private String[] fileExt = {".hwp", ".doc", ".xlsx", ".pptx", ".pdf"};
 
     public LoadDocumentFiles() {
         this.documentFiles = new ArrayList<>();
@@ -34,6 +35,8 @@ public class LoadDocumentFiles extends Thread {
     public int DocumentPathArrayCnt(String path)
     {
         int cnt = 0;
+        int fileExtNum = 0;
+
         file = new File(path);
         if(file.isDirectory()){
             Log.d("DocDirectory? ", "dir");
@@ -56,12 +59,26 @@ public class LoadDocumentFiles extends Thread {
             else
             {
                 if(files[i].isFile()){
-                    if(files[i].getName().endsWith(".hwp") || files[i].getName().endsWith(".doc") || files[i].getName().endsWith(".xlsx") || files[i].getName().endsWith(".pptx") || files[i].getName().endsWith(".pdf"))
-                    {
-                        documentFiles.add(files[i]);
-                        Log.d("file " + i + " : ", files[i].getName());
-                        cnt++;
+                    while(true){
+                        if(fileExtNum > 4){
+                            fileExtNum = 0;
+                            break;
+                        }
+                        if(files[i].getName().endsWith(fileExt[fileExtNum])){
+                            documentFiles.add(new FileNode(files[i], fileExtNum));
+                            fileExtNum = 0;
+                            cnt++;
+                            break;
+                        }
+                        fileExtNum++;
                     }
+
+//                    if(files[i].getName().endsWith(".hwp") || files[i].getName().endsWith(".doc") || files[i].getName().endsWith(".xlsx") || files[i].getName().endsWith(".pptx") || files[i].getName().endsWith(".pdf"))
+//                    {
+//                        documentFiles.add(files[i]);
+//                        Log.d("file " + i + " : ", files[i].getName());
+//                        cnt++;
+//                    }
                 }
             }
 
@@ -69,11 +86,11 @@ public class LoadDocumentFiles extends Thread {
         return cnt;
     }
 
-    public ArrayList<File> getDocumentFiles() {
+    public ArrayList<FileNode> getDocumentFiles() {
         return documentFiles;
     }
 
-    public void setDocumentFiles(ArrayList<File> documentFiles) {
+    public void setDocumentFiles(ArrayList<FileNode> documentFiles) {
         this.documentFiles = documentFiles;
     }
 

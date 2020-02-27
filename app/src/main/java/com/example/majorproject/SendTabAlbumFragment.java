@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class SendTabAlbumFragment extends Fragment {
 
@@ -49,7 +50,7 @@ public class SendTabAlbumFragment extends Fragment {
         for(int i = 0; i < MainActivity.albumList.size(); i++){
             Log.d("albumData : ", MainActivity.albumList.get(i).getAlbumName());
             Log.d("albumIdx : ", Integer.toString(MainActivity.albumList.get(i).getStartIdx()));
-            String path = MainActivity.imageList.get(MainActivity.albumList.get(i).getStartIdx() - 1).getAbsolutePath();
+            String path = MainActivity.imageList.get(MainActivity.albumList.get(i).getStartIdx() - 1).getFile().getAbsolutePath();
             String name = MainActivity.albumList.get(i).getAlbumName();
             int sum = MainActivity.albumList.get(i).getAlbumCnt();
             sendAlbumArrayList.add(new SendAlbum(name, sum, path));

@@ -36,12 +36,12 @@ public class SendTabViewPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 //최근 탭
                 MainActivity.selectList.clear();
-//                recentFragment = new SendTabRecentFragment();
-//                return recentFragment;
+                recentFragment = new SendTabRecentFragment();
+                return recentFragment;
 
                 // 임시
-                photoFragment = new SendTabPhotoFragment();
-                return photoFragment;
+//                photoFragment = new SendTabPhotoFragment();
+//                return photoFragment;
             case 1:
                 //사진 탭
                 MainActivity.selectList.clear();

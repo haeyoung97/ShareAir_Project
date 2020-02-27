@@ -1,5 +1,6 @@
 package com.example.majorproject;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,18 +10,52 @@ public class BitmapSizeModify extends Thread {
 
     private String filepath;
     private Bitmap resizeBitmap;
+    private int fileExtNum = -1;
+    private Context context;
 
     public BitmapSizeModify(String filepath, Bitmap resizeBitmap) {
         this.filepath = filepath;
         this.resizeBitmap = resizeBitmap;
     }
 
+    public BitmapSizeModify(String filepath, Bitmap resizeBitmap, int fileExtNum, Context context) {
+        this.filepath = filepath;
+        this.resizeBitmap = resizeBitmap;
+        this.fileExtNum = fileExtNum;
+        this.context = context;
+    }
+
 
     @Override
     public void run() {
         Log.d("bitmapresize : ", filepath);
+        Log.d("bitmap extnum : ", Integer.toString(fileExtNum));
         //resizeBitmap = decodeSampleBitmapFromResource(filepath, 128, 128);
-        resizeBitmap = cropBitmap(filepath, 256, 256);
+        if (fileExtNum >= 0 && fileExtNum <= 4) {
+            Log.d("bitmapififif : ", "hoooooo");
+            switch (fileExtNum){
+                case 0:
+                    resizeBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.hwp);
+                    break;
+                case 1:
+                    resizeBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.doc);
+                    break;
+                case 2:
+                    resizeBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.xls);
+                    break;
+                case 3:
+                    resizeBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ppt);
+                    break;
+                case 4:
+                    resizeBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.pdf);
+                    break;
+            }
+        } else
+        {
+            Log.d("ressss? ", filepath);
+            resizeBitmap = cropBitmap(filepath, 256, 256);
+            Log.d("re? ", Integer.toString(resizeBitmap.getHeight()));
+        }
     }
 
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight)
@@ -72,6 +107,9 @@ public class BitmapSizeModify extends Thread {
         return BitmapFactory.decodeFile(filepath, options);
     }
     public Bitmap getResizeBitmap(){
+        if(resizeBitmap == null){
+            Log.d("resize ", "NULL??????");
+        }
         return resizeBitmap;
     }
 

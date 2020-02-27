@@ -22,7 +22,7 @@ public class SendTabPhotoFragment extends Fragment {
     private ArrayList<SendPhoto> sendPhotoArrayList;
     private SendPhotoRecyclerViewAdapter photoRecyclerViewAdapter;
 
-    private ArrayList<File> imageFile;
+    private ArrayList<FileNode> imageFile;
 
     @Nullable
     @Override
@@ -47,8 +47,8 @@ public class SendTabPhotoFragment extends Fragment {
             return;
         }
         for(int i = 0; i < 15; i++){
-            Log.d("imageData : ", imageFile.get(i).getAbsolutePath());
-            sendPhotoArrayList.add(new SendPhoto(imageFile.get(i).getAbsolutePath()));
+            Log.d("imageData : ", imageFile.get(i).getFile().getAbsolutePath());
+            sendPhotoArrayList.add(new SendPhoto(imageFile.get(i).getFile().getAbsolutePath()));
             // sendPhotoArrayList.get(i).setImagePath(imageFile.get(i).getAbsolutePath());
             sendPhotoArrayList.get(i).setIndex(i);
             Log.d("sendarray ", sendPhotoArrayList.get(i).getImagePath());

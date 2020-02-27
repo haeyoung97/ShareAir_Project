@@ -8,6 +8,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
         <CheckBox
             android:id="@+id/send_recent_checkbox"
             android:layout_width="wrap_content"
@@ -30,39 +34,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="filename"
-            android:textSize="25dp"
+            android:textSize="15dp"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/send_recent_image"
             android:layout_alignTop="@id/send_recent_image"/>
 
         <TextView
-            android:id="@+id/send_recent_date_year"
+            android:id="@+id/send_recent_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="YEAR"
-            android:textSize="17dp"
+            android:text="YEAR MONTH DAY"
+            android:textSize="13dp"
             android:layout_alignBottom="@+id/send_recent_image"
             android:layout_alignLeft="@+id/send_recent_filename"/>
 
-        <TextView
-            android:id="@+id/send_recent_date_month"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="MONTH"
-            android:textSize="17dp"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/send_recent_date_year"
-            android:layout_alignBottom="@+id/send_recent_image"/>
-
-        <TextView
-            android:id="@+id/send_recent_date_day"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="DAY"
-            android:textSize="17dp"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/send_recent_date_month"
-            android:layout_alignBottom="@+id/send_recent_image"/>
 
     </RelativeLayout>
 

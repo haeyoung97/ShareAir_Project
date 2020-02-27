@@ -37,23 +37,50 @@ public class LoadFilesActivity extends Activity {
                MainActivity.sortedFileList.addAll(MainActivity.imageList);
 
                MainActivity.sortedFileList.addAll(MainActivity.documentList);
-               Collections.sort(MainActivity.sortedFileList, new Comparator<File>() {
+               Collections.sort(MainActivity.sortedFileList, new Comparator<FileNode>() {
                    @Override
-                   public int compare(File o1, File o2) {
-                       Date d1 = new Date(o1.lastModified());
-                       Date d2 = new Date(o2.lastModified());
+                   public int compare(FileNode o1, FileNode o2) {
+                       Date d1 = new Date(o1.getFile().lastModified());
+                       Date d2 = new Date(o2.getFile().lastModified());
                        return -(d1.compareTo(d2));
                    }
-               });
 
-               for(int i = 0; i < MainActivity.imageList.size()/2; i++){
-                   Log.d("LoadImage??? : ", MainActivity.imageList.get(i).getAbsolutePath());
-               }
+               });
+//
+//               for(int i = 0; i < MainActivity.imageList.size()/2; i++){
+//                   Log.d("LoadImage??? : ", MainActivity.imageList.get(i).getAbsolutePath());
+//               }
                hd.postDelayed(new splashhandler(), 10000);
            } catch (InterruptedException e) {
                e.printStackTrace();
            }
 
+       }
+
+       public class SortedNode{
+           private File file;
+           private int fileExt;
+
+           public SortedNode(File file, int fileExt) {
+               this.file = file;
+               this.fileExt = fileExt;
+           }
+
+           public File getFile() {
+               return file;
+           }
+
+           public void setFile(File file) {
+               this.file = file;
+           }
+
+           public int getFileExt() {
+               return fileExt;
+           }
+
+           public void setFileExt(int fileExt) {
+               this.fileExt = fileExt;
+           }
        }
     private class splashhandler implements Runnable{
 

@@ -92,7 +92,7 @@ public class SendAlbumRecyclerViewAdapter extends RecyclerView.Adapter<SendAlbum
                     sendAlbums.get(pos).setImageCheck(true);
                     int startIdx = MainActivity.albumList.get(sendAlbums.get(pos).getIndex()).getStartIdx();
                     for(int i = 0; i < sendAlbums.get(pos).getImageSum(); i++) {
-                        MainActivity.selectList.add(MainActivity.imageList.get(startIdx + i));
+                        MainActivity.selectList.add(MainActivity.imageList.get(startIdx + i).getFile());
                     }
 //                    MainActivity.selectList.add(MainActivity.albumList.get(sendAlbums.get(pos).getIndex()));
                 }

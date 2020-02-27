@@ -36,16 +36,33 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
     @Override
     public SendRecentRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        Log.d("SendRecentRecycler : ", sendRecents.get(1).getImagePath());
+        Log.d("SendRecentRecycler : ", sendRecents.get(1).getFilePath());
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        view = layoutInflater.inflate(R.layout.send_photo_cardview, parent, false);
+        view = layoutInflater.inflate(R.layout.send_recent_cardview, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull SendRecentRecyclerViewAdapter.ViewHolder holder, int position) {
-        Log.d("RecentBindHolder : ", sendRecents.get(position).getImagePath());
+//        Log.d("RecentBindHolder : ", sendRecents.get(position).getImagePath());
+        Bitmap resizeBitmap = null;
+        Log.d("recentThumbPath : ", sendRecents.get(position).getThumbPath());
+        BitmapSizeModify bitmapThread = new BitmapSizeModify(sendRecents.get(position).getThumbPath(), resizeBitmap, sendRecents.get(position).getFileExtNum(), context);
+        bitmapThread.start();
 
+        try {
+            bitmapThread.join();
+            Bitmap rresizeBitmap = bitmapThread.getResizeBitmap();
+            if(rresizeBitmap == null){
+                Log.d("resize ", "NULL??????");
+            }
+            holder.imageView.setImageBitmap(rresizeBitmap);
+            holder.filename.setText(sendRecents.get(position).getFilename());
+            holder.date.setText(sendRecents.get(position).getDate());
+            holder.checkBox.setChecked(false);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -59,9 +76,7 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
         private ImageView imageView;
         private CardView cardView;
         private TextView filename;
-        private TextView year;
-        private TextView month;
-        private TextView day;
+        private TextView date;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -70,9 +85,8 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
             checkBox = (CheckBox)itemView.findViewById(R.id.send_recent_checkbox);
             imageView = (ImageView)itemView.findViewById(R.id.send_recent_image);
             filename = (TextView)itemView.findViewById(R.id.send_recent_filename);
-            year = (TextView)itemView.findViewById(R.id.send_recent_date_year);
-            month = (TextView)itemView.findViewById(R.id.send_recent_date_month);
-            day = (TextView)itemView.findViewById(R.id.send_recent_date_day);
+            date = (TextView)itemView.findViewById(R.id.send_recent_date);
+
 
 
             itemView.setOnClickListener(this);
@@ -87,15 +101,15 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
                 if(!checkBox.isChecked()) {
                     checkBox.setChecked(true);
                     sendRecents.get(pos).setCheck(true);
-                    MainActivity.selectList.add(MainActivity.imageList.get(sendRecents.get(pos).getIndex()));
+                    MainActivity.selectList.add(MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getFile());
                 }
                 else{
                     checkBox.setChecked(false);
                     sendRecents.get(pos).setCheck(false);
                     MainActivity.selectList.remove(MainActivity.imageList.get(sendRecents.get(pos).getIndex()));
                 }
-                Log.d("image?List", MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getName());
-                Log.d("selectList ", MainActivity.selectList.get(0).getName());
+//                Log.d("recentFIle?List", MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getName());
+//                Log.d("selectList ", MainActivity.selectList.get(0).getName());
             }
         }
     }

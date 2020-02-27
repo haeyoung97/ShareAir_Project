@@ -122,7 +122,7 @@ public class SendPhotoRecyclerViewAdapter extends RecyclerView.Adapter<SendPhoto
                     Log.d("check!", "yes");
                     checkBox.setChecked(true);
                     sendPhotos.get(pos).setCheck(true);
-                    MainActivity.selectList.add(MainActivity.imageList.get(sendPhotos.get(pos).getIndex()));
+                    MainActivity.selectList.add(MainActivity.imageList.get(sendPhotos.get(pos).getIndex()).getFile());
                 }
                 else{
                     Log.d("check?", "No");
@@ -130,7 +130,7 @@ public class SendPhotoRecyclerViewAdapter extends RecyclerView.Adapter<SendPhoto
                     sendPhotos.get(pos).setCheck(false);
                     MainActivity.selectList.remove(MainActivity.imageList.get(sendPhotos.get(pos).getIndex()));
                 }
-                Log.d("image?List", MainActivity.imageList.get(sendPhotos.get(pos).getIndex()).getName());
+                Log.d("image?List", MainActivity.imageList.get(sendPhotos.get(pos).getIndex()).getFile().getName());
 //                Log.d("selectList ", MainActivity.selectList.get(0).getName());
             }
         }

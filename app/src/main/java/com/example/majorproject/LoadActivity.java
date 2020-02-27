@@ -49,9 +49,8 @@ public class LoadActivity extends Activity {
 
             try {
                 imageThread.join();
-                MainActivity.imageList = imageThread.getImagefiles();
                 MainActivity.albumList = imageThread.getAlbumList();
-                hd.postDelayed(new splashhandler(), 10000);
+                hd.postDelayed(new splashhandler(), 15000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

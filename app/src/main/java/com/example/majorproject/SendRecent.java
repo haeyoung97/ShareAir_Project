@@ -2,16 +2,104 @@ package com.example.majorproject;
 
 import android.media.Image;
 import android.net.Uri;
+import android.os.Environment;
+import android.util.Log;
 import android.widget.ImageView;
 
 public class SendRecent {
-    private String imagePath;
+    private String filePath;
+    private String thumbPath;
     private String filename;
-    private String year;
-    private String month;
-    private String day;
+    private String date;
     private boolean check;
     private int index;
+    private int fileExtNum;
+
+    private String[] thumbPathArr
+            = {getURLForResource(R.drawable.hwp),
+            getURLForResource(R.drawable.doc),
+            getURLForResource(R.drawable.xls),
+            getURLForResource(R.drawable.ppt),
+            getURLForResource(R.drawable.pdf)};
+//    private String[] thumbPathArr
+//            = {getURLForResource("hwp.jpg"),
+//               getURLForResource("doc.png"),
+//               getURLForResource("xls.png"),
+//               getURLForResource("ppt.png"),
+//               getURLForResource("pdf.png")};
+
+    public SendRecent(String filePath, String filename, String date, int fileExtNum) {
+        this.filePath = filePath;
+        this.filename = filename;
+        this.date = date;
+        this.fileExtNum = fileExtNum;
+        run(fileExtNum);
+
+    }
+    ///////////////////////////////////////////////////////여기부분
+    private String getURLForResource(int Extension){
+//        return Uri.parse("android.resource://" + R.class.getPackage().getName() + "/drawable/" + resId).toString();
+//        return "data/user/0/" + R.class.getPackage().getName() + "res/drawable/"+Extension;
+        return Uri.parse("android.resource://" + R.class.getPackage().getName() + "/drawable-v24/" + Extension).toString();
+    }
+
+    public void run(int fileExtNum){
+        switch(fileExtNum){
+            case 0:
+                // Ext : .hwp
+                thumbPath = thumbPathArr[0];
+                break;
+            case 1:
+                // Ext : .doc
+                thumbPath = thumbPathArr[1];
+                break;
+            case 2:
+                // Ext : .xlsx
+                thumbPath = thumbPathArr[2];
+                break;
+            case 3:
+                // Ext : .pptx
+                thumbPath = thumbPathArr[3];
+                break;
+            case 4:
+                // Ext : .pdf
+                thumbPath = thumbPathArr[4];
+                break;
+            case 5:
+            case 6:
+            case 7:
+                // Ext : image files
+                thumbPath = filePath;
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    public String getThumbPath() {
+        return thumbPath;
+    }
+
+    public void setThumbPath(String thumbPath) {
+        this.thumbPath = thumbPath;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public int getFileExtNum() {
+        return fileExtNum;
+    }
+
+    public void setFileExtNum(int fileExtNum) {
+        this.fileExtNum = fileExtNum;
+    }
 
     public String getFilename() {
         return filename;
@@ -21,28 +109,12 @@ public class SendRecent {
         this.filename = filename;
     }
 
-    public String getYear() {
-        return year;
+    public String getDate() {
+        return date;
     }
 
-    public void setYear(String year) {
-        this.year = year;
-    }
-
-    public String getMonth() {
-        return month;
-    }
-
-    public void setMonth(String month) {
-        this.month = month;
-    }
-
-    public String getDay() {
-        return day;
-    }
-
-    public void setDay(String day) {
-        this.day = day;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public int getIndex() {
@@ -51,18 +123,6 @@ public class SendRecent {
 
     public void setIndex(int index) {
         this.index = index;
-    }
-
-    public SendRecent(String imagePath) {
-        this.imagePath = imagePath;
-    }
-
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
     }
 
     public boolean isCheck() {
