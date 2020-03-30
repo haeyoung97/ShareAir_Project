@@ -23,7 +23,7 @@ public class SendTabAlbumFragment extends Fragment {
     private ArrayList<SendAlbum> sendAlbumArrayList;
     private SendAlbumRecyclerViewAdapter albumRecyclerViewAdapter;
 
-    private ArrayList<LoadImageFiles.AlbumNode> albumNodes;
+//    private ArrayList<LoadImageFiles.AlbumNode> albumNodes;
 
     @Nullable
     @Override
@@ -31,10 +31,10 @@ public class SendTabAlbumFragment extends Fragment {
         View view = inflater.inflate(R.layout.send_viewpager_recyclerview, container, false);
         Log.d("sendAlbumFragment :", "Yes");
 
-        albumNodes = MainActivity.albumList;
+//        albumNodes = MainActivity.albumList;
         sendAlbumArrayList = new ArrayList<>();
 
-        AlbumData();
+//        AlbumData();
         albumRecyclerview = (RecyclerView) view.findViewById(R.id.send_recyclerview);
         // layoutManager = new LinearLayoutManager(this.getContext());
         layoutManager = new LinearLayoutManager(this.getContext());
@@ -43,20 +43,20 @@ public class SendTabAlbumFragment extends Fragment {
         albumRecyclerview.setAdapter(albumRecyclerViewAdapter);
         return view;
     }
-    private void AlbumData(){
-        if(MainActivity.albumList.size() == 0){
-            return;
-        }
-        for(int i = 0; i < MainActivity.albumList.size(); i++){
-            Log.d("albumData : ", MainActivity.albumList.get(i).getAlbumName());
-            Log.d("albumIdx : ", Integer.toString(MainActivity.albumList.get(i).getStartIdx()));
-            String path = MainActivity.imageList.get(MainActivity.albumList.get(i).getStartIdx() - 1).getFile().getAbsolutePath();
-            String name = MainActivity.albumList.get(i).getAlbumName();
-            int sum = MainActivity.albumList.get(i).getAlbumCnt();
-            sendAlbumArrayList.add(new SendAlbum(name, sum, path));
-            // sendPhotoArrayList.get(i).setImagePath(imageFile.get(i).getAbsolutePath());
-            sendAlbumArrayList.get(i).setIndex(i);
-            Log.d("sendarray ", sendAlbumArrayList.get(i).getImagePath());
-        }
-    }
+//    private void AlbumData(){
+//        if(MainActivity.albumList.size() == 0){
+//            return;
+//        }
+//        for(int i = 0; i < MainActivity.albumList.size(); i++){
+//            Log.d("albumData : ", MainActivity.albumList.get(i).getAlbumName());
+//            Log.d("albumIdx : ", Integer.toString(MainActivity.albumList.get(i).getStartIdx()));
+//            String path = MainActivity.imageList.get(MainActivity.albumList.get(i).getStartIdx() - 1).getFile().getAbsolutePath();
+//            String name = MainActivity.albumList.get(i).getAlbumName();
+//            int sum = MainActivity.albumList.get(i).getAlbumCnt();
+//            sendAlbumArrayList.add(new SendAlbum(name, sum, path));
+//            // sendPhotoArrayList.get(i).setImagePath(imageFile.get(i).getAbsolutePath());
+//            sendAlbumArrayList.get(i).setIndex(i);
+//            Log.d("sendarray ", sendAlbumArrayList.get(i).getImagePath());
+//        }
+//    }
 }

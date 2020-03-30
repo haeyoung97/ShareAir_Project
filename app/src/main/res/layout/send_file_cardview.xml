@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:id="@+id/send_file_cardview">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <CheckBox
+            android:id="@+id/send_file_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"/>
+
+        <ImageView
+            android:id="@+id/send_file_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@color/cardview_dark_background"
+            android:layout_toRightOf="@+id/send_file_checkbox"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/send_file_filename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="filename"
+            android:textSize="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/send_file_image"
+            android:layout_alignTop="@id/send_file_image"/>
+
+        <TextView
+            android:id="@+id/send_file_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YEAR MONTH DAY"
+            android:textSize="13dp"
+            android:layout_alignBottom="@+id/send_file_image"
+            android:layout_alignLeft="@+id/send_file_filename"/>
+
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

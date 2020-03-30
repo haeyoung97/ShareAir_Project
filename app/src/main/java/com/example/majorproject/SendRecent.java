@@ -14,6 +14,10 @@ public class SendRecent {
     private boolean check;
     private int index;
     private int fileExtNum;
+    private int resourceFile;
+    private String fileExtension;
+
+    private String[] stringExt= {".hwp", ".doc", ".xlsx", ".pptx", ".pdf"};
 
     private String[] thumbPathArr
             = {getURLForResource(R.drawable.hwp),
@@ -28,14 +32,24 @@ public class SendRecent {
 //               getURLForResource("ppt.png"),
 //               getURLForResource("pdf.png")};
 
-    public SendRecent(String filePath, String filename, String date, int fileExtNum) {
+    public SendRecent(String filePath, String fileExtension, String filename, String date) {
         this.filePath = filePath;
+        this.fileExtension = fileExtension;
         this.filename = filename;
         this.date = date;
-        this.fileExtNum = fileExtNum;
-        run(fileExtNum);
+        run(fileExtension);
+//        run(fileExtNum);
 
     }
+
+    public int getResourceFile(){
+        return resourceFile;
+    }
+    public SendRecent(String filePath, String fileExtension) {
+        this.filePath = filePath;
+        this.fileExtension = fileExtension;
+    }
+
     ///////////////////////////////////////////////////////여기부분
     private String getURLForResource(int Extension){
 //        return Uri.parse("android.resource://" + R.class.getPackage().getName() + "/drawable/" + resId).toString();
@@ -43,39 +57,75 @@ public class SendRecent {
         return Uri.parse("android.resource://" + R.class.getPackage().getName() + "/drawable-v24/" + Extension).toString();
     }
 
-    public void run(int fileExtNum){
-        switch(fileExtNum){
-            case 0:
-                // Ext : .hwp
-                thumbPath = thumbPathArr[0];
+    public void run(String extension){
+        switch(extension){
+            case "hwp":
+                fileExtNum = 0;
+                resourceFile = R.drawable.hwp;
                 break;
-            case 1:
-                // Ext : .doc
-                thumbPath = thumbPathArr[1];
+            case "doc":
+                fileExtNum = 1;
+                resourceFile = R.drawable.doc;
                 break;
-            case 2:
-                // Ext : .xlsx
-                thumbPath = thumbPathArr[2];
+            case "xlsx":
+                fileExtNum = 2;
+                resourceFile = R.drawable.xls;
                 break;
-            case 3:
-                // Ext : .pptx
-                thumbPath = thumbPathArr[3];
+            case "pptx":
+                fileExtNum = 3;
+                resourceFile = R.drawable.ppt;
                 break;
-            case 4:
-                // Ext : .pdf
-                thumbPath = thumbPathArr[4];
+            case "pdf":
+                fileExtNum = 4;
+                resourceFile = R.drawable.pdf;
                 break;
-            case 5:
-            case 6:
-            case 7:
-                // Ext : image files
-                thumbPath = filePath;
+            case "jpeg":
+            case "jpg":
+            case "png":
+            case "bmp":
+            case "gif":
+                fileExtNum = 5;
                 break;
             default:
+                fileExtNum = 6;
+                resourceFile = R.drawable.folder;
                 break;
         }
-
     }
+
+//    public void run(int fileExtNum){
+//        switch(fileExtNum){
+//            case 0:
+//                // Ext : .hwp
+//                thumbPath = thumbPathArr[0];
+//                break;
+//            case 1:
+//                // Ext : .doc
+//                thumbPath = thumbPathArr[1];
+//                break;
+//            case 2:
+//                // Ext : .xlsx
+//                thumbPath = thumbPathArr[2];
+//                break;
+//            case 3:
+//                // Ext : .pptx
+//                thumbPath = thumbPathArr[3];
+//                break;
+//            case 4:
+//                // Ext : .pdf
+//                thumbPath = thumbPathArr[4];
+//                break;
+//            case 5:
+//            case 6:
+//            case 7:
+//                // Ext : image files
+//                thumbPath = filePath;
+//                break;
+//            default:
+//                break;
+//        }
+//
+//    }
 
     public String getThumbPath() {
         return thumbPath;

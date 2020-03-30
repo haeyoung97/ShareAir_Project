@@ -38,22 +38,12 @@ public class LoadActivity extends Activity {
         setContentView(R.layout.activity_load);
         Handler hd = new Handler();
 
-        LoadImageFiles imageThread;
-        imageThread = new LoadImageFiles();
-
         if(!hasPermissions(this, permissionArr)){
             ActivityCompat.requestPermissions(this, permissionArr, permissioncheck);
         }
         else{
-            imageThread.start();
+                hd.postDelayed(new splashhandler(), 5000);
 
-            try {
-                imageThread.join();
-                MainActivity.albumList = imageThread.getAlbumList();
-                hd.postDelayed(new splashhandler(), 15000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
 //            while (true){
 //                if (!imageThread.isAlive() && !documentThread.isAlive()) {
@@ -84,38 +74,6 @@ public class LoadActivity extends Activity {
 
 
     }
-//    public void checkPermission(){
-//        permissioncheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-//        if(permissioncheck != PackageManager.PERMISSION_GRANTED){
-//            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)){
-//
-//            }
-//            else
-//            {
-//                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-//                permissioncheck = PackageManager.PERMISSION_GRANTED;
-//            }
-//        }
-//        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-//            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-//
-//            }
-//            else
-//            {
-//                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-//            }
-//        }
-//        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-//            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION)){
-//
-//            }
-//            else
-//            {
-//                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-//            }
-//        }
-//
-//    }
     public boolean hasPermissions(Context context, String...permissionArr){
         if(context != null && permissionArr !=null){
             for(String permission : permissionArr){
@@ -155,7 +113,7 @@ public class LoadActivity extends Activity {
 
         @Override
         public void run() {
-            startActivity(new Intent(getApplication(), LoadFilesActivity.class));
+            startActivity(new Intent(getApplication(), MainActivity.class));
             LoadActivity.this.finish();
         }
     }

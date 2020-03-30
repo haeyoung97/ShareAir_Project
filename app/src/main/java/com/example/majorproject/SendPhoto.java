@@ -1,9 +1,16 @@
 package com.example.majorproject;
 
+import android.net.Uri;
+
 public class SendPhoto {
     private String imagePath;
     private boolean check;
     private int index;
+    private Uri uri;
+
+    public Uri getUri(){
+        return uri;
+    }
 
     public int getIndex() {
         return index;
@@ -15,6 +22,7 @@ public class SendPhoto {
 
     public SendPhoto(String imagePath) {
         this.imagePath = imagePath;
+        uri = Uri.parse("file://"+imagePath);
     }
 
     public String getImagePath() {

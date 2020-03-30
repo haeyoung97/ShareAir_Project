@@ -1,9 +1,6 @@
 package com.example.majorproject;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,35 +16,31 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
-public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRecentRecyclerViewAdapter.ViewHolder> {
-    private ArrayList<SendRecent> sendRecents;
+public class SendFileRecyclerViewAdapter extends RecyclerView.Adapter<SendFileRecyclerViewAdapter.ViewHolder> {
+    private ArrayList<SendFile> sendFiles;
     private Context context;
 
-    public SendRecentRecyclerViewAdapter(ArrayList<SendRecent> sendRecents, Context context) {
-        this.sendRecents = sendRecents;
+    public SendFileRecyclerViewAdapter(ArrayList<SendFile> sendFiles, Context context) {
+        this.sendFiles = sendFiles;
         this.context = context;
     }
 
 
     @NonNull
     @Override
-    public SendRecentRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SendFileRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
 //        Log.d("SendRecentRecycler : ", sendRecents.get(1).getFilePath());
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        view = layoutInflater.inflate(R.layout.send_recent_cardview, parent, false);
+        view = layoutInflater.inflate(R.layout.send_file_cardview, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SendRecentRecyclerViewAdapter.ViewHolder holder, int position) {
-        SendRecent item = sendRecents.get(position);
+    public void onBindViewHolder(@NonNull SendFileRecyclerViewAdapter.ViewHolder holder, int position) {
+        SendFile item = sendFiles.get(position);
         holder.setItem(item);
 //        Log.d("RecentBindHolder : ", sendRecents.get(position).getImagePath());
 //        Bitmap resizeBitmap = null;
@@ -72,23 +65,23 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
 
     @Override
     public int getItemCount() {
-        return sendRecents.size();
+        return sendFiles.size();
     }
 
-    public void addItem(SendRecent item){
-        sendRecents.add(item);
+    public void addItem(SendFile item){
+        sendFiles.add(item);
     }
 
-    public void setItems(ArrayList<SendRecent> item){
-        this.sendRecents = item;
+    public void setItems(ArrayList<SendFile> item){
+        this.sendFiles = item;
     }
 
-    public SendRecent getItem(int position){
-        return sendRecents.get(position);
+    public SendFile getItem(int position){
+        return sendFiles.get(position);
     }
 
-    public void setItem(int position, SendRecent item){
-        sendRecents.set(position, item);
+    public void setItem(int position, SendFile item){
+        sendFiles.set(position, item);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -102,27 +95,27 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            cardView = (CardView)itemView.findViewById(R.id.send_recent_cardview);
-            checkBox = (CheckBox)itemView.findViewById(R.id.send_recent_checkbox);
-            imageView = (ImageView)itemView.findViewById(R.id.send_recent_image);
-            filename = (TextView)itemView.findViewById(R.id.send_recent_filename);
-            date = (TextView)itemView.findViewById(R.id.send_recent_date);
+            cardView = (CardView)itemView.findViewById(R.id.send_file_cardview);
+            checkBox = (CheckBox)itemView.findViewById(R.id.send_file_checkbox);
+            imageView = (ImageView)itemView.findViewById(R.id.send_file_image);
+            filename = (TextView)itemView.findViewById(R.id.send_file_filename);
+            date = (TextView)itemView.findViewById(R.id.send_file_date);
 
 
 
             itemView.setOnClickListener(this);
         }
-        public void setItem(SendRecent item){
+        public void setItem(SendFile item){
 
 
 //            Log.d("picasso : ", item.getImagePath());
             if(item.getFileExtNum() == 5) {
                 Picasso.with(context)
-                        .load(Uri.parse("file://" + item.getFilePath()))
+                        .load(Uri.parse("file://" + item.getFilepath()))
                         .into(imageView);
             }
             else{
-                Log.d("resourcefile? ", Integer.toString(item.getResourceFile()));
+                Log.d("resource? ", Integer.toString(item.getResourceFile()));
                 Picasso.with(context)
                         .load(item.getResourceFile())
                         .into(imageView);
@@ -140,12 +133,12 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
                 Log.d("aa", "god");
                 if(!checkBox.isChecked()) {
                     checkBox.setChecked(true);
-                    sendRecents.get(pos).setCheck(true);
+                    sendFiles.get(pos).setCheck(true);
 //                    MainActivity.selectList.add(MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getFile());
                 }
                 else{
                     checkBox.setChecked(false);
-                    sendRecents.get(pos).setCheck(false);
+                    sendFiles.get(pos).setCheck(false);
 //                    MainActivity.selectList.remove(MainActivity.imageList.get(sendRecents.get(pos).getIndex()));
                 }
 //                Log.d("recentFIle?List", MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getName());

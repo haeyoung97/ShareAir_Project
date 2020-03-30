@@ -38,9 +38,9 @@ public class SendAlbumRecyclerViewAdapter extends RecyclerView.Adapter<SendAlbum
 
     @Override
     public void onBindViewHolder(@NonNull SendAlbumRecyclerViewAdapter.ViewHolder holder, int position) {
-        Bitmap resizeBitmap = null;
-        BitmapSizeModify bitmapThread = new BitmapSizeModify(sendAlbums.get(position).getImagePath(), resizeBitmap);
-        bitmapThread.start();
+//        Bitmap resizeBitmap = null;
+//        BitmapSizeModify bitmapThread = new BitmapSizeModify(sendAlbums.get(position).getImagePath(), resizeBitmap);
+//        bitmapThread.start();
 //        while(true){
 //            if(!bitmapThread.isAlive()){
 //                holder.imageView.setImageBitmap(resizeBitmap);
@@ -48,17 +48,17 @@ public class SendAlbumRecyclerViewAdapter extends RecyclerView.Adapter<SendAlbum
 //                break;
 //            }
 //        }
-        try {
-            bitmapThread.join();
-            resizeBitmap = bitmapThread.getResizeBitmap();
-            Log.d("albumBind : ", "yes");
-            holder.albumImage.setImageBitmap(resizeBitmap);
-            holder.albumName.setText(sendAlbums.get(position).getImageName());
-            holder.albumSum.setText(Integer.toString(sendAlbums.get(position).getImageSum()));
-            holder.checkBox.setChecked(false);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            bitmapThread.join();
+//            resizeBitmap = bitmapThread.getResizeBitmap();
+//            Log.d("albumBind : ", "yes");
+//            holder.albumImage.setImageBitmap(resizeBitmap);
+//            holder.albumName.setText(sendAlbums.get(position).getImageName());
+//            holder.albumSum.setText(Integer.toString(sendAlbums.get(position).getImageSum()));
+//            holder.checkBox.setChecked(false);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -90,23 +90,21 @@ public class SendAlbumRecyclerViewAdapter extends RecyclerView.Adapter<SendAlbum
                 if(!checkBox.isChecked()) {
                     checkBox.setChecked(true);
                     sendAlbums.get(pos).setImageCheck(true);
-                    int startIdx = MainActivity.albumList.get(sendAlbums.get(pos).getIndex()).getStartIdx();
-                    for(int i = 0; i < sendAlbums.get(pos).getImageSum(); i++) {
-                        MainActivity.selectList.add(MainActivity.imageList.get(startIdx + i).getFile());
-                    }
+//                    int startIdx = MainActivity.albumList.get(sendAlbums.get(pos).getIndex()).getStartIdx();
+//                    for(int i = 0; i < sendAlbums.get(pos).getImageSum(); i++) {
+//                        MainActivity.selectList.add(MainActivity.imageList.get(startIdx + i).getFile());
+//                    }
 //                    MainActivity.selectList.add(MainActivity.albumList.get(sendAlbums.get(pos).getIndex()));
                 }
                 else{
                     checkBox.setChecked(false);
                     sendAlbums.get(pos).setImageCheck(false);
-                    int startIdx = MainActivity.albumList.get(sendAlbums.get(pos).getIndex()).getStartIdx();
-                    for(int i = 0; i < sendAlbums.get(pos).getImageSum(); i++) {
-                        MainActivity.selectList.remove(MainActivity.imageList.get(startIdx + i));
-                    }
+//                    int startIdx = MainActivity.albumList.get(sendAlbums.get(pos).getIndex()).getStartIdx();
+//                    for(int i = 0; i < sendAlbums.get(pos).getImageSum(); i++) {
+//                        MainActivity.selectList.remove(MainActivity.imageList.get(startIdx + i));
+//                    }
 //                    MainActivity.selectList.remove(MainActivity.albumList.get(sendAlbums.get(pos).getIndex()));
                 }
-                Log.d("album?List", MainActivity.albumList.get(sendAlbums.get(pos).getIndex()).getAlbumName());
-//                Log.d("selectList ", MainActivity.selectList.get(0).getName());
             }
 
         }
