@@ -1,6 +1,10 @@
 package com.example.majorproject;
 
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +27,7 @@ public class SendTabAlbumFragment extends Fragment {
     private ArrayList<SendAlbum> sendAlbumArrayList;
     private SendAlbumRecyclerViewAdapter albumRecyclerViewAdapter;
 
-//    private ArrayList<LoadImageFiles.AlbumNode> albumNodes;
+    private int pictureCount = 0;
 
     @Nullable
     @Override
@@ -31,18 +35,55 @@ public class SendTabAlbumFragment extends Fragment {
         View view = inflater.inflate(R.layout.send_viewpager_recyclerview, container, false);
         Log.d("sendAlbumFragment :", "Yes");
 
-//        albumNodes = MainActivity.albumList;
         sendAlbumArrayList = new ArrayList<>();
 
-//        AlbumData();
         albumRecyclerview = (RecyclerView) view.findViewById(R.id.send_recyclerview);
-        // layoutManager = new LinearLayoutManager(this.getContext());
         layoutManager = new LinearLayoutManager(this.getContext());
         albumRecyclerview.setLayoutManager(layoutManager);
         albumRecyclerViewAdapter = new SendAlbumRecyclerViewAdapter(sendAlbumArrayList, getActivity());
         albumRecyclerview.setAdapter(albumRecyclerViewAdapter);
+
+        ArrayList<SendAlbum> result = queryAllAlbum();
+        albumRecyclerViewAdapter.setItems(result);
+        albumRecyclerViewAdapter.notifyDataSetChanged();
         return view;
     }
+    private ArrayList<SendAlbum> queryAllAlbum(){
+        ArrayList<SendAlbum> result = new ArrayList<>();
+        Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        String[] projection = { MediaStore.Images.Media._ID, MediaStore.Images.Media.BUCKET_ID,
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media._COUNT};
+
+
+        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, MediaStore.MediaColumns.DATE_ADDED + " DESC");
+
+        int colDataIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
+        int colNameIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+        int colIdIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_ID);
+        int colCntIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._COUNT);
+
+        pictureCount = 0;
+        while(cursor.moveToNext())
+        {
+            String path = cursor.getString(colDataIndex);
+            String displayName = cursor.getString(colNameIndex);
+            String albumId = cursor.getString(colIdIndex);
+            int albumCount = cursor.getInt(colCntIndex);
+
+            if(!TextUtils.isEmpty(path)){
+                SendAlbum sendVideo = new SendAlbum(albumId, displayName, albumCount);
+                result.add(sendVideo);
+            }
+            pictureCount++;
+        }
+        Log.d("Picturecount : ", Integer.toString(pictureCount));
+
+        for(SendAlbum sendAlbum : result){
+            Log.d("SendAlbum : ", sendAlbum.toString());
+        }
+        return result;
+    }
+
 //    private void AlbumData(){
 //        if(MainActivity.albumList.size() == 0){
 //            return;

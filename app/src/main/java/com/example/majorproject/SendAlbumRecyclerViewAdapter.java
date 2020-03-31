@@ -2,6 +2,7 @@ package com.example.majorproject;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -38,32 +41,27 @@ public class SendAlbumRecyclerViewAdapter extends RecyclerView.Adapter<SendAlbum
 
     @Override
     public void onBindViewHolder(@NonNull SendAlbumRecyclerViewAdapter.ViewHolder holder, int position) {
-//        Bitmap resizeBitmap = null;
-//        BitmapSizeModify bitmapThread = new BitmapSizeModify(sendAlbums.get(position).getImagePath(), resizeBitmap);
-//        bitmapThread.start();
-//        while(true){
-//            if(!bitmapThread.isAlive()){
-//                holder.imageView.setImageBitmap(resizeBitmap);
-//                holder.checkBox.setChecked(false);
-//                break;
-//            }
-//        }
-//        try {
-//            bitmapThread.join();
-//            resizeBitmap = bitmapThread.getResizeBitmap();
-//            Log.d("albumBind : ", "yes");
-//            holder.albumImage.setImageBitmap(resizeBitmap);
-//            holder.albumName.setText(sendAlbums.get(position).getImageName());
-//            holder.albumSum.setText(Integer.toString(sendAlbums.get(position).getImageSum()));
-//            holder.checkBox.setChecked(false);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
     }
 
     @Override
     public int getItemCount() {
         return sendAlbums.size();
+    }
+
+    public void addItem(SendAlbum item){
+        sendAlbums.add(item);
+    }
+
+    public void setItems(ArrayList<SendAlbum> item){
+        this.sendAlbums = item;
+    }
+
+    public SendAlbum getItem(int position){
+        return sendAlbums.get(position);
+    }
+
+    public void setItem(int position, SendAlbum item){
+        sendAlbums.set(position, item);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -80,6 +78,15 @@ public class SendAlbumRecyclerViewAdapter extends RecyclerView.Adapter<SendAlbum
             albumImage = (ImageView)itemView.findViewById(R.id.send_album_cardview_image);
 
             itemView.setOnClickListener(this);
+        }
+        public void setItem(SendAlbum item){
+            Picasso.with(context)
+                    .load(Uri.parse("file://" + item.getImagePath()))
+                    .into(albumImage);
+
+            albumName.setText(item.getImageName());
+            albumName.setText(item.getImageSum());
+
         }
 
         @Override

@@ -101,17 +101,17 @@ public class SendVideoRecyclerViewAdapter extends RecyclerView.Adapter<SendVideo
         @Override
         public void onClick(View v) {
             int pos = getAdapterPosition();
-            Log.d("clickListener", "listen!");
             if(pos != RecyclerView.NO_POSITION){
-                Log.d("aa", "god");
                 if(!checkBox.isChecked()) {
                     checkBox.setChecked(true);
                     sendVideos.get(pos).setCheck(true);
+                    MainActivity.selectList.add(sendVideos.get(pos).getFilepath());
 //                    MainActivity.selectList.add(MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getFile());
                 }
                 else{
                     checkBox.setChecked(false);
                     sendVideos.get(pos).setCheck(false);
+                    MainActivity.selectList.remove(sendVideos.get(pos).getFilepath());
 //                    MainActivity.selectList.remove(MainActivity.imageList.get(sendRecents.get(pos).getIndex()));
                 }
 //                Log.d("recentFIle?List", MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getName());

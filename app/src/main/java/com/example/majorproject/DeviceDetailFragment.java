@@ -170,8 +170,11 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         return uri;
     }
     public void startFileTransfer(){
-        String filepath = MainActivity.selectList.get(0).getAbsolutePath();
+        // selectList에서 여러개 파일 전송하는 것도 구현해야 할 듯.
+        // selectList는 파일 경로 리스트로 수정
+        String filepath = MainActivity.selectList.get(0);
         Uri uri = getUriFromPath(filepath);
+
         TextView statusText = (TextView) mContentView.findViewById(R.id.status_text);
         statusText.setText("Sending: " + uri);
 //        statusText.setText("Sending: " + filepath);

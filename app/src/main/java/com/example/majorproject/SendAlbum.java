@@ -11,10 +11,10 @@ public class SendAlbum {
     private int index;
 
 
-    public SendAlbum(String imageName, int imageSum, String imagePath) {
+    public SendAlbum(String imagePath, String imageName, int imageSum) {
+        this.imagePath = imagePath;
         this.imageName = imageName;
         this.imageSum = imageSum;
-        this.imagePath = imagePath;
     }
 
     public String getImageName() {

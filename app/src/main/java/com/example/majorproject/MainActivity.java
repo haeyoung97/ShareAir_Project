@@ -18,11 +18,8 @@ public class MainActivity extends AppCompatActivity {
 
     FragmentManager fragmentManager;
 
-
-    static ArrayList<FileNode> imageList = new ArrayList<>();
-    static ArrayList<File> selectList = new ArrayList<>();
-    static ArrayList<FileNode> documentList = new ArrayList<>();
-    static ArrayList<FileNode> sortedFileList = new ArrayList<>();
+    static ArrayList<String> selectList = new ArrayList<>();
+//    static ArrayList<File> selectList = new ArrayList<>();
     private SendTabFragment sendTabFragment = new SendTabFragment(this);
     private FragmentTransaction transaction;
 

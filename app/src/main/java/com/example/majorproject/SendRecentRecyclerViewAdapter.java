@@ -1,5 +1,6 @@
 package com.example.majorproject;
 
+import android.Manifest;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -141,11 +142,13 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
                 if(!checkBox.isChecked()) {
                     checkBox.setChecked(true);
                     sendRecents.get(pos).setCheck(true);
+                    MainActivity.selectList.add(sendRecents.get(pos).getFilePath());
 //                    MainActivity.selectList.add(MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getFile());
                 }
                 else{
                     checkBox.setChecked(false);
                     sendRecents.get(pos).setCheck(false);
+                    MainActivity.selectList.remove(sendRecents.get(pos));
 //                    MainActivity.selectList.remove(MainActivity.imageList.get(sendRecents.get(pos).getIndex()));
                 }
 //                Log.d("recentFIle?List", MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getName());

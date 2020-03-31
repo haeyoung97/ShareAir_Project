@@ -42,25 +42,6 @@ public class SendFileRecyclerViewAdapter extends RecyclerView.Adapter<SendFileRe
     public void onBindViewHolder(@NonNull SendFileRecyclerViewAdapter.ViewHolder holder, int position) {
         SendFile item = sendFiles.get(position);
         holder.setItem(item);
-//        Log.d("RecentBindHolder : ", sendRecents.get(position).getImagePath());
-//        Bitmap resizeBitmap = null;
-//        Log.d("recentThumbPath : ", sendRecents.get(position).getThumbPath());
-//        BitmapSizeModify bitmapThread = new BitmapSizeModify(sendRecents.get(position).getThumbPath(), resizeBitmap, sendRecents.get(position).getFileExtNum(), context);
-//        bitmapThread.start();
-//
-//        try {
-//            bitmapThread.join();
-//            Bitmap rresizeBitmap = bitmapThread.getResizeBitmap();
-//            if(rresizeBitmap == null){
-//                Log.d("resize ", "NULL??????");
-//            }
-//            holder.imageView.setImageBitmap(rresizeBitmap);
-//            holder.filename.setText(sendRecents.get(position).getFilename());
-//            holder.date.setText(sendRecents.get(position).getDate());
-//            holder.checkBox.setChecked(false);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
     }
 
     @Override
@@ -134,15 +115,15 @@ public class SendFileRecyclerViewAdapter extends RecyclerView.Adapter<SendFileRe
                 if(!checkBox.isChecked()) {
                     checkBox.setChecked(true);
                     sendFiles.get(pos).setCheck(true);
+                    MainActivity.selectList.add(sendFiles.get(pos).getFilepath());
 //                    MainActivity.selectList.add(MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getFile());
                 }
                 else{
                     checkBox.setChecked(false);
                     sendFiles.get(pos).setCheck(false);
+                    MainActivity.selectList.remove(sendFiles.get(pos));
 //                    MainActivity.selectList.remove(MainActivity.imageList.get(sendRecents.get(pos).getIndex()));
                 }
-//                Log.d("recentFIle?List", MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getName());
-//                Log.d("selectList ", MainActivity.selectList.get(0).getName());
             }
         }
     }
