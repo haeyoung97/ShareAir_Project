@@ -52,7 +52,7 @@ public class SendTabAlbumFragment extends Fragment {
         ArrayList<SendAlbum> result = new ArrayList<>();
         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         String[] projection = { MediaStore.Images.Media._ID, MediaStore.Images.Media.BUCKET_ID,
-                MediaStore.Images.Media.BUCKET_DISPLAY_NAME, MediaStore.Images.Media._COUNT};
+                MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
 
 
         Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, MediaStore.MediaColumns.DATE_ADDED + " DESC");
@@ -60,7 +60,7 @@ public class SendTabAlbumFragment extends Fragment {
         int colDataIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
         int colNameIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
         int colIdIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_ID);
-        int colCntIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._COUNT);
+//        int colCntIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._COUNT);
 
         pictureCount = 0;
         while(cursor.moveToNext())
@@ -68,7 +68,9 @@ public class SendTabAlbumFragment extends Fragment {
             String path = cursor.getString(colDataIndex);
             String displayName = cursor.getString(colNameIndex);
             String albumId = cursor.getString(colIdIndex);
-            int albumCount = cursor.getInt(colCntIndex);
+//            int albumCount = cursor.getInt(colCntIndex);
+            int albumCount = 5;
+            Log.d("bucket display name : ", displayName);
 
             if(!TextUtils.isEmpty(path)){
                 SendAlbum sendVideo = new SendAlbum(albumId, displayName, albumCount);

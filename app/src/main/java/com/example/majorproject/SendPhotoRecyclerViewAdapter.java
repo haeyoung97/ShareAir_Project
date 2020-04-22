@@ -152,7 +152,8 @@ public class SendPhotoRecyclerViewAdapter extends RecyclerView.Adapter<SendPhoto
                     Log.d("check!", "yes");
                     checkBox.setChecked(true);
                     sendPhotos.get(pos).setCheck(true);
-                    MainActivity.selectList.add(sendPhotos.get(pos).getImagePath());
+                    MainActivity.selectList.add(new FileNode(sendPhotos.get(pos).getImagePath(), 1));
+//                    MainActivity.selectList.add(sendPhotos.get(pos).getImagePath());
                 }
                 else{
                     Log.d("check?", "No");

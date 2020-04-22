@@ -20,11 +20,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/send_tab_photo"/>
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/send_tabitem_album"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/send_tab_album"/>
+<!--        <com.google.android.material.tabs.TabItem-->
+<!--            android:id="@+id/send_tabitem_album"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/send_tab_album"/>-->
         <com.google.android.material.tabs.TabItem
             android:id="@+id/send_tabitem_video"
             android:layout_width="wrap_content"

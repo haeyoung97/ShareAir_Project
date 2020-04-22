@@ -115,7 +115,8 @@ public class SendFileRecyclerViewAdapter extends RecyclerView.Adapter<SendFileRe
                 if(!checkBox.isChecked()) {
                     checkBox.setChecked(true);
                     sendFiles.get(pos).setCheck(true);
-                    MainActivity.selectList.add(sendFiles.get(pos).getFilepath());
+                    MainActivity.selectList.add(new FileNode(sendFiles.get(pos).getFilepath(), 3));
+//                    MainActivity.selectList.add(sendFiles.get(pos).getFilepath());
 //                    MainActivity.selectList.add(MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getFile());
                 }
                 else{

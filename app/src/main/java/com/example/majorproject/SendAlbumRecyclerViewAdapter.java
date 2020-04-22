@@ -80,6 +80,7 @@ public class SendAlbumRecyclerViewAdapter extends RecyclerView.Adapter<SendAlbum
             itemView.setOnClickListener(this);
         }
         public void setItem(SendAlbum item){
+            Log.d("album image name : ", item.getImageName());
             Picasso.with(context)
                     .load(Uri.parse("file://" + item.getImagePath()))
                     .into(albumImage);

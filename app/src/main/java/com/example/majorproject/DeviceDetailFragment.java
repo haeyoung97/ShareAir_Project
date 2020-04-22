@@ -161,19 +161,49 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         fileTransferService.connectionSocket();
 
     }
-    public Uri getUriFromPath(String filepath){
-        Cursor cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, "_data ='" + filepath + "'", null, null);
-        cursor.moveToNext();
-        int id = cursor.getInt(cursor.getColumnIndex("_id"));
-        Uri uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+
+    /////////////////////////////////////////////////////////
+    ////////이 부분 수정함/////////////////////////////////
+    /////////////////////////////////////////////////////////
+    public Uri getUriFromPath(String filepath, int fileKind){
+        Cursor cursor;
+        int id;
+        Uri uri = null;
+        switch(fileKind){
+            case 0:
+            case 3:
+                //recent, file tab
+                cursor = context.getContentResolver().query(MediaStore.Files.getContentUri("external"), null, "_data ='" + filepath + "'", null, null);
+                cursor.moveToNext();
+                id = cursor.getInt(cursor.getColumnIndex("_id"));
+                uri = ContentUris.withAppendedId(MediaStore.Files.getContentUri("external"), id);
+                break;
+            case 1:
+                //photo tab
+                cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, "_data ='" + filepath + "'", null, null);
+                cursor.moveToNext();
+                id = cursor.getInt(cursor.getColumnIndex("_id"));
+                uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+                break;
+            case 2:
+                //video tab
+                cursor = context.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null, "_data ='" + filepath + "'", null, null);
+                cursor.moveToNext();
+                id = cursor.getInt(cursor.getColumnIndex("_id"));
+                uri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id);
+                break;
+            default:
+                break;
+
+        }
 
         return uri;
     }
     public void startFileTransfer(){
         // selectList에서 여러개 파일 전송하는 것도 구현해야 할 듯.
-        // selectList는 파일 경로 리스트로 수정
-        String filepath = MainActivity.selectList.get(0);
-        Uri uri = getUriFromPath(filepath);
+        // selectList는 [String 파일 경로, int 파일 종류] 리스트로 수정
+        String filepath = MainActivity.selectList.get(0).getFilePath();
+        Uri uri = getUriFromPath(filepath, MainActivity.selectList.get(0).getFileKind());
 
         TextView statusText = (TextView) mContentView.findViewById(R.id.status_text);
         statusText.setText("Sending: " + uri);

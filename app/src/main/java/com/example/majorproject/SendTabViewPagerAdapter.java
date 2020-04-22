@@ -47,21 +47,22 @@ public class SendTabViewPagerAdapter extends FragmentStatePagerAdapter {
                 MainActivity.selectList.clear();
                 photoFragment = new SendTabPhotoFragment();
                 return photoFragment;
+//            case 2:
+//                //앨범 탭
+//                //그냥 앨범 탭 없애버리자ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ
+//                MainActivity.selectList.clear();
+////                albumFragment = new SendTabAlbumFragment();
+////                return albumFragment;
+//
+////                임시
+//                fileFragment = new SendTabFileFragment();
+//                return fileFragment;
+
             case 2:
-                //앨범 탭
-                MainActivity.selectList.clear();
-//                albumFragment = new SendTabAlbumFragment();
-//                return albumFragment;
-
-                //임시
-                fileFragment = new SendTabFileFragment();
-                return fileFragment;
-
-            case 3:
                 //영상 탭
                 videoFragment = new SendTabVideoFragment();
                 return videoFragment;
-            case 4:
+            case 3:
                 //파일 탭
                 fileFragment = new SendTabFileFragment();
                 return fileFragment;
