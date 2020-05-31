@@ -131,9 +131,6 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
                             startFileTransfer();
                         }
 
-
-
-
                     }
                 });
 

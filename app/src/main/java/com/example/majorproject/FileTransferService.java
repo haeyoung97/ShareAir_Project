@@ -6,6 +6,7 @@ import android.app.IntentService;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
@@ -28,12 +29,14 @@ public class FileTransferService extends IntentService {
     public String EXTRAS_GROUP_OWNER_ADDRESS = "go_host";
     public String EXTRAS_GROUP_OWNER_PORT = "go_port";
     public int port;
+    HistoryDatabase historyDatabase;
 
     private Context context;
 
     public FileTransferService(Context context) {
         super("FileTransferService");
         this.context = context;
+        historyDatabase = new HistoryDatabase(this, MainActivity.dbName, null, MainActivity.dbVersion);
     }
 
     public FileTransferService() {
@@ -120,6 +123,8 @@ public class FileTransferService extends IntentService {
         Log.e("JSch-threadConnect", ": hello");
        // Context context = getApplicationContext();
         Socket socket = new Socket();
+        String sql;
+        SQLiteDatabase db;
 
         try {
             Log.d(WiFiDirectActivity.TAG, "Opening client socket - ");
@@ -136,7 +141,13 @@ public class FileTransferService extends IntentService {
                 Log.d(WiFiDirectActivity.TAG, e.toString());
             }
             Log.e("DETAIL : "," pre copyFile");
-            DeviceDetailFragment.copyFile(is, stream);
+            db = historyDatabase.getWritableDatabase();
+            String filename, date, device;
+            int size, isSuccess;
+            if(DeviceDetailFragment.copyFile(is, stream)){
+
+//                sql = String.format("INSERT INTO history VALUES('" + )
+            }
             Log.d(WiFiDirectActivity.TAG, "Client: Data written");
         } catch (IOException e) {
             Log.e(WiFiDirectActivity.TAG, e.getMessage());

@@ -23,7 +23,12 @@ public class MainActivity extends AppCompatActivity {
 
 //    static ArrayList<File> selectList = new ArrayList<>();
     private SendTabFragment sendTabFragment = new SendTabFragment(this);
+    private HistoryTabFragment historyTabFragment = new HistoryTabFragment();
     private FragmentTransaction transaction;
+
+    //db 생성 파일 이름
+    final static String dbName = "history.db";
+    final static int dbVersion = 2;
 
 
     private ButtonEventListener buttonEventListener;
@@ -40,9 +45,11 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_receive:
                     return true;
                 case R.id.navigation_history:
-                    return true;
+                    transaction = fragmentManager.beginTransaction();
+                    transaction.replace(R.id.fragmentLayout, historyTabFragment).commitAllowingStateLoss();
+                    break;
             }
-            return false;
+            return true;
         }
     };
     @Override
@@ -51,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         BottomNavigationView bottomNavView = findViewById(R.id.bottom_nav_view);
+
 
 //        buttonEventListener = new ButtonEventListener();
 //

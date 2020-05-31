@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:id="@+id/history_cardview">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <CheckBox
+            android:id="@+id/history_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"/>
+
+        <ImageView
+            android:id="@+id/history_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@color/cardview_dark_background"
+            android:layout_toRightOf="@+id/history_checkbox"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/history_device"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sender"
+            android:textSize="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/history_image"
+            android:layout_alignTop="@id/history_image"/>
+
+        <TextView
+            android:id="@+id/history_filesize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="size MB"
+            android:textSize="12dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/history_image"
+            android:layout_below="@id/history_device"/>
+
+        <TextView
+            android:id="@+id/history_SucOrFail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Success/Fail"
+            android:textSize="13dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/history_image"
+            android:layout_below="@id/history_filesize"/>
+
+        <TextView
+            android:id="@+id/history_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YEAR MONTH DAY"
+            android:textSize="12dp"
+            android:layout_alignBottom="@+id/history_image"
+            android:layout_alignLeft="@+id/history_device"/>
+
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
