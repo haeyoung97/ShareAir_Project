@@ -53,7 +53,7 @@ public class ButtonEventListener implements View.OnClickListener {
                 Intent sendIntent = new Intent(context, WiFiDirectActivity.class);
                 mainActivity.startActivity(sendIntent);
                 mainActivity.finish();
-
+                Log.e("", "onClick: " +  MainActivity.selectList.get(0).getFilePath());
                 break;
             case R.id.recv_frame_transferButton:
                 isSendOrRecvBtn = 15;

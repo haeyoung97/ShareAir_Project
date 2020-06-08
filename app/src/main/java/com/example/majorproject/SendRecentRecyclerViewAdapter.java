@@ -143,6 +143,8 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
                     checkBox.setChecked(true);
                     sendRecents.get(pos).setCheck(true);
                     MainActivity.selectList.add(new FileNode(sendRecents.get(pos).getFilePath(), 0));
+
+                    Log.e("", "onClick: " + MainActivity.selectList.get(0).getFilePath());
 //                    MainActivity.selectList.add(sendRecents.get(pos).getFilePath());
 //                    MainActivity.selectList.add(MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getFile());
                 }
