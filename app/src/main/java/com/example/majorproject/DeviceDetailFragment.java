@@ -48,8 +48,10 @@ import com.example.majorproject.DeviceListFragment.DeviceActionListener;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.ProxyHTTP;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
+import com.jcraft.jsch.SocketFactory;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -61,9 +63,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+
 
 /**
  * A fragment that manages a particular peer and allows interaction with device
@@ -76,8 +81,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
     private WifiP2pDevice device;
     private WifiP2pInfo info;
     private LayoutInflater inflater;
-    String filepath_s;
-    Uri uri_s;
+    private int port;
 
     ProgressDialog progressDialog = null;
 
@@ -90,8 +94,6 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-//        filepath_s = MainActivity.selectList.get(0).getFilePath();
-//        uri_s = getUriFromPath(filepath_s, MainActivity.selectList.get(0).getFileKind());
         this.inflater = inflater;
         mContentView = inflater.inflate(R.layout.device_detail, null);
 
@@ -222,6 +224,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         return uri;
     }
     public void startFileTransfer(){
+        port = 2222;
         // selectList에서 여러개 파일 전송하는 것도 구현해야 할 듯.
         // selectList는 [String 파일 경로, int 파일 종류] 리스트로 수정
         String filepath = MainActivity.selectList.get(0).getFilePath();
@@ -236,7 +239,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 //        Log.e("JSch-Path", uri.toString());
         fileTransferService.setEXTRAS_GROUP_OWNER_ADDRESS(info.groupOwnerAddress.getHostAddress());
         Log.e("JSch-Address", info.groupOwnerAddress.getHostAddress());
-        fileTransferService.setEXTRAS_GROUP_OWNER_PORT("2222");
+        fileTransferService.setEXTRAS_GROUP_OWNER_PORT(Integer.toString(port));
 //        Log.e("JSch-port", "22");
         fileTransferService.connectionSocket(filepath);
     }
@@ -320,13 +323,13 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 
         private Context context;
         private TextView statusText;
-        private WifiP2pInfo info;
         private JSch jsch;
         private Session session;
         private ChannelSftp channel;
         private LayoutInflater inflater;
         private String savefilename;
         private WifiP2pInfo R_info;
+        private int port = 2222;
 
         /**
          * @param context
@@ -406,16 +409,36 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         }
 
         protected void connect() throws JSchException {
-            jsch = new JSch();
-//            if(R_info.groupOwnerAddress.getHostAddress() == null)
-            Log.e("groupOwnerAddress", R_info.groupOwnerAddress.getHostAddress());
-            session = jsch.getSession("Receiver", R_info.groupOwnerAddress.getHostAddress(), 2222);
-            session.setPassword("password");
-            Log.d("Session-Re", "connect: "+ session.getPort());
-            session.connect();
+//            try {
+//                ServerSocket serverSocket = new ServerSocket(port);
+//                Log.e(WiFiDirectActivity.TAG, "Server: Socket opened");
+//                Socket client = serverSocket.accept();
+//                Log.e(WiFiDirectActivity.TAG, "Server: connection done");
+                jsch = new JSch();
+//                Log.e("Server : ", "host :" + client.getInetAddress().getHostAddress() + ", port :" + client.getPort());
+//                session = jsch.getSession("Receiver", client.getInetAddress().getHostAddress(), client.getPort());
+                session = jsch.getSession("Receiver", R_info.groupOwnerAddress.getHostAddress(), port);
 
-            channel = (ChannelSftp) session.openChannel("sftp");
-            channel.connect();
+                session.setPassword("password");
+                Log.d("Session-Re", "connect: " + session.getPort());
+
+                java.util.Properties config = new java.util.Properties();
+                config.put("StrictHostKeyChecking", "no");
+                session.setConfig(config);
+                session.setTimeout(30000);
+            session.setServerAliveInterval(5000); // Check if server is alive every 5 seconds
+            session.setServerAliveCountMax(5);
+                SocketFactory socketFactory = new ReSocketFactory();
+                session.setSocketFactory(socketFactory);
+                Log.e("", "connect: before");
+                session.connect();
+                Log.e("", "connect: after");
+                channel = (ChannelSftp) session.openChannel("sftp");
+                channel.connect();
+//            }catch (IOException e){
+//                e.printStackTrace();
+//            }
+
         }
         protected void disconnect() {
             if(session.isConnected()){
@@ -479,5 +502,39 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 //        }
 //        return true;
 //    }
+
+}
+
+class ReSocketFactory implements SocketFactory {
+
+    @Override
+    public Socket createSocket(String host, int port) throws IOException, UnknownHostException {
+//        ServerSocket serverSocket = new ServerSocket(2222);
+        Log.e("", "createSocket : start");
+//        Socket client = serverSocket.accept();
+//        Log.e("", "createSocket : end");
+        Socket socket = new Socket();
+//        socket.bind(new InetSocketAddress("192.168.1.4", 0));
+        socket.bind(new InetSocketAddress(host, port));
+        Log.e("", "createSocket: middle" );
+        Log.e("", "createSocket: "+ host + ", " + port );
+        socket.connect(new InetSocketAddress(host, port));
+
+//        socket.bind(new InetSocketAddress("192.168.1.4", 0));
+//        socket.bind(new InetSocketAddress("192.168.1.4", 8988));
+//        socket.connect(new InetSocketAddress("192.168.1.4", 8988));
+
+        return socket;
+    }
+
+    @Override
+    public InputStream getInputStream(Socket socket) throws IOException {
+        return socket.getInputStream();
+    }
+
+    @Override
+    public OutputStream getOutputStream(Socket socket) throws IOException {
+        return socket.getOutputStream();
+    }
 
 }

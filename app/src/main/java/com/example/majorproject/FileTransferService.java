@@ -14,7 +14,9 @@ import android.util.Log;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.ProxyHTTP;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SocketFactory;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -28,6 +30,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -149,14 +152,41 @@ public class FileTransferService extends IntentService {
         disconnect();
     }
     public void connect() throws JSchException {
-        jsch = new JSch();
-        Log.d("JSCH-upload", "connect: "+ port);
-        session = jsch.getSession("Sender", EXTRAS_GROUP_OWNER_ADDRESS, port);
-        session.setPassword("password");
-        session.connect();
+        try {
+//            Socket socket = new Socket();
+//            socket.bind(null);
+//            Log.e(WiFiDirectActivity.TAG, "Socket: bind");
+//            socket.connect((new InetSocketAddress(EXTRAS_GROUP_OWNER_ADDRESS, port)), SOCKET_TIMEOUT);
+//            Log.e(WiFiDirectActivity.TAG, "Socket: connect");
+            jsch = new JSch();
 
-        channel = (ChannelSftp) session.openChannel("sftp");
-        channel.connect();
+            Log.d("JSCH-upload", "connect: "+ port);
+
+//            Log.e("Server : ", "host :" + socket.getInetAddress().getHostAddress() + ", port :" + socket.getPort());
+//            session = jsch.getSession("Sender", socket.getInetAddress().getHostAddress(), socket.getPort());
+            session = jsch.getSession("Sender", EXTRAS_GROUP_OWNER_ADDRESS, port);
+            Log.e("", "connect: "+session.getPort() + ", " + session.getHost());
+    //        session = jsch.getSession("Sender", "192.168.1.4", 8988);
+    //        session = jsch.getSession("Sender", "localhost");
+
+            session.setPassword("password");
+
+            java.util.Properties config = new java.util.Properties();
+            config.put("StrictHostKeyChecking", "no");
+            session.setConfig(config);
+            session.setTimeout(30000);
+            SocketFactory socketFactory = new SeSocketFactory();
+            session.setSocketFactory(socketFactory);
+            Log.e("", "connect: before");
+            session.connect();
+            Log.e("", "connect: after");
+            channel = (ChannelSftp) session.openChannel("sftp");
+            channel.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
     public void disconnect() {
         if(session.isConnected()){
@@ -165,6 +195,35 @@ public class FileTransferService extends IntentService {
             channel.disconnect();
             session.disconnect();
         }
+    }
+
+}
+
+class SeSocketFactory implements SocketFactory {
+
+    @Override
+    public Socket createSocket(String host, int port) throws IOException, UnknownHostException {
+        Log.e("", "createSocket: start" );
+        Socket socket = new Socket();
+//        socket.bind(new InetSocketAddress("192.168.1.4", 0));
+//        socket.bind(new InetSocketAddress("localhost", 2222));
+        Log.e("", "createSocket: "+ host + ", " + port );
+        socket.bind(new InetSocketAddress("localhost", port));
+        Log.e("", "createSocket: middle" );
+        Log.e("", "createSocket: "+ host + ", " + port );
+        socket.connect(new InetSocketAddress("localhost", port));
+        Log.e("", "createSocket: end" );
+        return socket;
+    }
+
+    @Override
+    public InputStream getInputStream(Socket socket) throws IOException {
+        return socket.getInputStream();
+    }
+
+    @Override
+    public OutputStream getOutputStream(Socket socket) throws IOException {
+        return socket.getOutputStream();
     }
 
 }

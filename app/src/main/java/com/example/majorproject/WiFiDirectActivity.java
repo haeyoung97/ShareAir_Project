@@ -212,6 +212,7 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Dev
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -228,6 +229,7 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Dev
 
     @Override
     public void connect(WifiP2pConfig config) {
+
         manager.connect(channel, config, new ActionListener() {
 
             @Override
