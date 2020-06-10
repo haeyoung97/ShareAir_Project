@@ -31,22 +31,26 @@ public class MainActivity extends AppCompatActivity {
     final static int dbVersion = 2;
 
 
+
     private ButtonEventListener buttonEventListener;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//            transaction = fragmentManager.beginTransaction();
             switch (item.getItemId()) {
                 case R.id.navigation_send:
                     transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.fragmentLayout, sendTabFragment).commitAllowingStateLoss();
+                    transaction.replace(R.id.fragmentLayout, sendTabFragment).addToBackStack(sendTabFragment.getClass().getSimpleName()).commitAllowingStateLoss();
                     break;
                 case R.id.navigation_receive:
-                    return true;
+                    transaction = fragmentManager.beginTransaction();
+                    transaction.replace(R.id.fragmentLayout, sendTabFragment).addToBackStack(sendTabFragment.getClass().getSimpleName()).commitAllowingStateLoss();
+                    break;
                 case R.id.navigation_history:
                     transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.fragmentLayout, historyTabFragment).commitAllowingStateLoss();
+                    transaction.replace(R.id.fragmentLayout, historyTabFragment).addToBackStack(historyTabFragment.getClass().getSimpleName()).commitAllowingStateLoss();
                     break;
             }
             return true;

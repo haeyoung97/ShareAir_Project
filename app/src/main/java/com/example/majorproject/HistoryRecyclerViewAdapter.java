@@ -91,7 +91,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 
         public void setItem(HistoryDBArray item){
             deviceName.setText(item.getDeviceName());
-            fileSize.setText(item.getFileSize());
+            fileSize.setText(item.getFileSize() + "KB");
             sucOrFail.setText(item.getSucOrFail());
             date.setText(item.getDate());
         }

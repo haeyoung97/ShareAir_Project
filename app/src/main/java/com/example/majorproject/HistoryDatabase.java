@@ -15,8 +15,8 @@ public class HistoryDatabase extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+//        db.execSQL("DROP TABLE IF EXISTS " + DBstruct.TBL_NAME);
         db.execSQL(DBstruct.SQL_CREATE_TBL);
-        Log.d("history db Table : ", "create table");
     }
 
     @Override
