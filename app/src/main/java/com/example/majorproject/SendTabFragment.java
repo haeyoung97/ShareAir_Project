@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,7 @@ public class SendTabFragment extends Fragment {
     private Button recvButton;
     private ButtonEventListener buttonEventListener;
 
+
     public SendTabFragment(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
@@ -39,16 +41,16 @@ public class SendTabFragment extends Fragment {
 //        Log.d("TAG: ", thread.getImagefiles().get(1).getAbsolutePath());
         this.context = mainActivity.getApplicationContext();
 
-
-        sendButton = (Button)view.findViewById(R.id.send_frame_transferButton);
-        recvButton = (Button)view.findViewById(R.id.recv_frame_transferButton);
+//
+//        sendButton = (Button)view.findViewById(R.id.send_frame_transferButton);
+//        recvButton = (Button)view.findViewById(R.id.recv_frame_transferButton);
 
         tabLayout = (TabLayout)view.findViewById(R.id.send_frame_tablayout);
         viewPager = (ViewPager)view.findViewById(R.id.send_frame_viewpager);
 
         buttonEventListener = new ButtonEventListener(mainActivity, context);
-        sendButton.setOnClickListener(buttonEventListener);
-        recvButton.setOnClickListener(buttonEventListener);
+//        sendButton.setOnClickListener(buttonEventListener);
+//        recvButton.setOnClickListener(buttonEventListener);
 
         SendTabViewPagerAdapter adapter = new SendTabViewPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
         if(adapter == null){

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,12 +30,20 @@ import java.util.Calendar;
 public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRecentRecyclerViewAdapter.ViewHolder> {
     private ArrayList<SendRecent> sendRecents;
     private Context context;
+    private LinearLayout dynamicLinearLayout;
+    private DynamicSendSelectLayout dynamicSendSelectLayout;
+    private int selectCnt;
 
     public SendRecentRecyclerViewAdapter(ArrayList<SendRecent> sendRecents, Context context) {
         this.sendRecents = sendRecents;
         this.context = context;
     }
 
+    public SendRecentRecyclerViewAdapter(ArrayList<SendRecent> sendRecents, Context context, LinearLayout dynamicLinearLayout) {
+        this.sendRecents = sendRecents;
+        this.context = context;
+        this.dynamicLinearLayout = dynamicLinearLayout;
+    }
 
     @NonNull
     @Override
@@ -99,6 +108,8 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
         private CardView cardView;
         private TextView filename;
         private TextView date;
+        private TextView selectCntTextView;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -142,16 +153,29 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
                 if(!checkBox.isChecked()) {
                     checkBox.setChecked(true);
                     sendRecents.get(pos).setCheck(true);
+                    selectCnt++;
                     MainActivity.selectList.add(new FileNode(sendRecents.get(pos).getFilePath(), 0));
+                    dynamicSendSelectLayout = new DynamicSendSelectLayout(context.getApplicationContext());
+                    if(selectCnt==1){
+                        dynamicLinearLayout.addView(dynamicSendSelectLayout);
+                    }
 
-                    Log.e("", "onClick: " + MainActivity.selectList.get(0).getFilePath());
+                    selectCntTextView = (TextView)dynamicLinearLayout.findViewById(R.id.dynamic_send_select_cnt);
+                    selectCntTextView.setText(selectCnt + "개 선택");
+
+//                    Log.e("", "onClick: " + MainActivity.selectList.get(0).getFilePath());
 //                    MainActivity.selectList.add(sendRecents.get(pos).getFilePath());
 //                    MainActivity.selectList.add(MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getFile());
                 }
                 else{
                     checkBox.setChecked(false);
                     sendRecents.get(pos).setCheck(false);
+                    selectCnt--;
                     MainActivity.selectList.remove(sendRecents.get(pos));
+                    selectCntTextView.setText(selectCnt + "개 선택");
+                    if(selectCnt==0){
+                        dynamicLinearLayout.removeAllViews();
+                    }
 //                    MainActivity.selectList.remove(MainActivity.imageList.get(sendRecents.get(pos).getIndex()));
                 }
 //                Log.d("recentFIle?List", MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getName());

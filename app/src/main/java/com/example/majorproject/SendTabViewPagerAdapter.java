@@ -1,6 +1,7 @@
 package com.example.majorproject;
 
 import android.util.Log;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -21,12 +22,17 @@ public class SendTabViewPagerAdapter extends FragmentStatePagerAdapter {
     private SendTabVideoFragment videoFragment;
     private SendTabFileFragment fileFragment;
 
+
+//    public SendTabViewPagerAdapter(@NonNull FragmentManager fm, int mPageCount) {
+//        super(fm, mPageCount);
+//        this.mPageCount = mPageCount;
+//        Log.d("mPageCount : ", Integer.toString(mPageCount));
+//    }
+
     public SendTabViewPagerAdapter(@NonNull FragmentManager fm, int mPageCount) {
         super(fm, mPageCount);
         this.mPageCount = mPageCount;
-        Log.d("mPageCount : ", Integer.toString(mPageCount));
     }
-
 
     @NonNull
     @Override

@@ -47,20 +47,20 @@ public class ButtonEventListener implements View.OnClickListener {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.send_frame_transferButton:
-                // 전송 버튼
-                isSendOrRecvBtn = 1;
-                Intent sendIntent = new Intent(context, WiFiDirectActivity.class);
-                mainActivity.startActivity(sendIntent);
-                mainActivity.finish();
-                Log.e("", "onClick: " +  MainActivity.selectList.get(0).getFilePath());
-                break;
-            case R.id.recv_frame_transferButton:
-                isSendOrRecvBtn = 15;
-                Intent recvIntent = new Intent(context, WiFiDirectActivity.class);
-                mainActivity.startActivity(recvIntent);
-                mainActivity.finish();
-                break;
+//            case R.id.send_frame_transferButton:
+//                // 전송 버튼
+//                isSendOrRecvBtn = 1;
+//                Intent sendIntent = new Intent(context, WiFiDirectActivity.class);
+//                mainActivity.startActivity(sendIntent);
+//                mainActivity.finish();
+//                Log.e("", "onClick: " +  MainActivity.selectList.get(0).getFilePath());
+//                break;
+//            case R.id.recv_frame_transferButton:
+//                isSendOrRecvBtn = 15;
+//                Intent recvIntent = new Intent(context, WiFiDirectActivity.class);
+//                mainActivity.startActivity(recvIntent);
+//                mainActivity.finish();
+//                break;
 
             case R.id.wifi_direct_onoff_btn:
                 // wifi direct on/off 버튼

@@ -11,12 +11,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,12 +29,20 @@ import java.util.Calendar;
 public class SendPhotoRecyclerViewAdapter extends RecyclerView.Adapter<SendPhotoRecyclerViewAdapter.ViewHolder> {
     private ArrayList<SendPhoto> sendPhotos;
     private Context context;
+    private LinearLayout dynamicLinearLayout;
+    private DynamicSendSelectLayout dynamicSendSelectLayout;
+    private int selectCnt;
 
     public SendPhotoRecyclerViewAdapter(ArrayList<SendPhoto> sendPhotos, Context context) {
         this.sendPhotos = sendPhotos;
         this.context = context;
     }
 
+    public SendPhotoRecyclerViewAdapter(ArrayList<SendPhoto> sendPhotos, Context context, LinearLayout dynamicLinearLayout) {
+        this.sendPhotos = sendPhotos;
+        this.context = context;
+        this.dynamicLinearLayout = dynamicLinearLayout;
+    }
 
     @NonNull
     @Override
@@ -118,6 +130,7 @@ public class SendPhotoRecyclerViewAdapter extends RecyclerView.Adapter<SendPhoto
         private CheckBox checkBox;
         private ImageView imageView;
         private CardView cardView;
+        private TextView selectCntTextView;
 
         private BitmapFactory.Options options = new BitmapFactory.Options();
 
@@ -152,14 +165,26 @@ public class SendPhotoRecyclerViewAdapter extends RecyclerView.Adapter<SendPhoto
                     Log.d("check!", "yes");
                     checkBox.setChecked(true);
                     sendPhotos.get(pos).setCheck(true);
+                    selectCnt++;
                     MainActivity.selectList.add(new FileNode(sendPhotos.get(pos).getImagePath(), 1));
 //                    MainActivity.selectList.add(sendPhotos.get(pos).getImagePath());
+                    dynamicSendSelectLayout = new DynamicSendSelectLayout(context.getApplicationContext());
+                    if(selectCnt==1){
+                        dynamicLinearLayout.addView(dynamicSendSelectLayout);
+                    }
+                    selectCntTextView = (TextView)dynamicLinearLayout.findViewById(R.id.dynamic_send_select_cnt);
+                    selectCntTextView.setText(selectCnt + "개 선택");
                 }
                 else{
                     Log.d("check?", "No");
                     checkBox.setChecked(false);
                     sendPhotos.get(pos).setCheck(false);
+                    selectCnt--;
                     MainActivity.selectList.remove(sendPhotos.get(pos));
+                    selectCntTextView.setText(selectCnt + "개 선택");
+                    if(selectCnt==0){
+                        dynamicLinearLayout.removeAllViews();
+                    }
                 }
             }
         }

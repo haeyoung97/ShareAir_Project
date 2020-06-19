@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,7 @@ public class SendTabFileFragment extends Fragment {
     private ArrayList<SendFile> sendFileArrayList;
     private SendFileRecyclerViewAdapter fileRecyclerViewAdapter;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private LinearLayout dynamicLinearLayout;
 
     private int pictureCount = 0;
 
@@ -38,7 +40,9 @@ public class SendTabFileFragment extends Fragment {
         fileRecyclerview = (RecyclerView)view.findViewById(R.id.send_recyclerview);
         layoutManager = new LinearLayoutManager(this.getContext());
         fileRecyclerview.setLayoutManager(layoutManager);
-        fileRecyclerViewAdapter = new SendFileRecyclerViewAdapter(sendFileArrayList, getActivity());
+
+        dynamicLinearLayout = (LinearLayout)view.findViewById(R.id.send_dynamic_linearlayout);
+        fileRecyclerViewAdapter = new SendFileRecyclerViewAdapter(sendFileArrayList, getActivity(), dynamicLinearLayout);
         fileRecyclerview.setAdapter(fileRecyclerViewAdapter);
 
         ArrayList<SendFile> result = queryAllFiles();

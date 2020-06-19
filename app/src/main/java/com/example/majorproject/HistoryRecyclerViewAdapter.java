@@ -87,6 +87,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         private TextView sucOrFail;
         private TextView date;
         private CardView cardView;
+        private TextView historySelectCntView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -118,15 +119,18 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
                     checkBox.setChecked(true);
                     historyDBArrays.get(pos).setCheck(true);
                     selectCnt++;
+                    dynamicSelectLayout = new DynamicSelectLayout(context.getApplicationContext());
                     if(selectCnt==1){
-                        dynamicSelectLayout = new DynamicSelectLayout(context.getApplicationContext());
                         dynamicLinearLayout.addView(dynamicSelectLayout);
                     }
+                    historySelectCntView = (TextView)dynamicLinearLayout.findViewById(R.id.dynamic_select_cnt);
+                    historySelectCntView.setText(selectCnt + "개 선택");
                 }
                 else{
                     checkBox.setChecked(false);
                     historyDBArrays.get(pos).setCheck(false);
                     selectCnt--;
+                    historySelectCntView.setText(selectCnt + "개 선택");
                     if(selectCnt==0){
                        dynamicLinearLayout.removeAllViews();
                     }

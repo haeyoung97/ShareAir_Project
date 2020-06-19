@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +35,8 @@ public class SendTabVideoFragment extends Fragment {
     private int pictureCount = 0;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+    private LinearLayout dynamicLinearLayout;
+
 
     @Nullable
     @Override
@@ -43,7 +46,9 @@ public class SendTabVideoFragment extends Fragment {
          layoutManager = new LinearLayoutManager(this.getContext());
 //        layoutManager = new GridLayoutManager(this.getContext(), 3);
         videoRecyclerview.setLayoutManager(layoutManager);
-        videoRecyclerViewAdapter = new SendVideoRecyclerViewAdapter(sendVideosArrayList, getActivity());
+
+        dynamicLinearLayout = (LinearLayout)view.findViewById(R.id.send_dynamic_linearlayout);
+        videoRecyclerViewAdapter = new SendVideoRecyclerViewAdapter(sendVideosArrayList, getActivity(), dynamicLinearLayout);
         videoRecyclerview.setAdapter(videoRecyclerViewAdapter);
 
         ArrayList<SendVideo> result = queryAllVideo();

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,17 +17,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class SendVideoRecyclerViewAdapter extends RecyclerView.Adapter<SendVideoRecyclerViewAdapter.ViewHolder> {
     private ArrayList<SendVideo> sendVideos;
     private Context context;
+    private LinearLayout dynamicLinearLayout;
+    private DynamicSendSelectLayout dynamicSendSelectLayout;
+    private int selectCnt;
 
     public SendVideoRecyclerViewAdapter(ArrayList<SendVideo> sendVideos, Context context) {
         this.sendVideos = sendVideos;
         this.context = context;
     }
 
+    public SendVideoRecyclerViewAdapter(ArrayList<SendVideo> sendVideos, Context context, LinearLayout dynamicLinearLayout) {
+        this.sendVideos = sendVideos;
+        this.context = context;
+        this.dynamicLinearLayout = dynamicLinearLayout;
+    }
 
     @NonNull
     @Override
@@ -72,6 +83,7 @@ public class SendVideoRecyclerViewAdapter extends RecyclerView.Adapter<SendVideo
         private TextView filename;
         private TextView date;
         private TextView timeLength;
+        private TextView selectCntTextView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -105,14 +117,28 @@ public class SendVideoRecyclerViewAdapter extends RecyclerView.Adapter<SendVideo
                 if(!checkBox.isChecked()) {
                     checkBox.setChecked(true);
                     sendVideos.get(pos).setCheck(true);
+                    selectCnt++;
                     MainActivity.selectList.add(new FileNode(sendVideos.get(pos).getFilepath(), 2));
+
+                    dynamicSendSelectLayout = new DynamicSendSelectLayout(context.getApplicationContext());
+                    if(selectCnt==1){
+                        dynamicLinearLayout.addView(dynamicSendSelectLayout);
+                    }
+
+                    selectCntTextView = (TextView)dynamicLinearLayout.findViewById(R.id.dynamic_send_select_cnt);
+                    selectCntTextView.setText(selectCnt + "개 선택");
 //                    MainActivity.selectList.add(sendVideos.get(pos).getFilepath());
 //                    MainActivity.selectList.add(MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getFile());
                 }
                 else{
                     checkBox.setChecked(false);
                     sendVideos.get(pos).setCheck(false);
+                    selectCnt--;
                     MainActivity.selectList.remove(sendVideos.get(pos).getFilepath());
+                    selectCntTextView.setText(selectCnt + "개 선택");
+                    if(selectCnt==0){
+                        dynamicLinearLayout.removeAllViews();
+                    }
 //                    MainActivity.selectList.remove(MainActivity.imageList.get(sendRecents.get(pos).getIndex()));
                 }
 //                Log.d("recentFIle?List", MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getName());

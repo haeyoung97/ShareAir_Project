@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,12 +22,20 @@ import java.util.ArrayList;
 public class SendFileRecyclerViewAdapter extends RecyclerView.Adapter<SendFileRecyclerViewAdapter.ViewHolder> {
     private ArrayList<SendFile> sendFiles;
     private Context context;
+    private LinearLayout dynamicLinearLayout;
+    private DynamicSendSelectLayout dynamicSendSelectLayout;
+    private int selectCnt;
 
     public SendFileRecyclerViewAdapter(ArrayList<SendFile> sendFiles, Context context) {
         this.sendFiles = sendFiles;
         this.context = context;
     }
 
+    public SendFileRecyclerViewAdapter(ArrayList<SendFile> sendFiles, Context context, LinearLayout dynamicLinearLayout) {
+        this.sendFiles = sendFiles;
+        this.context = context;
+        this.dynamicLinearLayout = dynamicLinearLayout;
+    }
 
     @NonNull
     @Override
@@ -72,6 +81,7 @@ public class SendFileRecyclerViewAdapter extends RecyclerView.Adapter<SendFileRe
         private CardView cardView;
         private TextView filename;
         private TextView date;
+        private TextView selectCntTextView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -115,15 +125,27 @@ public class SendFileRecyclerViewAdapter extends RecyclerView.Adapter<SendFileRe
                 if(!checkBox.isChecked()) {
                     checkBox.setChecked(true);
                     sendFiles.get(pos).setCheck(true);
+                    selectCnt++;
                     MainActivity.selectList.add(new FileNode(sendFiles.get(pos).getFilepath(), 3));
 //                    MainActivity.selectList.add(sendFiles.get(pos).getFilepath());
 //                    MainActivity.selectList.add(MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getFile());
+                    dynamicSendSelectLayout = new DynamicSendSelectLayout(context.getApplicationContext());
+                    if(selectCnt==1){
+                        dynamicLinearLayout.addView(dynamicSendSelectLayout);
+                    }
+                    selectCntTextView = (TextView)dynamicLinearLayout.findViewById(R.id.dynamic_send_select_cnt);
+                    selectCntTextView.setText(selectCnt + "개 선택");
                 }
                 else{
                     checkBox.setChecked(false);
                     sendFiles.get(pos).setCheck(false);
+                    selectCnt--;
                     MainActivity.selectList.remove(sendFiles.get(pos));
+                    selectCntTextView.setText(selectCnt + "개 선택");
 //                    MainActivity.selectList.remove(MainActivity.imageList.get(sendRecents.get(pos).getIndex()));
+                    if(selectCnt==0){
+                        dynamicLinearLayout.removeAllViews();
+                    }
                 }
             }
         }

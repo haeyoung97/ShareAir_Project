@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,11 +28,13 @@ public class SendTabPhotoFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<SendPhoto> sendPhotoArrayList;
     private SendPhotoRecyclerViewAdapter photoRecyclerViewAdapter;
+    private LinearLayout dynamicLinearLayout;
 
 //    private ArrayList<FileNode> imageFile;
     private int pictureCount = 0;
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
 
     @Nullable
     @Override
@@ -43,10 +46,13 @@ public class SendTabPhotoFragment extends Fragment {
 
 //        imageData();
         photoRecyclerview = (RecyclerView) view.findViewById(R.id.send_recyclerview);
+
+        dynamicLinearLayout = (LinearLayout)view.findViewById(R.id.send_dynamic_linearlayout);
         // layoutManager = new LinearLayoutManager(this.getContext());
         layoutManager = new GridLayoutManager(this.getContext(), 3);
         photoRecyclerview.setLayoutManager(layoutManager);
-        photoRecyclerViewAdapter = new SendPhotoRecyclerViewAdapter(sendPhotoArrayList, getActivity());
+
+        photoRecyclerViewAdapter = new SendPhotoRecyclerViewAdapter(sendPhotoArrayList, getActivity(), dynamicLinearLayout);
         photoRecyclerview.setAdapter(photoRecyclerViewAdapter);
 
         ArrayList<SendPhoto> result = queryAllPhoto();
