@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +25,7 @@ public class HistoryTabFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<HistoryDBArray> historyDBArrays;
     private HistoryRecyclerViewAdapter historyRecyclerViewAdapter;
-
+    private LinearLayout dynamicLinearLayout;
     private SQLiteDatabase database;
     private HistoryDatabase helper;
     @Nullable
@@ -35,7 +36,8 @@ public class HistoryTabFragment extends Fragment {
         historyRecyclerview = (RecyclerView)view.findViewById(R.id.history_recyclerview);
         layoutManager = new LinearLayoutManager(this.getContext());
         historyRecyclerview.setLayoutManager(layoutManager);
-        historyRecyclerViewAdapter = new HistoryRecyclerViewAdapter(historyDBArrays, getActivity());
+        dynamicLinearLayout = (LinearLayout)view.findViewById(R.id.history_dynamic_linearlayout);
+        historyRecyclerViewAdapter = new HistoryRecyclerViewAdapter(historyDBArrays, getActivity(), dynamicLinearLayout);
         historyRecyclerview.setAdapter(historyRecyclerViewAdapter);
 
         openDatabase ("historyDB.db");
@@ -100,7 +102,6 @@ public class HistoryTabFragment extends Fragment {
         Cursor cursor = database.rawQuery(DBstruct.SQL_SELECT, null);
 
         while (cursor.moveToNext()){
-            Log.d("h?", "insert@");
             String date = cursor.getString(1);
             String deviceName = cursor.getString(2);
             int fileSize = cursor.getInt(3);

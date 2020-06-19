@@ -5,11 +5,13 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.nfc.cardemulation.CardEmulation;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,9 +24,19 @@ import java.util.ArrayList;
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.ViewHolder> {
     private ArrayList<HistoryDBArray> historyDBArrays;
     private Context context;
+    private int selectCnt;
+    private DynamicSelectLayout dynamicSelectLayout;
+    private LinearLayout dynamicLinearLayout;
+
     public HistoryRecyclerViewAdapter(ArrayList<HistoryDBArray> historyDBArrays, Context context) {
         this.historyDBArrays = historyDBArrays;
         this.context = context;
+    }
+
+    public HistoryRecyclerViewAdapter(ArrayList<HistoryDBArray> historyDBArrays, Context context, LinearLayout dynamicLinearLayout) {
+        this.historyDBArrays = historyDBArrays;
+        this.context = context;
+        this.dynamicLinearLayout = dynamicLinearLayout;
     }
 
     @NonNull
@@ -33,6 +45,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         View view;
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         view = layoutInflater.inflate(R.layout.history_cardview, parent, false);
+
         return new ViewHolder(view);
     }
 
@@ -86,6 +99,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
             sucOrFail = (TextView)itemView.findViewById(R.id.history_SucOrFail);
             date = (TextView)itemView.findViewById(R.id.history_date);
 
+
             itemView.setOnClickListener(this);
         }
 
@@ -103,10 +117,19 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
                 if(!checkBox.isChecked()){
                     checkBox.setChecked(true);
                     historyDBArrays.get(pos).setCheck(true);
+                    selectCnt++;
+                    if(selectCnt==1){
+                        dynamicSelectLayout = new DynamicSelectLayout(context.getApplicationContext());
+                        dynamicLinearLayout.addView(dynamicSelectLayout);
+                    }
                 }
                 else{
                     checkBox.setChecked(false);
                     historyDBArrays.get(pos).setCheck(false);
+                    selectCnt--;
+                    if(selectCnt==0){
+                       dynamicLinearLayout.removeAllViews();
+                    }
                 }
             }
         }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:foregroundGravity="center"
+        android:id="@+id/dynamic_select_framelayout"
+        android:background="#dfdfdf">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/dynamic_select_cnt"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:text="N개 선택"
+            android:textSize="15dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/dynamic_send_btn"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:text="SEND"
+            android:textSize="15dp"/>
+        </RelativeLayout>
+    </FrameLayout>
+
+</LinearLayout>
