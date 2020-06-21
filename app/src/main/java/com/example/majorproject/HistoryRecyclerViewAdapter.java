@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,6 +28,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     private int selectCnt;
     private DynamicSelectLayout dynamicSelectLayout;
     private LinearLayout dynamicLinearLayout;
+    private int count = 0;
 
     public HistoryRecyclerViewAdapter(ArrayList<HistoryDBArray> historyDBArrays, Context context) {
         this.historyDBArrays = historyDBArrays;
@@ -37,6 +39,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         this.historyDBArrays = historyDBArrays;
         this.context = context;
         this.dynamicLinearLayout = dynamicLinearLayout;
+        Log.e("history recyclerview : ", Integer.toString(count++));
     }
 
     @NonNull
@@ -88,6 +91,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         private TextView date;
         private CardView cardView;
         private TextView historySelectCntView;
+        private Button historyDeleteBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -119,11 +123,12 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
                     checkBox.setChecked(true);
                     historyDBArrays.get(pos).setCheck(true);
                     selectCnt++;
-                    dynamicSelectLayout = new DynamicSelectLayout(context.getApplicationContext());
                     if(selectCnt==1){
+                        dynamicSelectLayout = new DynamicSelectLayout(context.getApplicationContext());
                         dynamicLinearLayout.addView(dynamicSelectLayout);
                     }
-                    historySelectCntView = (TextView)dynamicLinearLayout.findViewById(R.id.dynamic_select_cnt);
+                    historySelectCntView = (TextView) dynamicLinearLayout.findViewById(R.id.dynamic_select_cnt);
+                    historyDeleteBtn = (Button) dynamicLinearLayout.findViewById(R.id.dynamic_delete_btn);
                     historySelectCntView.setText(selectCnt + "개 선택");
                 }
                 else{

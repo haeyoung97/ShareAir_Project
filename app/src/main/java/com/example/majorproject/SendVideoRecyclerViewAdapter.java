@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -84,6 +85,7 @@ public class SendVideoRecyclerViewAdapter extends RecyclerView.Adapter<SendVideo
         private TextView date;
         private TextView timeLength;
         private TextView selectCntTextView;
+        private Button selectSendButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -127,6 +129,8 @@ public class SendVideoRecyclerViewAdapter extends RecyclerView.Adapter<SendVideo
 
                     selectCntTextView = (TextView)dynamicLinearLayout.findViewById(R.id.dynamic_send_select_cnt);
                     selectCntTextView.setText(selectCnt + "개 선택");
+                    selectSendButton = (Button)dynamicLinearLayout.findViewById(R.id.dynamic_send_select_btn);
+                    selectSendButton.setOnClickListener(MainActivity.btnEventListener);
 //                    MainActivity.selectList.add(sendVideos.get(pos).getFilepath());
 //                    MainActivity.selectList.add(MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getFile());
                 }

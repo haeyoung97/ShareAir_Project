@@ -13,33 +13,37 @@
             android:id="@+id/main_frame_layout"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:background="#81DAF5"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:gravity="center_vertical">
+            android:layout_height="60dp">
 
                 <TextView
                     android:id="@+id/main_frame_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
+                    android:layout_centerVertical="true"
                     android:text="Wifi Direct"
-                    android:textSize="35dp"/>
+                    android:textColor="#ffffff"
+                    android:textSize="25dp"/>
                 <Button
                     android:id="@+id/atn_direct_enable"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_toLeftOf="@+id/atn_direct_discover"
-                    android:layout_marginRight="5dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
                     android:background="@drawable/ic_action_on_off"/>
                 <Button
                     android:id="@+id/atn_direct_discover"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginRight="5dp"
                     android:background="@drawable/ic_action_discover"/>
 

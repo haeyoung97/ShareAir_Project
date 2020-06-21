@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -131,6 +132,7 @@ public class SendPhotoRecyclerViewAdapter extends RecyclerView.Adapter<SendPhoto
         private ImageView imageView;
         private CardView cardView;
         private TextView selectCntTextView;
+        private Button selectSendButton;
 
         private BitmapFactory.Options options = new BitmapFactory.Options();
 
@@ -174,6 +176,9 @@ public class SendPhotoRecyclerViewAdapter extends RecyclerView.Adapter<SendPhoto
                     }
                     selectCntTextView = (TextView)dynamicLinearLayout.findViewById(R.id.dynamic_send_select_cnt);
                     selectCntTextView.setText(selectCnt + "개 선택");
+
+                    selectSendButton = (Button)dynamicLinearLayout.findViewById(R.id.dynamic_send_select_btn);
+                    selectSendButton.setOnClickListener(MainActivity.btnEventListener);
                 }
                 else{
                     Log.d("check?", "No");

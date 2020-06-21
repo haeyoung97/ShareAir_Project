@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,6 +35,7 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
     private DynamicSendSelectLayout dynamicSendSelectLayout;
     private int selectCnt;
 
+
     public SendRecentRecyclerViewAdapter(ArrayList<SendRecent> sendRecents, Context context) {
         this.sendRecents = sendRecents;
         this.context = context;
@@ -52,6 +54,7 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
 //        Log.d("SendRecentRecycler : ", sendRecents.get(1).getFilePath());
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         view = layoutInflater.inflate(R.layout.send_recent_cardview, parent, false);
+
         return new ViewHolder(view);
     }
 
@@ -109,6 +112,7 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
         private TextView filename;
         private TextView date;
         private TextView selectCntTextView;
+        private Button selectSendButton;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -162,6 +166,9 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
 
                     selectCntTextView = (TextView)dynamicLinearLayout.findViewById(R.id.dynamic_send_select_cnt);
                     selectCntTextView.setText(selectCnt + "개 선택");
+
+                    selectSendButton = (Button)dynamicLinearLayout.findViewById(R.id.dynamic_send_select_btn);
+                    selectSendButton.setOnClickListener(MainActivity.btnEventListener);
 
 //                    Log.e("", "onClick: " + MainActivity.selectList.get(0).getFilePath());
 //                    MainActivity.selectList.add(sendRecents.get(pos).getFilePath());

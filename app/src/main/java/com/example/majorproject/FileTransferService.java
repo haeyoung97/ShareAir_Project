@@ -111,7 +111,7 @@ public class FileTransferService extends IntentService {
         SQLiteDatabase db;
 
         try {
-            Log.d(WiFiDirectActivity.TAG, "Opening client socket - ");
+            Log.d(WifiDirectFragment.TAG, "Opening client socket - ");
 //            connect();
 //            String filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
             // 다운로드 파일의 임시 이름 설정
@@ -123,7 +123,7 @@ public class FileTransferService extends IntentService {
 //
 ////                sql = String.format("INSERT INTO history VALUES('" + )
 //            }
-            Log.d(WiFiDirectActivity.TAG, "Client: Data written");
+            Log.d(WifiDirectFragment.TAG, "Client: Data written");
         } catch (Exception e) {
             e.printStackTrace();
         }finally {

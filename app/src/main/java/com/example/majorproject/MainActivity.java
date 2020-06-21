@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -25,14 +26,14 @@ public class MainActivity extends AppCompatActivity {
     private SendTabFragment sendTabFragment = new SendTabFragment(this);
     private HistoryTabFragment historyTabFragment = new HistoryTabFragment();
     private FragmentTransaction transaction;
+    private WifiDirectFragment wifiDirectFragment = new WifiDirectFragment(this);
+
 
     //db 생성 파일 이름
     final static String dbName = "history.db";
     final static int dbVersion = 2;
 
-
-
-    private ButtonEventListener buttonEventListener;
+    static ButtonEventListener btnEventListener;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -45,8 +46,9 @@ public class MainActivity extends AppCompatActivity {
                     transaction.replace(R.id.fragmentLayout, sendTabFragment).addToBackStack(sendTabFragment.getClass().getSimpleName()).commitAllowingStateLoss();
                     break;
                 case R.id.navigation_receive:
+                    ButtonEventListener.isSendOrRecvBtn = 15;
                     transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.fragmentLayout, sendTabFragment).addToBackStack(sendTabFragment.getClass().getSimpleName()).commitAllowingStateLoss();
+                    transaction.replace(R.id.fragmentLayout, wifiDirectFragment).addToBackStack(wifiDirectFragment.getClass().getSimpleName()).commitAllowingStateLoss();
                     break;
                 case R.id.navigation_history:
                     transaction = fragmentManager.beginTransaction();
@@ -56,6 +58,11 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     };
+
+    public FragmentTransaction getTransaction() {
+        return transaction;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         BottomNavigationView bottomNavView = findViewById(R.id.bottom_nav_view);
 
+        btnEventListener= new ButtonEventListener(this, this.getApplicationContext());
 
-//        buttonEventListener = new ButtonEventListener();
 //
 //        Button wifiOnOffBtn = findViewById(R.id.wifi_direct_onoff_btn);
 //        wifiOnOffBtn.setOnClickListener(buttonEventListener);
@@ -79,6 +86,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public WifiDirectFragment getWifiDirectFragment() {
+        return wifiDirectFragment;
+    }
+
     public static boolean checkExternalAvailable(){
         String state = Environment.getExternalStorageState();
         if(Environment.MEDIA_MOUNTED.equals(state)){
@@ -86,4 +97,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
+
 }

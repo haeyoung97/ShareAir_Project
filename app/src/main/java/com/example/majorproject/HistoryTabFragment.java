@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,7 @@ public class HistoryTabFragment extends Fragment {
     private RecyclerView historyRecyclerview;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<HistoryDBArray> historyDBArrays;
+    static ArrayList<String> historySelectArrays;
     private HistoryRecyclerViewAdapter historyRecyclerViewAdapter;
     private LinearLayout dynamicLinearLayout;
     private SQLiteDatabase database;

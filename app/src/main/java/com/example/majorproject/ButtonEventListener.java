@@ -9,11 +9,14 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import java.nio.channels.AcceptPendingException;
+import java.util.ArrayList;
 
 public class ButtonEventListener implements View.OnClickListener {
 
@@ -22,8 +25,12 @@ public class ButtonEventListener implements View.OnClickListener {
 //    private FragmentTransaction transaction;
     private MainActivity mainActivity;
     private Context context;
-    private WiFiDirectActivity wiFiDirectActivity;
+//    private WiFiDirectActivity wiFiDirectActivity;
+    private WifiDirectFragment wifiDirectFragment;
     static int isSendOrRecvBtn = 0;
+    private HistoryRecyclerViewAdapter view;
+    private int pos;
+    private ArrayList<HistoryDBArray> historyDBArray;
 //    private Fragment fragment;
 //    public ButtonEventListener(MainActivity mainActivity) {
 //        this.mainActivity = mainActivity;
@@ -39,10 +46,18 @@ public class ButtonEventListener implements View.OnClickListener {
         this.mainActivity = mainActivity;
         this.context = context;
     }
-
-    public ButtonEventListener(WiFiDirectActivity wiFiDirectActivity){
-        this.wiFiDirectActivity = wiFiDirectActivity;
+    public ButtonEventListener(WifiDirectFragment wifiDirectFragment){
+        this.wifiDirectFragment = wifiDirectFragment;
     }
+    public ButtonEventListener(HistoryRecyclerViewAdapter view, int pos, ArrayList<HistoryDBArray> historyDBArray){
+        this.view = view;
+        this.pos = pos;
+        this.historyDBArray = historyDBArray;
+    }
+
+//    public ButtonEventListener(WiFiDirectActivity wiFiDirectActivity){
+//        this.wiFiDirectActivity = wiFiDirectActivity;
+//    }
 
 
     public void onClick(View v) {
@@ -62,55 +77,71 @@ public class ButtonEventListener implements View.OnClickListener {
 //                mainActivity.finish();
 //                break;
 
+            case R.id.dynamic_delete_btn:
+                historyDBArray.remove(pos);
+                view.notifyItemRemoved(pos);
+                view.notifyItemRangeChanged(pos, historyDBArray.size());
+                break;
+
+            case R.id.dynamic_send_select_btn:
+                isSendOrRecvBtn = 1;
+                FragmentTransaction transaction = mainActivity.getTransaction();
+                transaction = mainActivity.fragmentManager.beginTransaction();
+//                WifiDirectFragment directFragment = new WifiDirectFragment(mainActivity);
+                transaction.replace(R.id.fragmentLayout, mainActivity.getWifiDirectFragment())
+                        .addToBackStack(mainActivity.getWifiDirectFragment().getClass().getSimpleName()).commitAllowingStateLoss();
+                break;
+
             case R.id.wifi_direct_onoff_btn:
                 // wifi direct on/off 버튼
 
-                if (wiFiDirectActivity.getManager() == null) {
-                    Log.d("getman", "null");
-                }
-                if (wiFiDirectActivity.getChannel() == null) {
-                    Log.d("getChan", "null");
-                }
-                if (wiFiDirectActivity.getManager() != null && wiFiDirectActivity.getChannel() != null) {
-                    mainActivity.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
-                } else {
-                    Log.e(wiFiDirectActivity.TAG, "channel or manager is null");
-                }
+//                if (wiFiDirectActivity.getManager() == null) {
+//                    Log.d("getman", "null");
+//                }
+//                if (wiFiDirectActivity.getChannel() == null) {
+//                    Log.d("getChan", "null");
+//                }
+//                if (wiFiDirectActivity.getManager() != null && wiFiDirectActivity.getChannel() != null) {
+//                    mainActivity.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+//                } else {
+//                    Log.e(wiFiDirectActivity.TAG, "channel or manager is null");
+//                }
                 break;
 
             case R.id.atn_direct_enable:
 
-                if (wiFiDirectActivity.getManager() == null) {
+                if (wifiDirectFragment.getManager() == null) {
                     Log.d("getman", "null");
                 }
-                if (wiFiDirectActivity.getChannel() == null) {
+                if (wifiDirectFragment.getChannel() == null) {
                     Log.d("getChan", "null");
                 }
-                if (wiFiDirectActivity.getManager() != null && wiFiDirectActivity.getChannel() != null) {
-                    wiFiDirectActivity.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+                if (wifiDirectFragment.getManager() != null && wifiDirectFragment.getChannel() != null) {
+                    wifiDirectFragment.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
                 } else {
-                    Log.e(wiFiDirectActivity.TAG, "channel or manager is null");
+                    Log.e(wifiDirectFragment.TAG, "channel or manager is null");
                 }
                 break;
 
             case R.id.atn_direct_discover:
-                if (!wiFiDirectActivity.getIsWifiP2pEnabled()) {
-                    Toast.makeText(wiFiDirectActivity, R.string.p2p_off_warning,
+                if (!wifiDirectFragment.getIsWifiP2pEnabled()) {
+                    Toast.makeText(wifiDirectFragment.getContext(), R.string.p2p_off_warning,
                             Toast.LENGTH_SHORT).show();
                     break;
                 }
-                final DeviceListFragment fragment = (DeviceListFragment) wiFiDirectActivity.getFragmentManager().findFragmentById(R.id.frag_list);
+                final DeviceListFragment fragment = (DeviceListFragment) wifiDirectFragment.getListFragmentManager().findFragmentById(R.id.frag_list);
+//                final DeviceListFragment fragment = new DeviceListFragment();
                 fragment.onInitiateDiscovery();
-                wiFiDirectActivity.getManager().discoverPeers(wiFiDirectActivity.getChannel(), new WifiP2pManager.ActionListener() {
+                wifiDirectFragment.getManager().discoverPeers(wifiDirectFragment.getChannel(), new WifiP2pManager.ActionListener() {
                     @Override
                     public void onSuccess() {
-                        Toast.makeText(wiFiDirectActivity, "Discovery Initiated",
+                        Toast.makeText(wifiDirectFragment.getContext(), "Discovery Initiated",
                                 Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(int reasonCode) {
-                        Toast.makeText(wiFiDirectActivity, "Discovery Failed : " + reasonCode,
+                        Toast.makeText(wifiDirectFragment.getContext(), "Discovery Failed : " + reasonCode,
                                 Toast.LENGTH_SHORT).show();
                     }
                 });

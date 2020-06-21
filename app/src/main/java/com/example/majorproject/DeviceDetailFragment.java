@@ -17,7 +17,7 @@
 package com.example.majorproject;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
+import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
@@ -43,6 +43,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
 
 import com.example.majorproject.DeviceListFragment.DeviceActionListener;
 import com.jcraft.jsch.ChannelSftp;
@@ -68,6 +69,21 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyStore;
+import java.security.Security;
+import java.util.Timer;
+
+import javax.net.ServerSocketFactory;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+
+
 
 
 /**
@@ -233,7 +249,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         TextView statusText = (TextView) mContentView.findViewById(R.id.status_text);
         statusText.setText("Sending: " + uri);
 //        statusText.setText("Sending: " + filepath);
-        Log.d(WiFiDirectActivity.TAG, "Intent----------- " + uri);
+        Log.d(WifiDirectFragment.TAG, "Intent----------- " + uri);
         FileTransferService fileTransferService = new FileTransferService(context);
         fileTransferService.setEXTRAS_FILE_PATH(uri.toString());
 //        Log.e("JSch-Path", uri.toString());
@@ -331,6 +347,14 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         private WifiP2pInfo R_info;
         private int port = 2222;
 
+        private Socket socket;
+        private OutputStream socketOutput;
+        private BufferedReader socketInput;
+        private Timer timer;
+        private String ip;
+//        private int port;
+//        private ClientCallback listener=null;
+
         /**
          * @param context
          * @param statusText
@@ -381,73 +405,139 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
             byte[] buffer = new byte[1024];
             BufferedInputStream bis;
             connect();
-            try {
-                // Change to output directory
-                String cdDir = fileName.substring(0, fileName.lastIndexOf("/") + 1);
-                channel.cd(cdDir);
-
-                File file = new File(fileName);
-                bis = new BufferedInputStream(channel.get(file.getName()));
-
-                File newFile = new File(localDir + "/" + file.getName());
-
-                // Download file
-                OutputStream os = new FileOutputStream(newFile);
-                BufferedOutputStream bos = new BufferedOutputStream(os);
-                int readCount;
-                while ((readCount = bis.read(buffer)) > 0) {
-                    bos.write(buffer, 0, readCount);
-                }
-                bis.close();
-                bos.close();
-                System.out.println("File downloaded successfully - "+ file.getAbsolutePath());
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+//            try {
+//                // Change to output directory
+//                String cdDir = fileName.substring(0, fileName.lastIndexOf("/") + 1);
+//                channel.cd(cdDir);
+//
+//                File file = new File(fileName);
+//                bis = new BufferedInputStream(channel.get(file.getName()));
+//
+//                File newFile = new File(localDir + "/" + file.getName());
+//
+//                // Download file
+//                OutputStream os = new FileOutputStream(newFile);
+//                BufferedOutputStream bos = new BufferedOutputStream(os);
+//                int readCount;
+//                while ((readCount = bis.read(buffer)) > 0) {
+//                    bos.write(buffer, 0, readCount);
+//                }
+//                bis.close();
+//                bos.close();
+//                System.out.println("File downloaded successfully - "+ file.getAbsolutePath());
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
             disconnect();
         }
+        public Socket connectSocket(boolean ssl) throws IOException {
+            Socket socket = null;
+            if(ssl){
+                SSLContext context = null;
+                char[] passphrase = "sw1234".toCharArray();
+                try{
+                    KeyStore keystore =  KeyStore.getInstance("BKS");
+//                    this.context.getResources().openRawResource(android.R.raw.keystore)
+//                    this.context.getResources().openRawResource(R.raw.keystore);
+//                    this.context.getResources().openRawResource(R.raw.keystore)
+                    keystore.load(this.context.getResources().openRawResource(R.raw.keystore), passphrase);
+//                    keystore.load(this.context.getResources().openRawResource(R.raw.keystore), passphrase);
+//                    keystore.load(App.getApp().getResources().openRawResource(R.raw.keystore), passphrase);
+                    TrustManagerFactory tmf = TrustManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+                    tmf.init(keystore);
+                    context = SSLContext.getInstance("TLS");
+                    TrustManager[] trustManagers = tmf.getTrustManagers();
+                    context.init(null, trustManagers, null);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
 
-        protected void connect() throws JSchException {
+                SSLSocketFactory sf = context.getSocketFactory();
+                socket = sf.createSocket(R_info.groupOwnerAddress.getHostAddress(), port);
+            }else{
+                socket = new Socket();
+                InetSocketAddress socketAddress = new InetSocketAddress(R_info.groupOwnerAddress.getHostAddress(), port);
+                socket.connect(socketAddress,SOCKET_TIMEOUT);
+            }
+            return  socket;
+
+        }
+
+
+        protected void connect() {
+
+            try{
+                String reservedSSFacProvider =
+                        Security.getProperty("ssl.ServerSocketFactory.provider");
+                Security.setProperty("ssl.ServerSocketFactory.provider", "oops");
+                ServerSocketFactory ssocketFactory =
+                        SSLServerSocketFactory.getDefault();
+                SSLServerSocket sslServerSocket =
+                        (SSLServerSocket)ssocketFactory.createServerSocket(2222);
+                Log.e("", "connect: " + "start");
+                SSLSocket client = (SSLSocket) sslServerSocket.accept();
+                Log.e("", "connect: " + "end");
+
+//            try {
+//                socket = connectSocket(true);
+//            } catch (Exception e){
+//                Log.e("createSocketError",e.getMessage());
+//            }
+
 //            try {
 //                ServerSocket serverSocket = new ServerSocket(port);
 //                Log.e(WiFiDirectActivity.TAG, "Server: Socket opened");
+//                Log.e(WiFiDirectActivity.TAG, "server socket port : " + serverSocket.getLocalPort());
+//
+//
 //                Socket client = serverSocket.accept();
 //                Log.e(WiFiDirectActivity.TAG, "Server: connection done");
-                jsch = new JSch();
+//                jsch = new JSch();
 //                Log.e("Server : ", "host :" + client.getInetAddress().getHostAddress() + ", port :" + client.getPort());
-//                session = jsch.getSession("Receiver", client.getInetAddress().getHostAddress(), client.getPort());
-                session = jsch.getSession("Receiver", R_info.groupOwnerAddress.getHostAddress(), port);
+//                Log.e("", "host : " + client.getLocalPort());
+//                Log.e("", "host : " + client.getLocalAddress().toString());
+//                session = jsch.getSession("Receiver", client.getInetAddress().getHostAddress(), client.getLocalPort());
+//                session = jsch.getSession("Receiver", client.getLocalAddress().toString(), client.getLocalPort());
 
-                session.setPassword("password");
-                Log.d("Session-Re", "connect: " + session.getPort());
-
-                java.util.Properties config = new java.util.Properties();
-                config.put("StrictHostKeyChecking", "no");
-                session.setConfig(config);
-                session.setTimeout(30000);
-            session.setServerAliveInterval(5000); // Check if server is alive every 5 seconds
-            session.setServerAliveCountMax(5);
-                SocketFactory socketFactory = new ReSocketFactory();
-                session.setSocketFactory(socketFactory);
-                Log.e("", "connect: before");
-                session.connect();
-                Log.e("", "connect: after");
-                channel = (ChannelSftp) session.openChannel("sftp");
-                channel.connect();
-//            }catch (IOException e){
-//                e.printStackTrace();
-//            }
-
-        }
-        protected void disconnect() {
-            if(session.isConnected()){
-                System.out.println("disconnecting...");
-                channel.disconnect();
-                channel.disconnect();
-                session.disconnect();
+//                session = jsch.getSession("Receiver", R_info.groupOwnerAddress.getHostAddress(), 1234);
+//
+//                session.setPassword("password");
+//                Log.d("Session-Re", "connect: " + session.getPort());
+//
+//                java.util.Properties config = new java.util.Properties();
+//                config.put("StrictHostKeyChecking", "no");
+//                session.setConfig(config);
+//                session.setTimeout(30000);
+//            session.setServerAliveInterval(5000); // Check if server is alive every 5 seconds
+//            session.setServerAliveCountMax(5);
+//                SocketFactory socketFactory = new ReSocketFactory();
+//                session.setSocketFactory(socketFactory);
+//                Log.e("", "connect: before");
+//                session.connect();
+//                Log.e("", "connect: after");
+//                channel = (ChannelSftp) session.openChannel("sftp");
+//                channel.connect();
+            }catch (IOException e){
+                e.printStackTrace();
             }
+
         }
+            protected void disconnect () {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+//            if(session.isConnected()){
+//                System.out.println("disconnecting...");
+//                channel.disconnect();
+//                channel.disconnect();
+//                session.disconnect();
+            }
+
+
 
         /*
          * (non-Javadoc)

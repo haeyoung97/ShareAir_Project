@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     
     <FrameLayout
         android:layout_width="match_parent"
@@ -8,6 +10,7 @@
         android:foregroundGravity="center"
         android:id="@+id/dynamic_send_select_framelayout"
         android:background="#81DAF5">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
