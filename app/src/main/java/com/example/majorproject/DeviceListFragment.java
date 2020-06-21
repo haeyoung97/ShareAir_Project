@@ -53,6 +53,7 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
         this.setListAdapter(new WiFiPeerListAdapter(mContentView.getContext(), R.layout.row_devices, peers));
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mContentView = inflater.inflate(R.layout.device_list, null);
@@ -67,7 +68,7 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
     }
 
     private static String getDeviceStatus(int deviceStatus) {
-        Log.d(WifiDirectFragment.TAG, "Peer status :" + deviceStatus);
+        Log.d(WiFiDirectActivity.TAG, "Peer status :" + deviceStatus);
         switch (deviceStatus) {
             case WifiP2pDevice.AVAILABLE:
                 return "Available";
@@ -160,7 +161,7 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
         peers.addAll(peerList.getDeviceList());
         ((WiFiPeerListAdapter) getListAdapter()).notifyDataSetChanged();
         if (peers.size() == 0) {
-            Log.d(WifiDirectFragment.TAG, "No devices found");
+            Log.d(WiFiDirectActivity.TAG, "No devices found");
             return;
         }
 

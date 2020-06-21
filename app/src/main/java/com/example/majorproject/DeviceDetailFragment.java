@@ -16,15 +16,10 @@
 
 package com.example.majorproject;
 
-import android.app.AlertDialog;
-import android.app.Application;
+import android.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.ContentUris;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -43,45 +38,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
 
 import com.example.majorproject.DeviceListFragment.DeviceActionListener;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.ProxyHTTP;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpException;
-import com.jcraft.jsch.SocketFactory;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
-import java.security.KeyStore;
-import java.security.Security;
-import java.util.Timer;
-
-import javax.net.ServerSocketFactory;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLServerSocket;
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 
 
@@ -98,6 +67,16 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
     private WifiP2pInfo info;
     private LayoutInflater inflater;
     private int port;
+
+    private String deviceName;
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
+    }
+
 
     ProgressDialog progressDialog = null;
 
@@ -116,7 +95,6 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         context = mContentView.getContext();
 
         mContentView.findViewById(R.id.btn_connect).setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 WifiP2pConfig config = new WifiP2pConfig();
@@ -131,8 +109,9 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
                 if (progressDialog != null && progressDialog.isShowing()) {
                     progressDialog.dismiss();
                 }
+//                setDeviceName(device.deviceName);
                 progressDialog = ProgressDialog.show(getActivity(), "Press back to cancel",
-                        "Connecting to :" + device.deviceAddress, true, true
+                        "Connecting to :" + device.deviceName, true, true
 //                        new DialogInterface.OnCancelListener() {
 //
 //                            @Override
@@ -167,6 +146,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 //                        intent.setType("image/*");
 //                        startActivityForResult(intent, CHOOSE_FILE_RESULT_CODE);
                         if(ButtonEventListener.isSendOrRecvBtn == 1) {
+//                            setDeviceName(device.deviceName);
                             onConnectionInfoAvailable(info);
                             startFileTransfer();
                         }
@@ -178,86 +158,25 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         return mContentView;
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        // User has picked an image. Transfer it to group owner i.e peer using
-        // FileTransferService.
-//        Uri uri = data.getData();
-//        TextView statusText = (TextView) mContentView.findViewById(R.id.status_text);
-//        statusText.setText("Sending: " + uri);
-//        Log.d(WiFiDirectActivity.TAG, "Intent----------- " + uri);
-//        FileTransferService fileTransferService = new FileTransferService(context);
-//        //sshConnectService.setActionSendFile();
-//        fileTransferService.setEXTRAS_FILE_PATH(uri.toString());
-////        Log.e("JSch-Path", uri.toString());
-//        fileTransferService.setEXTRAS_GROUP_OWNER_ADDRESS(info.groupOwnerAddress.getHostAddress());
-//        Log.e("JSch-Address", info.groupOwnerAddress.getHostAddress());
-//        fileTransferService.setEXTRAS_GROUP_OWNER_PORT("8988");
-//        Log.e("JSch-port", "22");
-//        alertDialog();
-//        fileTransferService.connectionSocket(savefilename);
-
     }
 
 
-
-    /////////////////////////////////////////////////////////
-    ////////이 부분 수정함/////////////////////////////////
-    /////////////////////////////////////////////////////////
-    public Uri getUriFromPath(String filepath, int fileKind){
-        Cursor cursor;
-        int id;
-        Uri uri = null;
-        switch(fileKind){
-            case 0:
-            case 3:
-                //recent, file tab
-                cursor = context.getContentResolver().query(MediaStore.Files.getContentUri("external"), null, "_data ='" + filepath + "'", null, null);
-                cursor.moveToNext();
-                id = cursor.getInt(cursor.getColumnIndex("_id"));
-                uri = ContentUris.withAppendedId(MediaStore.Files.getContentUri("external"), id);
-                break;
-            case 1:
-                //photo tab
-                cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, "_data ='" + filepath + "'", null, null);
-                cursor.moveToNext();
-                id = cursor.getInt(cursor.getColumnIndex("_id"));
-                uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
-                break;
-            case 2:
-                //video tab
-                cursor = context.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null, "_data ='" + filepath + "'", null, null);
-                cursor.moveToNext();
-                id = cursor.getInt(cursor.getColumnIndex("_id"));
-                uri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id);
-                break;
-            default:
-                break;
-
-        }
-
-        return uri;
-    }
     public void startFileTransfer(){
-        port = 2222;
-        // selectList에서 여러개 파일 전송하는 것도 구현해야 할 듯.
-        // selectList는 [String 파일 경로, int 파일 종류] 리스트로 수정
-        String filepath = MainActivity.selectList.get(0).getFilePath();
-        Uri uri = getUriFromPath(filepath, MainActivity.selectList.get(0).getFileKind());
-
+        ArrayList<String> uriString = new ArrayList<>();
         TextView statusText = (TextView) mContentView.findViewById(R.id.status_text);
-        statusText.setText("Sending: " + uri);
-//        statusText.setText("Sending: " + filepath);
-        Log.d(WifiDirectFragment.TAG, "Intent----------- " + uri);
+//        setDeviceName(device.deviceName);
         FileTransferService fileTransferService = new FileTransferService(context);
-        fileTransferService.setEXTRAS_FILE_PATH(uri.toString());
-//        Log.e("JSch-Path", uri.toString());
+        fileTransferService.setFILE_COUNT(MainActivity.selectList.size());
+        fileTransferService.setDeviceName(getDeviceName());
         fileTransferService.setEXTRAS_GROUP_OWNER_ADDRESS(info.groupOwnerAddress.getHostAddress());
         Log.e("JSch-Address", info.groupOwnerAddress.getHostAddress());
-        fileTransferService.setEXTRAS_GROUP_OWNER_PORT(Integer.toString(port));
-//        Log.e("JSch-port", "22");
-        fileTransferService.connectionSocket(filepath);
+        fileTransferService.setEXTRAS_GROUP_OWNER_PORT("8988");
+        Log.e("JSch-port", "8988");
+        fileTransferService.connectionSocket();
     }
 
     @Override
@@ -284,8 +203,10 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         if (info.groupFormed && info.isGroupOwner) {
 //            filepath_s = MainActivity.selectList.get(0).getFilePath();
 //            uri_s = getUriFromPath(filepath_s, MainActivity.selectList.get(0).getFileKind());
-            new FileServerAsyncTask(this.info, getActivity(), mContentView.findViewById(R.id.status_text), inflater)
-                    .execute();
+            Log.e("", "onConnectionInfoAvailable: DeviceName" + getDeviceName() );
+            setDeviceName(deviceName);
+            new FileServerAsyncTask(getDeviceName(), getActivity(), mContentView.findViewById(R.id.status_text))
+                    .threadStart();
         } else if (info.groupFormed) {
             // The other device acts as the client. In this case, we enable the
             // get file button.
@@ -335,215 +256,102 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
      * the stream.
      */
     // server socket download
-    public static class FileServerAsyncTask extends AsyncTask<Void, Void, String> {
-
+    public static class FileServerAsyncTask {
         private Context context;
         private TextView statusText;
-        private JSch jsch;
-        private Session session;
-        private ChannelSftp channel;
-        private LayoutInflater inflater;
-        private String savefilename;
-        private WifiP2pInfo R_info;
-        private int port = 2222;
-
-        private Socket socket;
-        private OutputStream socketOutput;
-        private BufferedReader socketInput;
-        private Timer timer;
-        private String ip;
-//        private int port;
-//        private ClientCallback listener=null;
+        private String deviceName;
 
         /**
          * @param context
          * @param statusText
          */
-        public FileServerAsyncTask(WifiP2pInfo R_info, Context context, View statusText, LayoutInflater inflater) {
-            this.R_info = R_info;
+        public FileServerAsyncTask(String deviceName, Context context, View statusText) {
             this.context = context;
             this.statusText = (TextView) statusText;
-            this.inflater = inflater;
+            this.deviceName = deviceName;
         }
 
+        // 파일 다운로드
+        public void threadStart(){
+            new Thread() {
+                public void run() {
+                    doInBackground();
+                }
+            }.start();
+        }
 
-        @Override
-        protected String doInBackground(Void... params) {
-
+        public void doInBackground() {
             try {
-                String filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
-//                alertDialog();
-//                download(savefilename, filepath); // JSch Lib 연결
-                download("test.jpg", filepath);
-                return filepath;
+//                String filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
+
+                File dirs = getSaveFolder();
+                ServerSocket serverSocket = new ServerSocket(8988);
+                Log.d(WiFiDirectActivity.TAG, "Server: Socket opened");
+                Socket client = serverSocket.accept();
+                FileOutputStream fos;
+
+                Log.d(WiFiDirectActivity.TAG, "Server: connection done");
+                DataInputStream dis = new DataInputStream(client.getInputStream());
+                DataOutputStream stream = new DataOutputStream(client.getOutputStream());
+               // 파일 개수
+                int count = dis.readInt();
+                Log.e("", "doInBackground: " + String.valueOf(count));
+                for(int i = 0; i < count; i++) {
+                    Log.e(WiFiDirectActivity.TAG, "For_Server: connection done");
+
+                    // 파일 확장자
+                    String file_extension = dis.readUTF();
+                    Log.e(WiFiDirectActivity.TAG, "For_Server: file_extension");
+                    File f = new File(dirs.getAbsolutePath() + "/" + System.currentTimeMillis() + "." + file_extension);
+
+                   // 파일 길이
+                    long length = dis.readLong();
+                    Log.e(WiFiDirectActivity.TAG, "For_Server: length");
+
+                    int len = 0;
+                    byte buf[] = new byte[1024];
+                    long data = 0;
+                    Log.d(WiFiDirectActivity.TAG, "server: copying files " + f.toString());
+                    fos = new FileOutputStream(f);
+                    while ((len = dis.read(buf)) != -1) {
+                        fos.write(buf, 0, len);
+                        data += len;
+                        if(data == length) break;
+
+                    }
+                    Log.e("", "doInBackground: " + "file_copy finish");
+                    Date current = new Date();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                    String date = dateFormat.format(current);
+                    Log.e("", "threadConnect: " + date);
+
+                    HistoryDatabase helper = new HistoryDatabase(context, MainActivity.dbName, null, 3);
+                    Log.e("", "doInBackground: " + "test point" );
+                    helper.insert_values(date, deviceName, f.getName(), 1, 1);
+
+                    stream.writeInt(1);
+                }
+                client.close();
+                serverSocket.close();
+                return ;
             } catch (IOException e) {
-                Log.e("IOException : ", e.getMessage());
-                return null;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-        protected void alertDialog(){
-            View dialog =  inflater.inflate(R.layout.filename_dialog, null);
-            final EditText nameEditText = (EditText)dialog.findViewById(R.id.name);
-            AlertDialog.Builder builder = new AlertDialog.Builder(dialog.getContext());
-            builder.setView(dialog);
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface dialog, int pos)
-                {
-                    savefilename = nameEditText.getText().toString();
-
-                }
-            });
-
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-        }
-
-        protected void download(String fileName, String localDir) throws Exception{
-            byte[] buffer = new byte[1024];
-            BufferedInputStream bis;
-            connect();
-//            try {
-//                // Change to output directory
-//                String cdDir = fileName.substring(0, fileName.lastIndexOf("/") + 1);
-//                channel.cd(cdDir);
-//
-//                File file = new File(fileName);
-//                bis = new BufferedInputStream(channel.get(file.getName()));
-//
-//                File newFile = new File(localDir + "/" + file.getName());
-//
-//                // Download file
-//                OutputStream os = new FileOutputStream(newFile);
-//                BufferedOutputStream bos = new BufferedOutputStream(os);
-//                int readCount;
-//                while ((readCount = bis.read(buffer)) > 0) {
-//                    bos.write(buffer, 0, readCount);
-//                }
-//                bis.close();
-//                bos.close();
-//                System.out.println("File downloaded successfully - "+ file.getAbsolutePath());
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-            disconnect();
-        }
-        public Socket connectSocket(boolean ssl) throws IOException {
-            Socket socket = null;
-            if(ssl){
-                SSLContext context = null;
-                char[] passphrase = "sw1234".toCharArray();
-                try{
-                    KeyStore keystore =  KeyStore.getInstance("BKS");
-//                    this.context.getResources().openRawResource(android.R.raw.keystore)
-//                    this.context.getResources().openRawResource(R.raw.keystore);
-//                    this.context.getResources().openRawResource(R.raw.keystore)
-                    keystore.load(this.context.getResources().openRawResource(R.raw.keystore), passphrase);
-//                    keystore.load(this.context.getResources().openRawResource(R.raw.keystore), passphrase);
-//                    keystore.load(App.getApp().getResources().openRawResource(R.raw.keystore), passphrase);
-                    TrustManagerFactory tmf = TrustManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-                    tmf.init(keystore);
-                    context = SSLContext.getInstance("TLS");
-                    TrustManager[] trustManagers = tmf.getTrustManagers();
-                    context.init(null, trustManagers, null);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
-                SSLSocketFactory sf = context.getSocketFactory();
-                socket = sf.createSocket(R_info.groupOwnerAddress.getHostAddress(), port);
-            }else{
-                socket = new Socket();
-                InetSocketAddress socketAddress = new InetSocketAddress(R_info.groupOwnerAddress.getHostAddress(), port);
-                socket.connect(socketAddress,SOCKET_TIMEOUT);
-            }
-            return  socket;
-
-        }
-
-
-        protected void connect() {
-
-            try{
-                String reservedSSFacProvider =
-                        Security.getProperty("ssl.ServerSocketFactory.provider");
-                Security.setProperty("ssl.ServerSocketFactory.provider", "oops");
-                ServerSocketFactory ssocketFactory =
-                        SSLServerSocketFactory.getDefault();
-                SSLServerSocket sslServerSocket =
-                        (SSLServerSocket)ssocketFactory.createServerSocket(2222);
-                Log.e("", "connect: " + "start");
-                SSLSocket client = (SSLSocket) sslServerSocket.accept();
-                Log.e("", "connect: " + "end");
-
-//            try {
-//                socket = connectSocket(true);
-//            } catch (Exception e){
-//                Log.e("createSocketError",e.getMessage());
-//            }
-
-//            try {
-//                ServerSocket serverSocket = new ServerSocket(port);
-//                Log.e(WiFiDirectActivity.TAG, "Server: Socket opened");
-//                Log.e(WiFiDirectActivity.TAG, "server socket port : " + serverSocket.getLocalPort());
-//
-//
-//                Socket client = serverSocket.accept();
-//                Log.e(WiFiDirectActivity.TAG, "Server: connection done");
-//                jsch = new JSch();
-//                Log.e("Server : ", "host :" + client.getInetAddress().getHostAddress() + ", port :" + client.getPort());
-//                Log.e("", "host : " + client.getLocalPort());
-//                Log.e("", "host : " + client.getLocalAddress().toString());
-//                session = jsch.getSession("Receiver", client.getInetAddress().getHostAddress(), client.getLocalPort());
-//                session = jsch.getSession("Receiver", client.getLocalAddress().toString(), client.getLocalPort());
-
-//                session = jsch.getSession("Receiver", R_info.groupOwnerAddress.getHostAddress(), 1234);
-//
-//                session.setPassword("password");
-//                Log.d("Session-Re", "connect: " + session.getPort());
-//
-//                java.util.Properties config = new java.util.Properties();
-//                config.put("StrictHostKeyChecking", "no");
-//                session.setConfig(config);
-//                session.setTimeout(30000);
-//            session.setServerAliveInterval(5000); // Check if server is alive every 5 seconds
-//            session.setServerAliveCountMax(5);
-//                SocketFactory socketFactory = new ReSocketFactory();
-//                session.setSocketFactory(socketFactory);
-//                Log.e("", "connect: before");
-//                session.connect();
-//                Log.e("", "connect: after");
-//                channel = (ChannelSftp) session.openChannel("sftp");
-//                channel.connect();
-            }catch (IOException e){
-                e.printStackTrace();
+                return ;
             }
 
         }
-            protected void disconnect () {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
-//            if(session.isConnected()){
-//                System.out.println("disconnecting...");
-//                channel.disconnect();
-//                channel.disconnect();
-//                session.disconnect();
+        private File getSaveFolder(){
+            File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/shairAir");
+            if(!dir.exists()){
+                dir.mkdirs();
             }
-
-
+            return dir;
+        }
 
         /*
          * (non-Javadoc)
          * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
          */
-        @Override
         protected void onPostExecute(String result) {
             if (result != null) {
                 statusText.setText("File copied - " + result);
@@ -564,67 +372,11 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
          * (non-Javadoc)
          * @see android.os.AsyncTask#onPreExecute()
          */
-        @Override
         protected void onPreExecute() {
             statusText.setText("Opening a server socket");
         }
 
     }
 
-//    public static boolean copyFile(InputStream inputStream, OutputStream out) {
-//        Log.e("DETAIL : "," now copyFile");
-//        byte buf[] = new byte[1024];
-//        int len;
-//        long startTime=System.currentTimeMillis();
-//
-//        try {
-//            while ((len = inputStream.read(buf)) != -1) {
-//                out.write(buf, 0, len);
-//            }
-//            out.close();
-//            inputStream.close();
-//            long endTime=System.currentTimeMillis()-startTime;
-//            Log.v("","Time taken to transfer all bytes is : "+endTime);
-//
-//        } catch (IOException e) {
-//            Log.d(WiFiDirectActivity.TAG, e.toString());
-//            return false;
-//        }
-//        return true;
-//    }
-
 }
 
-class ReSocketFactory implements SocketFactory {
-
-    @Override
-    public Socket createSocket(String host, int port) throws IOException, UnknownHostException {
-//        ServerSocket serverSocket = new ServerSocket(2222);
-        Log.e("", "createSocket : start");
-//        Socket client = serverSocket.accept();
-//        Log.e("", "createSocket : end");
-        Socket socket = new Socket();
-//        socket.bind(new InetSocketAddress("192.168.1.4", 0));
-        socket.bind(new InetSocketAddress(host, port));
-        Log.e("", "createSocket: middle" );
-        Log.e("", "createSocket: "+ host + ", " + port );
-        socket.connect(new InetSocketAddress(host, port));
-
-//        socket.bind(new InetSocketAddress("192.168.1.4", 0));
-//        socket.bind(new InetSocketAddress("192.168.1.4", 8988));
-//        socket.connect(new InetSocketAddress("192.168.1.4", 8988));
-
-        return socket;
-    }
-
-    @Override
-    public InputStream getInputStream(Socket socket) throws IOException {
-        return socket.getInputStream();
-    }
-
-    @Override
-    public OutputStream getOutputStream(Socket socket) throws IOException {
-        return socket.getOutputStream();
-    }
-
-}

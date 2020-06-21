@@ -2,14 +2,16 @@ package com.example.majorproject;
 
 public class HistoryDBArray {
     private String deviceName;
-    private String fileSize;
+    private String fileName;
     private String date;
+    private String kind;
     private String sucOrFail;
     private boolean check;
 
-    public HistoryDBArray(String deviceName, String fileSize, String date, String sucOrFail) {
+    public HistoryDBArray(String date, String deviceName, String fileName, String kind, String sucOrFail) {
         this.deviceName = deviceName;
-        this.fileSize = fileSize;
+        this.fileName = fileName;
+        this.kind = kind;
         this.date = date;
         this.sucOrFail = sucOrFail;
     }
@@ -22,12 +24,12 @@ public class HistoryDBArray {
         this.deviceName = deviceName;
     }
 
-    public String getFileSize() {
-        return fileSize;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setFileSize(String fileSize) {
-        this.fileSize = fileSize;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public String getDate() {
@@ -36,6 +38,14 @@ public class HistoryDBArray {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
     }
 
     public String getSucOrFail() {

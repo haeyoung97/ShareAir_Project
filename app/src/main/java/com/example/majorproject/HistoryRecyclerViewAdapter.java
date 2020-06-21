@@ -86,12 +86,12 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         private CheckBox checkBox;
         private ImageView imageView;
         private TextView deviceName;
-        private TextView fileSize;
+        private TextView fileName;
+        private TextView kind;
         private TextView sucOrFail;
         private TextView date;
         private CardView cardView;
         private TextView historySelectCntView;
-        private Button historyDeleteBtn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -100,7 +100,8 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
             imageView = (ImageView)itemView.findViewById(R.id.history_image);
             checkBox = (CheckBox)itemView.findViewById(R.id.history_checkbox);
             deviceName = (TextView)itemView.findViewById(R.id.history_device);
-            fileSize = (TextView)itemView.findViewById(R.id.history_filesize);
+            fileName = (TextView)itemView.findViewById(R.id.history_filename);
+            kind = (TextView)itemView.findViewById(R.id.history_kind);
             sucOrFail = (TextView)itemView.findViewById(R.id.history_SucOrFail);
             date = (TextView)itemView.findViewById(R.id.history_date);
 
@@ -110,7 +111,8 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 
         public void setItem(HistoryDBArray item){
             deviceName.setText(item.getDeviceName());
-            fileSize.setText(item.getFileSize() + "KB");
+            fileName.setText(item.getFileName());
+            kind.setText(item.getKind());
             sucOrFail.setText(item.getSucOrFail());
             date.setText(item.getDate());
         }
@@ -122,23 +124,10 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
                 if(!checkBox.isChecked()){
                     checkBox.setChecked(true);
                     historyDBArrays.get(pos).setCheck(true);
-                    selectCnt++;
-                    if(selectCnt==1){
-                        dynamicSelectLayout = new DynamicSelectLayout(context.getApplicationContext());
-                        dynamicLinearLayout.addView(dynamicSelectLayout);
-                    }
-                    historySelectCntView = (TextView) dynamicLinearLayout.findViewById(R.id.dynamic_select_cnt);
-                    historyDeleteBtn = (Button) dynamicLinearLayout.findViewById(R.id.dynamic_delete_btn);
-                    historySelectCntView.setText(selectCnt + "개 선택");
                 }
                 else{
                     checkBox.setChecked(false);
                     historyDBArrays.get(pos).setCheck(false);
-                    selectCnt--;
-                    historySelectCntView.setText(selectCnt + "개 선택");
-                    if(selectCnt==0){
-                       dynamicLinearLayout.removeAllViews();
-                    }
                 }
             }
         }

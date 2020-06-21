@@ -23,4 +23,19 @@ public class HistoryDatabase extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onCreate(db);
     }
+
+    public void insert_values(String date, String device, String filename, int kind, int isSuccess){
+        SQLiteDatabase db = getWritableDatabase();
+        String sqlInsert;
+        sqlInsert = DBstruct.SQL_INSERT + "(" +
+                "'" + date + "', " +
+                "'" + device + "', " +
+                "'" + filename + "', " +
+                kind + ", " +
+                isSuccess + ")";
+        db.execSQL(sqlInsert);
+
+        db.close();
+
+    }
 }

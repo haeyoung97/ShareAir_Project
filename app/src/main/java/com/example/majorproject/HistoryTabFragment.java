@@ -38,8 +38,7 @@ public class HistoryTabFragment extends Fragment {
         historyRecyclerview = (RecyclerView)view.findViewById(R.id.history_recyclerview);
         layoutManager = new LinearLayoutManager(this.getContext());
         historyRecyclerview.setLayoutManager(layoutManager);
-        dynamicLinearLayout = (LinearLayout)view.findViewById(R.id.history_dynamic_linearlayout);
-        historyRecyclerViewAdapter = new HistoryRecyclerViewAdapter(historyDBArrays, getActivity(), dynamicLinearLayout);
+        historyRecyclerViewAdapter = new HistoryRecyclerViewAdapter(historyDBArrays, getActivity());
         historyRecyclerview.setAdapter(historyRecyclerViewAdapter);
 
         openDatabase ("historyDB.db");
@@ -49,52 +48,12 @@ public class HistoryTabFragment extends Fragment {
         return view;
     }
 
-    private void insert_values(){
-        SQLiteDatabase db = helper.getWritableDatabase();
-//        db.execSQL(DBstruct.SQL_DELETE);
-        int no = 0;
-        String date = "202005";
-        String device = "your_i_phone";
-
-        int success = 1;
-        String sqlInsert;
-
-        for(int i = 0; i < 10; i++){
-            if(i%3 == 0){
-                success = 0;
-            }else
-                success = 1;
-
-            sqlInsert = DBstruct.SQL_INSERT + "(" +
-                    Integer.toString(no++) + ", " +
-                    "'" + date + String.format("%02d", (int)(Math.random()*30)+1) + "', " +
-                    "'" + device + " " + Integer.toString(i+1) +  "', " +
-                    Integer.toString((int)(Math.random()*100) +1) + ", " +
-                    Integer.toString(success) + ")";
-            db.execSQL(sqlInsert);
-        }
-        db.close();
-
-    }
 
     private void openDatabase(String databaseName){
         helper = new HistoryDatabase(this.getActivity(), databaseName, null, 3);
         database = helper.getReadableDatabase();
         Cursor cursor = database.rawQuery(DBstruct.SQL_SELECT, null);
-
-        if(!cursor.moveToNext()){
-            insert_values();
-            Log.d("insert", "value");
-        }
-
         cursor.close();
-
-//        try {
-//            database = SQLiteDatabase.openOrCreateDatabase(databaseName + ".db", null);
-//        } catch (SQLException e){
-//            e.printStackTrace();
-//        }
-
     }
 
 
@@ -106,11 +65,13 @@ public class HistoryTabFragment extends Fragment {
         while (cursor.moveToNext()){
             String date = cursor.getString(1);
             String deviceName = cursor.getString(2);
-            int fileSize = cursor.getInt(3);
-            int isSuccess= cursor.getInt(4);
+            String fileName = cursor.getString(3);
+            int kind = cursor.getInt(4);
+            int isSuccess= cursor.getInt(5);
+            String seOrRe = (kind == 0) ? "Send" : "Receive";
             String sucOrFail = (isSuccess == 1) ? "Success" : "Fail";
 
-            HistoryDBArray dbArray = new HistoryDBArray(deviceName, Integer.toString(fileSize), date, sucOrFail);
+            HistoryDBArray dbArray = new HistoryDBArray(date, deviceName, fileName, seOrRe, sucOrFail);
             result.add(dbArray);
         }
         cursor.close();

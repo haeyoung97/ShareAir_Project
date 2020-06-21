@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.MenuItem;
@@ -26,11 +27,10 @@ public class MainActivity extends AppCompatActivity {
     private SendTabFragment sendTabFragment = new SendTabFragment(this);
     private HistoryTabFragment historyTabFragment = new HistoryTabFragment();
     private FragmentTransaction transaction;
-    private WifiDirectFragment wifiDirectFragment = new WifiDirectFragment(this);
 
 
     //db 생성 파일 이름
-    final static String dbName = "history.db";
+    final static String dbName = "historyDB.db";
     final static int dbVersion = 2;
 
     static ButtonEventListener btnEventListener;
@@ -47,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.navigation_receive:
                     ButtonEventListener.isSendOrRecvBtn = 15;
-                    transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.fragmentLayout, wifiDirectFragment).addToBackStack(wifiDirectFragment.getClass().getSimpleName()).commitAllowingStateLoss();
+                    Intent recvIntent = new Intent(getApplicationContext(), WiFiDirectActivity.class);
+                    startActivity(recvIntent);
                     break;
                 case R.id.navigation_history:
                     transaction = fragmentManager.beginTransaction();
@@ -84,10 +84,6 @@ public class MainActivity extends AppCompatActivity {
         bottomNavView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
 
-    }
-
-    public WifiDirectFragment getWifiDirectFragment() {
-        return wifiDirectFragment;
     }
 
     public static boolean checkExternalAvailable(){

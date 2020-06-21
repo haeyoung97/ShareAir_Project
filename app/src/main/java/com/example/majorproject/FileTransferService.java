@@ -4,11 +4,14 @@ package com.example.majorproject;
 
 import android.app.IntentService;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import com.jcraft.jsch.ChannelSftp;
@@ -20,6 +23,8 @@ import com.jcraft.jsch.SocketFactory;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,6 +37,7 @@ import java.net.Socket;
 
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -42,22 +48,22 @@ import java.util.Date;
 public class FileTransferService extends IntentService {
 
     private static final int SOCKET_TIMEOUT = 10000;
+    //    public String ACTION_SEND_FILE = "com.example.android.wifidirectactivity.SEND_FILE";
     public String EXTRAS_FILE_PATH = "file_url";
+    public String EXTRAS_FILE_EXTENSION = "file_extension";
+    //    public ArrayList<String> EXTRAS_FILE_PATH = new ArrayList<>();
     public String EXTRAS_GROUP_OWNER_ADDRESS = "go_host";
     public String EXTRAS_GROUP_OWNER_PORT = "go_port";
+    public String deviceName = "deviceName";
+    public int FILE_COUNT = 0;
     public int port;
-    private String filepath;
-    private JSch jsch;
-    private Session session;
-    private ChannelSftp channel;
-    HistoryDatabase historyDatabase;
 
+    ArrayList<String> uriString = new ArrayList<>();
     private Context context;
 
     public FileTransferService(Context context) {
         super("FileTransferService");
         this.context = context;
-        historyDatabase = new HistoryDatabase(this, MainActivity.dbName, null, MainActivity.dbVersion);
     }
 
     public FileTransferService() {
@@ -66,6 +72,15 @@ public class FileTransferService extends IntentService {
 
     void setEXTRAS_FILE_PATH(String EXTRAS_FILE_PATH){
         this.EXTRAS_FILE_PATH = EXTRAS_FILE_PATH;
+    }
+    void setEXTRAS_FILE_EXTENSION(String EXTRAS_FILE_EXTENSION){
+        this.EXTRAS_FILE_EXTENSION = EXTRAS_FILE_EXTENSION;
+    }
+    void setDeviceName(String deviceName){
+        this.deviceName = deviceName;
+    }
+    void setFILE_COUNT(int FILE_COUNT){
+        this.FILE_COUNT = FILE_COUNT;
     }
 
     void setEXTRAS_GROUP_OWNER_ADDRESS(String EXTRAS_GROUP_OWNER_ADDRESS){
@@ -84,13 +99,56 @@ public class FileTransferService extends IntentService {
     protected void onHandleIntent(Intent intent) {
 
     }
+    public String getExtension(String filepath) {
+        Log.e("", "getExtension: " + filepath);
+        int index = filepath.lastIndexOf(".");
+        String extension = filepath.substring(index + 1);
+        return extension;
+    }
 
-    public void connectionSocket(String filepath) {
-        Log.e("JSch-connectionSocket", ": now fuction = connectionSocket");
-        Log.e("JSch-Path", EXTRAS_FILE_PATH);
-        Log.e("JSch-Address", EXTRAS_GROUP_OWNER_ADDRESS);
-        Log.e("JSch-port", EXTRAS_GROUP_OWNER_PORT);
-        this.filepath = filepath;
+    public Uri getUriFromPath(String filepath, int fileKind){
+        Cursor cursor;
+        int id;
+        Uri uri = null;
+        switch(fileKind){
+            case 0:
+            case 3:
+                //recent, file tab
+                cursor = context.getContentResolver().query(MediaStore.Files.getContentUri("external"), null, "_data ='" + filepath + "'", null, null);
+                cursor.moveToNext();
+                id = cursor.getInt(cursor.getColumnIndex("_id"));
+                uri = ContentUris.withAppendedId(MediaStore.Files.getContentUri("external"), id);
+                break;
+            case 1:
+                //photo tab
+                cursor = context.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, "_data ='" + filepath + "'", null, null);
+                cursor.moveToNext();
+                id = cursor.getInt(cursor.getColumnIndex("_id"));
+                uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id);
+                break;
+            case 2:
+                //video tab
+                cursor = context.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null, "_data ='" + filepath + "'", null, null);
+                cursor.moveToNext();
+                id = cursor.getInt(cursor.getColumnIndex("_id"));
+                uri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id);
+                break;
+            default:
+                break;
+
+        }
+
+        return uri;
+    }
+
+    public void connectionSocket() {
+        int i = 0;
+        while(i < MainActivity.selectList.size()) {
+            uriString.add(getUriFromPath(MainActivity.selectList.get(i).getFilePath(), MainActivity.selectList.get(i).getFileKind()).toString());
+            Log.e("FILE_LIST", "connectionSocket: " + MainActivity.selectList.get(i).getFilePath());
+            i++;
+        }
+//        Log.e("JSch-Path", EXTRAS_FILE_PATH);
         if (context == null) {
             Log.e("JSch-connectionSocket", ": getApplicationContext = null");
         }
@@ -102,128 +160,82 @@ public class FileTransferService extends IntentService {
     }
     public void threadConnect(){
         Log.e("JSch-threadConnect", ": hello");
-       // Context context = getApplicationContext();
-//        JSch jsch = new JSch();
-//        Session session;
-//        ChannelSftp channel;
-        //Socket socket = new Socket();
-        String sql;
-        SQLiteDatabase db;
-
-        try {
-            Log.d(WifiDirectFragment.TAG, "Opening client socket - ");
-//            connect();
-//            String filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
-            // 다운로드 파일의 임시 이름 설정
-            upload(filepath);
-            db = historyDatabase.getWritableDatabase();
-            String filename, date, device;
-            int size, isSuccess;
-//            if(DeviceDetailFragment.copyFile(is, stream)){
-//
-////                sql = String.format("INSERT INTO history VALUES('" + )
-//            }
-            Log.d(WifiDirectFragment.TAG, "Client: Data written");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally {
-        }
-
-    }
-    protected void upload(String filepath) throws Exception{
-        FileInputStream fis = null;
-        connect();
-        try {
-            // Upload file
-            File file = new File(filepath);
-            // Change to output directory
-            channel.cd(file.getParent());
-            // 입력 파일을 가져온다.
-            fis = new FileInputStream(file);
-            // 파일을 업로드한다.
-            channel.put(fis, file.getName());
-
-            fis.close();
-            System.out.println("File uploaded successfully - "+ file.getAbsolutePath());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        disconnect();
-    }
-    public void connect() throws JSchException {
-        try {
-//            Socket socket = new Socket();
-//            socket.bind(null);
-//            Log.e(WiFiDirectActivity.TAG, "Socket: bind");
-//            socket.connect((new InetSocketAddress(EXTRAS_GROUP_OWNER_ADDRESS, port)), SOCKET_TIMEOUT);
-//            Log.e(WiFiDirectActivity.TAG, "Socket: connect");
-            jsch = new JSch();
-
-            Log.d("JSCH-upload", "connect: "+ port);
-
-//            Log.e("Server : ", "host :" + socket.getInetAddress().getHostAddress() + ", port :" + socket.getPort());
-//            session = jsch.getSession("Sender", socket.getInetAddress().getHostAddress(), socket.getPort());
-            session = jsch.getSession("Sender", EXTRAS_GROUP_OWNER_ADDRESS, port);
-            Log.e("", "connect: "+session.getPort() + ", " + session.getHost());
-    //        session = jsch.getSession("Sender", "192.168.1.4", 8988);
-    //        session = jsch.getSession("Sender", "localhost");
-
-            session.setPassword("password");
-
-            java.util.Properties config = new java.util.Properties();
-            config.put("StrictHostKeyChecking", "no");
-            session.setConfig(config);
-            session.setTimeout(30000);
-            SocketFactory socketFactory = new SeSocketFactory();
-            session.setSocketFactory(socketFactory);
-            Log.e("", "connect: before");
-            session.connect();
-            Log.e("", "connect: after");
-            channel = (ChannelSftp) session.openChannel("sftp");
-            channel.connect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-    }
-    public void disconnect() {
-        if(session.isConnected()){
-            System.out.println("disconnecting...");
-            channel.disconnect();
-            channel.disconnect();
-            session.disconnect();
-        }
-    }
-
-}
-
-class SeSocketFactory implements SocketFactory {
-
-    @Override
-    public Socket createSocket(String host, int port) throws IOException, UnknownHostException {
-        Log.e("", "createSocket: start" );
         Socket socket = new Socket();
-//        socket.bind(new InetSocketAddress("192.168.1.4", 0));
-//        socket.bind(new InetSocketAddress("localhost", 2222));
-        Log.e("", "createSocket: "+ host + ", " + port );
-        socket.bind(new InetSocketAddress("localhost", port));
-        Log.e("", "createSocket: middle" );
-        Log.e("", "createSocket: "+ host + ", " + port );
-        socket.connect(new InetSocketAddress("localhost", port));
-        Log.e("", "createSocket: end" );
-        return socket;
-    }
+        FileInputStream fis;
+        BufferedInputStream bis;
+        String sql;
 
-    @Override
-    public InputStream getInputStream(Socket socket) throws IOException {
-        return socket.getInputStream();
-    }
+        try {
 
-    @Override
-    public OutputStream getOutputStream(Socket socket) throws IOException {
-        return socket.getOutputStream();
+            Log.d(WiFiDirectActivity.TAG, "Opening client socket - ");
+            socket.bind(null);
+            socket.connect((new InetSocketAddress(EXTRAS_GROUP_OWNER_ADDRESS, port)), SOCKET_TIMEOUT);
+            Log.d(WiFiDirectActivity.TAG, "Client socket - " + socket.isConnected());
+            DataOutputStream stream = new DataOutputStream(socket.getOutputStream());
+            DataInputStream dis = new DataInputStream(socket.getInputStream());
+
+            // 파일 개수 전송
+            stream.writeInt(FILE_COUNT);
+            Log.e("", "FILE_COUNT: "+ String.valueOf(FILE_COUNT));
+            int result;
+            Date current;
+            SimpleDateFormat dateFormat;
+            String date;
+            HistoryDatabase helper;
+            for(int i = 0; i < FILE_COUNT; i++) {
+                // 파일 경로와 파일 확장자 설정
+                result = 0;
+                setEXTRAS_FILE_PATH(uriString.get(i));
+                setEXTRAS_FILE_EXTENSION(getExtension(MainActivity.selectList.get(i).getFilePath()));
+                File f = new File(MainActivity.selectList.get(i).getFilePath());
+
+                Log.d(WiFiDirectActivity.TAG, "Client socket - " + socket.isConnected());
+
+                // 파일 확장자 전송
+                Log.e("", "threadConnect: 확장자 " + EXTRAS_FILE_EXTENSION);
+                stream.writeUTF(EXTRAS_FILE_EXTENSION);
+
+                // 파일 길이 전송
+                stream.writeLong(f.length());
+                try {
+                    int len = 0;
+                    byte buf[] = new byte[1024];
+
+                    fis = new FileInputStream(f);
+                    Log.d("Uri.parse - ", Uri.parse(EXTRAS_FILE_PATH).toString());
+                    while ((len = fis.read(buf)) != -1) {
+                        stream.write(buf, 0, len);
+                        stream.flush();
+                    }
+                    current = new Date();
+                    dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                    date = dateFormat.format(current);
+                    Log.e("", "threadConnect: " + date);
+                    Log.d(WiFiDirectActivity.TAG, "Client: Data written");
+                    helper = new HistoryDatabase(context, MainActivity.dbName, null, 3);
+                    Log.e("", "doInBackground: " + "test point" );
+                    helper.insert_values(date, deviceName, f.getName(), 0, 1);
+                    result = dis.readInt();
+                    if(result != 1)
+                        break;
+                } catch (FileNotFoundException e) {
+                    Log.d(WiFiDirectActivity.TAG, e.toString());
+                }
+                Log.e("", "threadConnect: " + Integer.toString(result) );
+                if(result != 1){
+                    current = new Date();
+                    dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                    date = dateFormat.format(current);
+                    helper = new HistoryDatabase(context, MainActivity.dbName, null, 3);
+                    helper.insert_values(date, deviceName, f.getName(), 0, 0);
+                }
+            }
+            socket.close();
+        } catch (IOException e) {
+            Log.e(WiFiDirectActivity.TAG, e.getMessage());
+
+        }
+
     }
 
 }
