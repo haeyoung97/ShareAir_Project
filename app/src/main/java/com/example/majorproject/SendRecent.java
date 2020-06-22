@@ -11,7 +11,8 @@ public class SendRecent {
     private String thumbPath;
     private String filename;
     private String date;
-    private boolean check;
+//    private boolean check;
+    private boolean isSelected = false;
     private int index;
     private int fileExtNum;
     private int resourceFile;
@@ -86,6 +87,9 @@ public class SendRecent {
             case "gif":
                 fileExtNum = 5;
                 break;
+            case "mp4":
+                fileExtNum = 7;
+                break;
             default:
                 fileExtNum = 6;
                 resourceFile = R.drawable.folder;
@@ -126,6 +130,14 @@ public class SendRecent {
 //        }
 //
 //    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
 
     public String getThumbPath() {
         return thumbPath;
@@ -174,12 +186,12 @@ public class SendRecent {
     public void setIndex(int index) {
         this.index = index;
     }
-
-    public boolean isCheck() {
-        return check;
-    }
-
-    public void setCheck(boolean check) {
-        this.check = check;
-    }
+//
+//    public boolean isCheck() {
+//        return check;
+//    }
+//
+//    public void setCheck(boolean check) {
+//        this.check = check;
+//    }
 }

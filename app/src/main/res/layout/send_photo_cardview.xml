@@ -21,12 +21,12 @@
             android:scaleType="centerCrop"
             android:background="#aabdbdbd"/>
 
-        <CheckBox
-            android:id="@+id/send_photo_cardview_check"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/listChoiceIndicatorMultiple"
-            android:layout_marginLeft="2dp"/>
+<!--        <CheckBox-->
+<!--            android:id="@+id/send_photo_cardview_check"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="?android:attr/listChoiceIndicatorMultiple"-->
+<!--            android:layout_marginLeft="2dp"/>-->
 
     </RelativeLayout>
 

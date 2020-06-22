@@ -20,13 +20,18 @@ import com.google.android.material.tabs.TabLayout;
 public class SendTabFragment extends Fragment {
 
     private TabLayout tabLayout;
-    private ViewPager viewPager;
+    static CustomViewPager viewPager;
     private MainActivity mainActivity;
     private Context context;
     private Button sendButton;
     private Button recvButton;
     private ButtonEventListener buttonEventListener;
 
+    static LinearLayout dynamicLinearLayout;
+    static LinearLayout tabStrip;
+//    static boolean selecting;
+
+    private int prevTabPosition;
 
     public SendTabFragment(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
@@ -46,27 +51,52 @@ public class SendTabFragment extends Fragment {
 //        recvButton = (Button)view.findViewById(R.id.recv_frame_transferButton);
 
         tabLayout = (TabLayout)view.findViewById(R.id.send_frame_tablayout);
-        viewPager = (ViewPager)view.findViewById(R.id.send_frame_viewpager);
+//        viewPager = (ViewPager)view.findViewById(R.id.send_frame_viewpager);
+        viewPager = (CustomViewPager)view.findViewById(R.id.send_frame_viewpager);
+        dynamicLinearLayout = (LinearLayout)view.findViewById(R.id.send_dynamic_linearlayout);
+        tabStrip = ((LinearLayout)tabLayout.getChildAt(0));
 
         buttonEventListener = new ButtonEventListener(mainActivity, context);
 //        sendButton.setOnClickListener(buttonEventListener);
 //        recvButton.setOnClickListener(buttonEventListener);
 
         SendTabViewPagerAdapter adapter = new SendTabViewPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
-        if(adapter == null){
-            Log.d("adapter null? : ", "null!");
-        }
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(0);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
+        prevTabPosition = viewPager.getCurrentItem();
        // tabLayout.setupWithViewPager(viewPager);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+
+
+
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                resizePager(tab.getPosition());
+//                MainActivity.selectList.clear();
+                if(MainActivity.selectList.size() != 0) {
+//                    MainActivity.selectList.clear();
+//                    viewPager.beginFakeDrag();
+                    Log.e("tab size not null", "");
+                    viewPager.setPagingEnabled(false);
+                    resizePager(prevTabPosition);
+                    viewPager.setCurrentItem(prevTabPosition);
+                 }
+                else {
+                    Log.e("tab size null", "");
+                    viewPager.setPagingEnabled(true);
+                    resizePager(tab.getPosition());
+                    viewPager.setCurrentItem(tab.getPosition());
+                    prevTabPosition = viewPager.getCurrentItem();
+                }
+//                    viewPager.endFakeDrag();
+//                if(dynamicLinearLayout != null){
+//                    dynamicLinearLayout.removeAllViews();
+//                }
                 Log.d("tabLayout : ", String.valueOf(tab.getPosition()));
-               viewPager.setCurrentItem(tab.getPosition());
+
+
+//                modifyTab = tab.getPosition();
             }
 
             @Override
@@ -76,10 +106,13 @@ public class SendTabFragment extends Fragment {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+//                MainActivity.selectList.clear();
+                Log.d("reselected : ", Integer.toString(tab.getPosition()));
                 viewPager.setCurrentItem(tab.getPosition());
 
             }
         });
+        adapter.notifyDataSetChanged();
         return view;
     }
 

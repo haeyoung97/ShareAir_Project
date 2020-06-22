@@ -7,6 +7,7 @@ public class SendPhoto {
     private boolean check;
     private int index;
     private Uri uri;
+    private boolean isSelected = false;
 
     public Uri getUri(){
         return uri;
@@ -23,6 +24,14 @@ public class SendPhoto {
     public SendPhoto(String imagePath) {
         this.imagePath = imagePath;
         uri = Uri.parse("file://"+imagePath);
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public String getImagePath() {

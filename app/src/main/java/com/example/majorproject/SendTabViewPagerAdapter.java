@@ -18,7 +18,7 @@ public class SendTabViewPagerAdapter extends FragmentStatePagerAdapter {
     private ArrayList<File> imageFile;
     private SendTabRecentFragment recentFragment;
     private SendTabPhotoFragment photoFragment;
-    private SendTabAlbumFragment albumFragment;
+//    private SendTabAlbumFragment albumFragment;
     private SendTabVideoFragment videoFragment;
     private SendTabFileFragment fileFragment;
 
@@ -41,35 +41,26 @@ public class SendTabViewPagerAdapter extends FragmentStatePagerAdapter {
         {
             case 0:
                 //최근 탭
-                MainActivity.selectList.clear();
                 recentFragment = new SendTabRecentFragment();
+                Log.e("dynamictab_recent?","");
                 return recentFragment;
 
-                // 임시
-//                photoFragment = new SendTabPhotoFragment();
-//                return photoFragment;
             case 1:
                 //사진 탭
-                MainActivity.selectList.clear();
+
+                Log.e("dynamictab_photo?","");
                 photoFragment = new SendTabPhotoFragment();
                 return photoFragment;
-//            case 2:
-//                //앨범 탭
-//                //그냥 앨범 탭 없애버리자ㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ
-//                MainActivity.selectList.clear();
-////                albumFragment = new SendTabAlbumFragment();
-////                return albumFragment;
-//
-////                임시
-//                fileFragment = new SendTabFileFragment();
-//                return fileFragment;
 
             case 2:
                 //영상 탭
+
                 videoFragment = new SendTabVideoFragment();
+                Log.e("dynamictab_video?","");
                 return videoFragment;
             case 3:
                 //파일 탭
+
                 fileFragment = new SendTabFileFragment();
                 return fileFragment;
             default:

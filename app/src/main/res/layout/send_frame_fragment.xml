@@ -68,11 +68,23 @@
 <!--            />-->
 
 <!--    </FrameLayout>-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/send_frame_tablayout"
+        android:id="@+id/send_dynamic_linearlayout"/>
 
-    <androidx.viewpager.widget.ViewPager
+    <com.example.majorproject.CustomViewPager
         android:id="@+id/send_frame_viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/send_frame_tablayout"
+        android:layout_below="@id/send_dynamic_linearlayout"
         android:layout_marginTop="5dp"/>
+<!--    <androidx.viewpager.widget.ViewPager-->
+<!--        android:id="@+id/send_frame_viewpager"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@id/send_dynamic_linearlayout"-->
+<!--        android:layout_marginTop="5dp"/>-->
 </RelativeLayout>

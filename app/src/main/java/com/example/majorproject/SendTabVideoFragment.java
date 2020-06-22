@@ -14,18 +14,13 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
-
-import java.sql.Time;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class SendTabVideoFragment extends Fragment {
     private RecyclerView videoRecyclerview;
@@ -41,13 +36,14 @@ public class SendTabVideoFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.send_viewpager_recyclerview, container, false);
-        videoRecyclerview = (RecyclerView) view.findViewById(R.id.send_recyclerview);
+        View view = inflater.inflate(R.layout.send_video_recyclerview, container, false);
+        videoRecyclerview = (RecyclerView) view.findViewById(R.id.send_video_recyclerview);
          layoutManager = new LinearLayoutManager(this.getContext());
-//        layoutManager = new GridLayoutManager(this.getContext(), 3);
         videoRecyclerview.setLayoutManager(layoutManager);
-
-        dynamicLinearLayout = (LinearLayout)view.findViewById(R.id.send_dynamic_linearlayout);
+//        dynamicLinearLayout = (LinearLayout)view.findViewById(R.id.send_dynamic_linearlayout);
+        dynamicLinearLayout = SendTabFragment.dynamicLinearLayout;
+        Log.e("dynamic_video?","");
+//        dynamicLinearLayout.removeAllViews();
         videoRecyclerViewAdapter = new SendVideoRecyclerViewAdapter(sendVideosArrayList, getActivity(), dynamicLinearLayout);
         videoRecyclerview.setAdapter(videoRecyclerViewAdapter);
 
@@ -56,12 +52,16 @@ public class SendTabVideoFragment extends Fragment {
         videoRecyclerViewAdapter.notifyDataSetChanged();
         return view;
     }
-    private String convertDuration(int duration){
-        int hour = duration/3600;
-        int minute = (duration%3600)/60;
-        int second = duration%60;
-        return Integer.toString(hour) + ":" + Integer.toString(minute) + ":" + Integer.toString(second);
-    }
+    private String convertDuration(long duration){
+//        int hour = duration/3600;
+//        int minute = (duration%3600)/60;
+//        int second = duration%60;
+        return String.format("%d:%d",
+                TimeUnit.MILLISECONDS.toMinutes(duration),
+                TimeUnit.MILLISECONDS.toSeconds(duration) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration))
+        );
+  }
 
     private ArrayList<SendVideo> queryAllVideo(){
         ArrayList<SendVideo> result = new ArrayList<>();
@@ -73,7 +73,7 @@ public class SendTabVideoFragment extends Fragment {
         int colDataIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
         int colNameIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
         int colDateIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_ADDED);
-        int colTLIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
+        long colTLIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
 
         pictureCount = 0;
         while(cursor.moveToNext())

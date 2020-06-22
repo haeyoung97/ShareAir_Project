@@ -35,13 +35,14 @@ public class SendTabFileFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.send_viewpager_recyclerview, container, false);
+        View view = inflater.inflate(R.layout.send_file_recyclerview, container, false);
 
-        fileRecyclerview = (RecyclerView)view.findViewById(R.id.send_recyclerview);
+        fileRecyclerview = (RecyclerView) view.findViewById(R.id.send_file_recyclerview);
         layoutManager = new LinearLayoutManager(this.getContext());
         fileRecyclerview.setLayoutManager(layoutManager);
-
-        dynamicLinearLayout = (LinearLayout)view.findViewById(R.id.send_dynamic_linearlayout);
+//        dynamicLinearLayout = (LinearLayout)view.findViewById(R.id.send_dynamic_linearlayout);
+        dynamicLinearLayout = SendTabFragment.dynamicLinearLayout;
+        Log.e("dynamic_file?","");
         fileRecyclerViewAdapter = new SendFileRecyclerViewAdapter(sendFileArrayList, getActivity(), dynamicLinearLayout);
         fileRecyclerview.setAdapter(fileRecyclerViewAdapter);
 

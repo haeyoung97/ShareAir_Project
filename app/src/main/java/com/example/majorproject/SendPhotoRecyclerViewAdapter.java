@@ -3,7 +3,9 @@ package com.example.majorproject;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +28,7 @@ import org.w3c.dom.Text;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 
 public class SendPhotoRecyclerViewAdapter extends RecyclerView.Adapter<SendPhotoRecyclerViewAdapter.ViewHolder> {
     private ArrayList<SendPhoto> sendPhotos;
@@ -49,62 +52,81 @@ public class SendPhotoRecyclerViewAdapter extends RecyclerView.Adapter<SendPhoto
     @Override
     public SendPhotoRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         view = layoutInflater.inflate(R.layout.send_photo_cardview, parent, false);
-        return new ViewHolder(view);
+        return new SendPhotoRecyclerViewAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SendPhotoRecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final SendPhotoRecyclerViewAdapter.ViewHolder holder, final int position) {
         Log.d("PhotoBindHolder : ", sendPhotos.get(position).getImagePath());
 
-//        Calendar c = Calendar.getInstance();
-//        SimpleDateFormat dateformat = new SimpleDateFormat("dd-MMM-yyyy hh:mm:ss aa");
-//        String datetime = dateformat.format(c.getTime());
-//        Log.d("prevTime : ", datetime);
 
-//       // Bitmap resizeBitmap = null;
-//       // BitmapSizeModify bitmapThread = new BitmapSizeModify(sendPhotos.get(position).getImagePath(), resizeBitmap);
-//       // bitmapThread.start();
-
-//        while(true){
-//            if(!bitmapThread.isAlive()){
-//                holder.imageView.setImageBitmap(resizeBitmap);
-//                holder.checkBox.setChecked(false);
-//                break;
-//            }
-//        }
-//
-//      /  try {
-//            bitmapThread.join();
-//            resizeBitmap = bitmapThread.getResizeBitmap();
-//            holder.imageView.setImageBitmap(resizeBitmap);
-//            holder.checkBox.setChecked(false);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//       / }
-
-
-//        BitmapFactory.Options options = new BitmapFactory.Options();
-//        options.inSampleSize = 3;
-//        Bitmap bitmap = BitmapFactory.decodeFile(sendPhotos.get(position).getImagePath());
-//        Bitmap resizeBitmap;
-//
-//        if(bitmap.getWidth() > bitmap.getHeight()){
-//            Matrix matrix = new Matrix();
-//            matrix.postRotate(90);
-//            resizeBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-//        }
-//        else{
-//            resizeBitmap = Bitmap.createScaledBitmap(bitmap, 130, 140, true);
-//
-//        }
-
-        SendPhoto item = sendPhotos.get(position);
+        final SendPhoto item = sendPhotos.get(position);
         holder.setItem(item);
+        final Drawable highlight = context.getDrawable(R.drawable.highlight);
+        final Drawable noHighlight = context.getDrawable(R.drawable.nohighlight);
+        if(MainActivity.selectList.size() == 0){
+            item.setSelected(false);
+        }
+//        holder.imageView.setBackgroundColor(item.isSelected() ? Color.GRAY : Color.WHITE);
+        holder.imageView.setColorFilter(item.isSelected() ?
+                context.getResources().getColor(R.color.selectItem) :
+                context.getResources().getColor(R.color.unselectItem));
+//        holder.views.setBackground(item.isSelected() ? highlight : noHighlight);
+        holder.views.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                item.setSelected(!item.isSelected());
+                holder.imageView.setColorFilter(item.isSelected() ?
+                        context.getResources().getColor(R.color.selectItem) :
+                        context.getResources().getColor(R.color.unselectItem));
+////                holder.views.setBackgroundColor(item.isSelected() ? Color.GRAY : Color.WHITE);
+//                holder.views.setBackground(item.isSelected() ? highlight : noHighlight);
+                if (item.isSelected()) {
+                    item.setIndex(position);
+//                    selectIdx++;
+                    selectCnt++;
+                    MainActivity.selectList.add(new FileNode(item.getImagePath(), 5, item.getIndex(), 2));
+                    dynamicSendSelectLayout = new DynamicSendSelectLayout(context.getApplicationContext());
+                    if (selectCnt == 1) {
+                        dynamicLinearLayout.addView(dynamicSendSelectLayout);
+                        SendTabFragment.viewPager.setPagingEnabled(false);
+                        for(int i = 0; i < SendTabFragment.tabStrip.getChildCount(); i++) {
+                            SendTabFragment.tabStrip.getChildAt(i).setClickable(false);
+                        }
+                    }
+
+                    holder.selectCntTextView = (TextView) dynamicLinearLayout.findViewById(R.id.dynamic_send_select_cnt);
+                    holder.selectCntTextView.setText(selectCnt + "개 선택");
+
+                    holder.selectSendButton = (Button) dynamicLinearLayout.findViewById(R.id.dynamic_send_select_btn);
+                    holder.selectSendButton.setOnClickListener(MainActivity.btnEventListener);
+
+                } else {
+                    int k = 0;
+                    while (true) {
+                        if ((MainActivity.selectList.get(k).getFileTab() == 2) && (MainActivity.selectList.get(k).getFileIdx() == item.getIndex())) {
+                            break;
+                        }
+                        Log.e("remove idx? ", Integer.toString(MainActivity.selectList.get(k).getFileIdx()));
+                        k++;
+                    }
+                    selectCnt--;
+                    MainActivity.selectList.remove(k);
+                    holder.selectCntTextView.setText(selectCnt + "개 선택");
+                    if (selectCnt == 0) {
+                        dynamicLinearLayout.removeAllViews();
+                        SendTabFragment.viewPager.setPagingEnabled(true);
+                        for(int i = 0; i < SendTabFragment.tabStrip.getChildCount(); i++) {
+                            SendTabFragment.tabStrip.getChildAt(i).setClickable(true);
+                        }
+                    }
+                }
+            }
+        });
     }
-
     public void addItem(SendPhoto item){
         sendPhotos.add(item);
     }
@@ -126,13 +148,14 @@ public class SendPhotoRecyclerViewAdapter extends RecyclerView.Adapter<SendPhoto
         return sendPhotos.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder{
 
         private CheckBox checkBox;
         private ImageView imageView;
         private CardView cardView;
         private TextView selectCntTextView;
         private Button selectSendButton;
+        private View views;
 
         private BitmapFactory.Options options = new BitmapFactory.Options();
 
@@ -142,56 +165,16 @@ public class SendPhotoRecyclerViewAdapter extends RecyclerView.Adapter<SendPhoto
             options.inSampleSize = 12;
 
             cardView = (CardView)itemView.findViewById(R.id.send_photo_cardview);
-            checkBox = (CheckBox)itemView.findViewById(R.id.send_photo_cardview_check);
             imageView = (ImageView)itemView.findViewById(R.id.send_photo_cardview_image);
-
-            itemView.setOnClickListener(this);
+            views = itemView;
         }
 
         public void setItem(SendPhoto item){
-
-//            Log.d("picasso : ", item.getImagePath());
 
             Picasso.with(context)
                     .load(Uri.parse("file://"+item.getImagePath()))
                     .into(imageView);
 
-        }
-
-        @Override
-        public void onClick(View v) {
-            int pos = getAdapterPosition();
-            Log.d("clickListener", "listen!");
-            if(pos != RecyclerView.NO_POSITION){
-                if(!checkBox.isChecked()) {
-                    Log.d("check!", "yes");
-                    checkBox.setChecked(true);
-                    sendPhotos.get(pos).setCheck(true);
-                    selectCnt++;
-                    MainActivity.selectList.add(new FileNode(sendPhotos.get(pos).getImagePath(), 1));
-//                    MainActivity.selectList.add(sendPhotos.get(pos).getImagePath());
-                    dynamicSendSelectLayout = new DynamicSendSelectLayout(context.getApplicationContext());
-                    if(selectCnt==1){
-                        dynamicLinearLayout.addView(dynamicSendSelectLayout);
-                    }
-                    selectCntTextView = (TextView)dynamicLinearLayout.findViewById(R.id.dynamic_send_select_cnt);
-                    selectCntTextView.setText(selectCnt + "개 선택");
-
-                    selectSendButton = (Button)dynamicLinearLayout.findViewById(R.id.dynamic_send_select_btn);
-                    selectSendButton.setOnClickListener(MainActivity.btnEventListener);
-                }
-                else{
-                    Log.d("check?", "No");
-                    checkBox.setChecked(false);
-                    sendPhotos.get(pos).setCheck(false);
-                    selectCnt--;
-                    MainActivity.selectList.remove(sendPhotos.get(pos));
-                    selectCntTextView.setText(selectCnt + "개 선택");
-                    if(selectCnt==0){
-                        dynamicLinearLayout.removeAllViews();
-                    }
-                }
-            }
         }
     }
 }

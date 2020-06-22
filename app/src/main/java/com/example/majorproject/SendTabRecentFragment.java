@@ -15,17 +15,14 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.File;
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class SendTabRecentFragment extends Fragment {
+public class SendTabRecentFragment extends Fragment{
     private RecyclerView recentRecyclerview;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<SendRecent> sendRecentArrayList;
@@ -40,16 +37,17 @@ public class SendTabRecentFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.send_viewpager_recyclerview, container, false);
-        //imageFile = MainActivity.imageList;
+        View view = inflater.inflate(R.layout.send_recent_recyclerview, container, false);
         sendRecentArrayList = new ArrayList<SendRecent>();
 
 //       recentData();
-       recentRecyclerview = (RecyclerView) view.findViewById(R.id.send_recyclerview);
+       recentRecyclerview = (RecyclerView) view.findViewById(R.id.send_recent_recyclerview);
+       recentRecyclerview.setItemViewCacheSize(0);
        layoutManager = new LinearLayoutManager(this.getContext());
-//        layoutManager = new GridLayoutManager(this.getContext(), 3);
         recentRecyclerview.setLayoutManager(layoutManager);
-        dynamicLinearLayout = (LinearLayout)view.findViewById(R.id.send_dynamic_linearlayout);
+//        dynamicLinearLayout = (LinearLayout)view.findViewById(R.id.send_dynamic_linearlayout);
+        dynamicLinearLayout = SendTabFragment.dynamicLinearLayout;
+        Log.e("dynamic_recent?","");
         recentRecyclerViewAdapter = new SendRecentRecyclerViewAdapter(sendRecentArrayList, getActivity(), dynamicLinearLayout);
         recentRecyclerview.setAdapter(recentRecyclerViewAdapter);
 
@@ -131,10 +129,7 @@ public class SendTabRecentFragment extends Fragment {
         }
         return result;
     }
-
-
-
-//    private void recentData(){
+    //    private void recentData(){
 //        if(MainActivity.sortedFileList.size() == 0){
 //            return;
 //        }

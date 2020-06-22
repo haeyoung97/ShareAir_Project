@@ -8,6 +8,7 @@ public class SendFile {
     private int resourceFile;
     private boolean check;
     private int index;
+    private boolean isSelected = false;
 
     public SendFile(String filepath, String extension, String filename, String date) {
         this.filepath = filepath;
@@ -53,6 +54,14 @@ public class SendFile {
                 resourceFile = R.drawable.folder;
                 break;
         }
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public String getFilepath() {

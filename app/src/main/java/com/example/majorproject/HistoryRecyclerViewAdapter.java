@@ -81,9 +81,9 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private CheckBox checkBox;
+//        private CheckBox checkBox;
         private ImageView imageView;
         private TextView deviceName;
         private TextView fileName;
@@ -98,7 +98,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 
             cardView = (CardView)itemView.findViewById(R.id.history_cardview);
             imageView = (ImageView)itemView.findViewById(R.id.history_image);
-            checkBox = (CheckBox)itemView.findViewById(R.id.history_checkbox);
+//            checkBox = (CheckBox)itemView.findViewById(R.id.history_checkbox);
             deviceName = (TextView)itemView.findViewById(R.id.history_device);
             fileName = (TextView)itemView.findViewById(R.id.history_filename);
             kind = (TextView)itemView.findViewById(R.id.history_kind);
@@ -106,7 +106,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
             date = (TextView)itemView.findViewById(R.id.history_date);
 
 
-            itemView.setOnClickListener(this);
+//            itemView.setOnClickListener(this);
         }
 
         public void setItem(HistoryDBArray item){
@@ -116,20 +116,20 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
             sucOrFail.setText(item.getSucOrFail());
             date.setText(item.getDate());
         }
-
-        @Override
-        public void onClick(View v) {
-            int pos = getAdapterPosition();
-            if(pos != RecyclerView.NO_POSITION){
-                if(!checkBox.isChecked()){
-                    checkBox.setChecked(true);
-                    historyDBArrays.get(pos).setCheck(true);
-                }
-                else{
-                    checkBox.setChecked(false);
-                    historyDBArrays.get(pos).setCheck(false);
-                }
-            }
-        }
+//
+//        @Override
+//        public void onClick(View v) {
+//            int pos = getAdapterPosition();
+//            if(pos != RecyclerView.NO_POSITION){
+//                if(!checkBox.isChecked()){
+//                    checkBox.setChecked(true);
+//                    historyDBArrays.get(pos).setCheck(true);
+//                }
+//                else{
+//                    checkBox.setChecked(false);
+//                    historyDBArrays.get(pos).setCheck(false);
+//                }
+//            }
+//        }
     }
 }

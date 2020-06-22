@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,16 +38,17 @@ public class SendTabPhotoFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.send_viewpager_recyclerview, container, false);
+        View view = inflater.inflate(R.layout.send_photo_recyclerview, container, false);
 
 //        imageFile = MainActivity.imageList;
         sendPhotoArrayList = new ArrayList<SendPhoto>();
 
 //        imageData();
-        photoRecyclerview = (RecyclerView) view.findViewById(R.id.send_recyclerview);
+        photoRecyclerview = (RecyclerView) view.findViewById(R.id.send_photo_recyclerview);
+//        dynamicLinearLayout = (LinearLayout)view.findViewById(R.id.send_dynamic_linearlayout);
 
-        dynamicLinearLayout = (LinearLayout)view.findViewById(R.id.send_dynamic_linearlayout);
-        // layoutManager = new LinearLayoutManager(this.getContext());
+        dynamicLinearLayout = SendTabFragment.dynamicLinearLayout;
+        Log.e("dynamic_photo?","");
         layoutManager = new GridLayoutManager(this.getContext(), 3);
         photoRecyclerview.setLayoutManager(layoutManager);
 
