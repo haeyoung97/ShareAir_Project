@@ -27,7 +27,10 @@ import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -91,9 +94,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 
         this.inflater = inflater;
         mContentView = inflater.inflate(R.layout.device_detail, null);
-
         context = mContentView.getContext();
-
         mContentView.findViewById(R.id.btn_connect).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,7 +172,6 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 //        setDeviceName(device.deviceName);
         FileTransferService fileTransferService = new FileTransferService(context);
         fileTransferService.setFILE_COUNT(MainActivity.selectList.size());
-        fileTransferService.setDeviceName(getDeviceName());
         fileTransferService.setEXTRAS_GROUP_OWNER_ADDRESS(info.groupOwnerAddress.getHostAddress());
         Log.e("JSch-Address", info.groupOwnerAddress.getHostAddress());
         fileTransferService.setEXTRAS_GROUP_OWNER_PORT("8988");
@@ -201,11 +201,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         // server. The file server is single threaded, single connection server
         // socket.
         if (info.groupFormed && info.isGroupOwner) {
-//            filepath_s = MainActivity.selectList.get(0).getFilePath();
-//            uri_s = getUriFromPath(filepath_s, MainActivity.selectList.get(0).getFileKind());
-            Log.e("", "onConnectionInfoAvailable: DeviceName" + getDeviceName() );
-            setDeviceName(deviceName);
-            new FileServerAsyncTask(getDeviceName(), getActivity(), mContentView.findViewById(R.id.status_text))
+            new FileServerAsyncTask(getActivity(), mContentView.findViewById(R.id.status_text))
                     .threadStart();
         } else if (info.groupFormed) {
             // The other device acts as the client. In this case, we enable the
@@ -259,16 +255,14 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
     public static class FileServerAsyncTask {
         private Context context;
         private TextView statusText;
-        private String deviceName;
 
         /**
          * @param context
          * @param statusText
          */
-        public FileServerAsyncTask(String deviceName, Context context, View statusText) {
+        public FileServerAsyncTask(Context context, View statusText) {
             this.context = context;
             this.statusText = (TextView) statusText;
-            this.deviceName = deviceName;
         }
 
         // 파일 다운로드
@@ -283,7 +277,11 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
         public void doInBackground() {
             try {
 //                String filepath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath();
-
+                int flag = 1, i;
+                Date current;
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                String date;
+                HistoryDatabase helper;
                 File dirs = getSaveFolder();
                 ServerSocket serverSocket = new ServerSocket(8988);
                 Log.d(WiFiDirectActivity.TAG, "Server: Socket opened");
@@ -293,10 +291,10 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
                 Log.d(WiFiDirectActivity.TAG, "Server: connection done");
                 DataInputStream dis = new DataInputStream(client.getInputStream());
                 DataOutputStream stream = new DataOutputStream(client.getOutputStream());
-               // 파일 개수
+                // 파일 개수
                 int count = dis.readInt();
                 Log.e("", "doInBackground: " + String.valueOf(count));
-                for(int i = 0; i < count; i++) {
+                for(i = 0; i < count; i++) {
                     Log.e(WiFiDirectActivity.TAG, "For_Server: connection done");
 
                     // 파일 확장자
@@ -304,7 +302,7 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
                     Log.e(WiFiDirectActivity.TAG, "For_Server: file_extension");
                     File f = new File(dirs.getAbsolutePath() + "/" + System.currentTimeMillis() + "." + file_extension);
 
-                   // 파일 길이
+                    // 파일 길이
                     long length = dis.readLong();
                     Log.e(WiFiDirectActivity.TAG, "For_Server: length");
 
@@ -320,19 +318,64 @@ public class DeviceDetailFragment extends Fragment implements ConnectionInfoList
 
                     }
                     Log.e("", "doInBackground: " + "file_copy finish");
-                    Date current = new Date();
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-                    String date = dateFormat.format(current);
+                    current = new Date();
+                    date = dateFormat.format(current);
                     Log.e("", "threadConnect: " + date);
 
-                    HistoryDatabase helper = new HistoryDatabase(context, MainActivity.dbName, null, 3);
+                    helper = new HistoryDatabase(context, MainActivity.dbName, null, 3);
                     Log.e("", "doInBackground: " + "test point" );
-                    helper.insert_values(date, deviceName, f.getName(), 1, 1);
+                    helper.insert_values(date, "Device", f.getName(), 1, 1);
 
-                    stream.writeInt(1);
+                    if(dis.available() == 0) {
+                        stream.writeInt(1);
+//                        if(count != (i+1))
+//                            flag = 0;
+//                        break;
+                    }
+                    else {
+                        stream.writeInt(0);
+                        if(count != (i+1))
+                            flag = 0;
+                        break;
+                    }
                 }
+                Handler mHandler = new Handler(Looper.getMainLooper());
+                if(flag == 0){
+                    // file transfer fail
+                    current = new Date();
+                    date = dateFormat.format(current);
+                    helper = new HistoryDatabase(context, MainActivity.dbName, null, 3);
+                    int false_count = count - i;
+                    for(int j = false_count; j < count; j++) {
+                        String false_filename = MainActivity.selectList.get(i).getFilePath();
+                        helper.insert_values(date, "Device", false_filename, 1, 0);
+                        i++;
+                    }
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 사용하고자 하는 코드
+                            Toast.makeText(context, "File Transfer Fail ", Toast.LENGTH_SHORT).show();
+                        }
+                    }, 0);
+                } else {
+                    // file transfer success
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 사용하고자 하는 코드
+                            Toast.makeText(context, "File Transfer Success ", Toast.LENGTH_SHORT).show();
+                        }
+                    }, 0);
+                }
+
+                dis.close();
                 client.close();
                 serverSocket.close();
+                MainActivity.wifiActivity.customDisconnect();
+//                MainActivity.selectList.clear();
+//                MainActivity.selectCnt = 0;
+                MainActivity.wifiActivity.finish();
                 return ;
             } catch (IOException e) {
                 return ;

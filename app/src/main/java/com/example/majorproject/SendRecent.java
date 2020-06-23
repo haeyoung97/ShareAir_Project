@@ -69,16 +69,30 @@ public class SendRecent {
                 resourceFile = R.drawable.doc;
                 break;
             case "xlsx":
+            case "xls":
                 fileExtNum = 2;
                 resourceFile = R.drawable.xls;
                 break;
             case "pptx":
+            case "ppt":
                 fileExtNum = 3;
                 resourceFile = R.drawable.ppt;
                 break;
             case "pdf":
                 fileExtNum = 4;
                 resourceFile = R.drawable.pdf;
+                break;
+            case "xml":
+                fileExtNum = 4;
+                resourceFile = R.drawable.xml;
+                break;
+            case "mp3":
+                fileExtNum = 4;
+                resourceFile = R.drawable.mp3;
+                break;
+            case "mp4":
+                fileExtNum = 4;
+                resourceFile = R.drawable.mp4;
                 break;
             case "jpeg":
             case "jpg":
@@ -87,49 +101,13 @@ public class SendRecent {
             case "gif":
                 fileExtNum = 5;
                 break;
-            case "mp4":
-                fileExtNum = 7;
-                break;
             default:
                 fileExtNum = 6;
-                resourceFile = R.drawable.folder;
+                resourceFile = R.drawable.extra;
                 break;
         }
     }
 
-//    public void run(int fileExtNum){
-//        switch(fileExtNum){
-//            case 0:
-//                // Ext : .hwp
-//                thumbPath = thumbPathArr[0];
-//                break;
-//            case 1:
-//                // Ext : .doc
-//                thumbPath = thumbPathArr[1];
-//                break;
-//            case 2:
-//                // Ext : .xlsx
-//                thumbPath = thumbPathArr[2];
-//                break;
-//            case 3:
-//                // Ext : .pptx
-//                thumbPath = thumbPathArr[3];
-//                break;
-//            case 4:
-//                // Ext : .pdf
-//                thumbPath = thumbPathArr[4];
-//                break;
-//            case 5:
-//            case 6:
-//            case 7:
-//                // Ext : image files
-//                thumbPath = filePath;
-//                break;
-//            default:
-//                break;
-//        }
-//
-//    }
 
     public boolean isSelected() {
         return isSelected;

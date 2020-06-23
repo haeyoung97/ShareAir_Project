@@ -31,6 +31,8 @@ public class ButtonEventListener implements View.OnClickListener {
     private HistoryRecyclerViewAdapter view;
     private int pos;
     private ArrayList<HistoryDBArray> historyDBArray;
+
+    private ArrayList<SendRecent> sendRecent;
 //    private Fragment fragment;
 //    public ButtonEventListener(MainActivity mainActivity) {
 //        this.mainActivity = mainActivity;
@@ -41,6 +43,13 @@ public class ButtonEventListener implements View.OnClickListener {
 //        this.fragment = fragment;
 //    }
 //
+
+
+    public ButtonEventListener(MainActivity mainActivity, Context context, ArrayList<SendRecent> sendRecent) {
+        this.mainActivity = mainActivity;
+        this.context = context;
+        this.sendRecent = sendRecent;
+    }
 
     public ButtonEventListener(MainActivity mainActivity, Context context) {
         this.mainActivity = mainActivity;
@@ -60,13 +69,24 @@ public class ButtonEventListener implements View.OnClickListener {
     }
 
 
+
+
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.dynamic_send_select_btn:
                 // 전송 버튼
                 isSendOrRecvBtn = 1;
                 Intent sendIntent = new Intent(context, WiFiDirectActivity.class);
+//                SendTabFragment.dynamicLinearLayout.removeAllViews();
+//                int k = 0;
+//                while(k < MainActivity.selectList.size()){
+//                    if(MainActivity.selectList.get(k).getFileIdx() == sendRecent.get(k).getIndex()){
+//                        sendRecent.get(k).setSelected(false);
+//                    }
+//                    k++;
+//                }
                 mainActivity.startActivity(sendIntent);
+
                 Log.e("select Count : ", Integer.toString(MainActivity.selectList.size()));
                 Log.e("", "onClick: " +  MainActivity.selectList.get(0).getFilePath());
                 break;

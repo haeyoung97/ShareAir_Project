@@ -38,10 +38,16 @@ public class SendFile {
                 resourceFile = R.drawable.doc;
                 break;
             case "xlsx":
+            case "xls":
                 fileExtNum = 2;
                 resourceFile = R.drawable.xls;
                 break;
+            case "xml":
+                fileExtNum = 4;
+                resourceFile = R.drawable.xml;
+                break;
             case "pptx":
+            case "ppt":
                 fileExtNum = 3;
                 resourceFile = R.drawable.ppt;
                 break;
@@ -49,9 +55,13 @@ public class SendFile {
                 fileExtNum = 4;
                 resourceFile = R.drawable.pdf;
                 break;
+            case "mp3":
+                fileExtNum = 4;
+                resourceFile = R.drawable.mp3;
+                break;
             default:
                 fileExtNum = 6;
-                resourceFile = R.drawable.folder;
+                resourceFile = R.drawable.extra;
                 break;
         }
     }

@@ -23,7 +23,7 @@
             android:id="@+id/send_video_image"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:background="@color/cardview_dark_background"
+            android:background="@color/cardView_shairAir_background"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp">
         </ImageView>

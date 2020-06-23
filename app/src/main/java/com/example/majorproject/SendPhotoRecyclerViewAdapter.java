@@ -35,7 +35,6 @@ public class SendPhotoRecyclerViewAdapter extends RecyclerView.Adapter<SendPhoto
     private Context context;
     private LinearLayout dynamicLinearLayout;
     private DynamicSendSelectLayout dynamicSendSelectLayout;
-    private int selectCnt;
 
     public SendPhotoRecyclerViewAdapter(ArrayList<SendPhoto> sendPhotos, Context context) {
         this.sendPhotos = sendPhotos;
@@ -64,8 +63,6 @@ public class SendPhotoRecyclerViewAdapter extends RecyclerView.Adapter<SendPhoto
 
         final SendPhoto item = sendPhotos.get(position);
         holder.setItem(item);
-        final Drawable highlight = context.getDrawable(R.drawable.highlight);
-        final Drawable noHighlight = context.getDrawable(R.drawable.nohighlight);
         if(MainActivity.selectList.size() == 0){
             item.setSelected(false);
         }
@@ -87,10 +84,10 @@ public class SendPhotoRecyclerViewAdapter extends RecyclerView.Adapter<SendPhoto
                 if (item.isSelected()) {
                     item.setIndex(position);
 //                    selectIdx++;
-                    selectCnt++;
+                    MainActivity.selectCnt++;
                     MainActivity.selectList.add(new FileNode(item.getImagePath(), 5, item.getIndex(), 2));
                     dynamicSendSelectLayout = new DynamicSendSelectLayout(context.getApplicationContext());
-                    if (selectCnt == 1) {
+                    if (MainActivity.selectCnt == 1) {
                         dynamicLinearLayout.addView(dynamicSendSelectLayout);
                         SendTabFragment.viewPager.setPagingEnabled(false);
                         for(int i = 0; i < SendTabFragment.tabStrip.getChildCount(); i++) {
@@ -99,12 +96,12 @@ public class SendPhotoRecyclerViewAdapter extends RecyclerView.Adapter<SendPhoto
                     }
 
                     holder.selectCntTextView = (TextView) dynamicLinearLayout.findViewById(R.id.dynamic_send_select_cnt);
-                    holder.selectCntTextView.setText(selectCnt + "개 선택");
+                    holder.selectCntTextView.setText(MainActivity.selectCnt + "개 선택");
 
                     holder.selectSendButton = (Button) dynamicLinearLayout.findViewById(R.id.dynamic_send_select_btn);
                     holder.selectSendButton.setOnClickListener(MainActivity.btnEventListener);
 
-                } else {
+                } else if(MainActivity.selectList.size() != 0){
                     int k = 0;
                     while (true) {
                         if ((MainActivity.selectList.get(k).getFileTab() == 2) && (MainActivity.selectList.get(k).getFileIdx() == item.getIndex())) {
@@ -113,10 +110,10 @@ public class SendPhotoRecyclerViewAdapter extends RecyclerView.Adapter<SendPhoto
                         Log.e("remove idx? ", Integer.toString(MainActivity.selectList.get(k).getFileIdx()));
                         k++;
                     }
-                    selectCnt--;
+                    MainActivity.selectCnt--;
                     MainActivity.selectList.remove(k);
-                    holder.selectCntTextView.setText(selectCnt + "개 선택");
-                    if (selectCnt == 0) {
+                    holder.selectCntTextView.setText(MainActivity.selectCnt + "개 선택");
+                    if (MainActivity.selectCnt == 0) {
                         dynamicLinearLayout.removeAllViews();
                         SendTabFragment.viewPager.setPagingEnabled(true);
                         for(int i = 0; i < SendTabFragment.tabStrip.getChildCount(); i++) {

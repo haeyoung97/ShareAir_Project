@@ -26,7 +26,6 @@ public class SendFileRecyclerViewAdapter extends RecyclerView.Adapter<SendFileRe
     private Context context;
     private LinearLayout dynamicLinearLayout;
     private DynamicSendSelectLayout dynamicSendSelectLayout;
-    private int selectCnt;
 
     public SendFileRecyclerViewAdapter(ArrayList<SendFile> sendFiles, Context context) {
         this.sendFiles = sendFiles;
@@ -64,10 +63,10 @@ public class SendFileRecyclerViewAdapter extends RecyclerView.Adapter<SendFileRe
                 holder.views.setBackgroundColor(item.isSelected() ? Color.GRAY : Color.WHITE);
 
                 if(item.isSelected()) {
-                    selectCnt++;
+                    MainActivity.selectCnt++;
                     MainActivity.selectList.add(new FileNode(item.getFilepath(), item.getFileExtNum(), item.getIndex(), 4));
                     dynamicSendSelectLayout = new DynamicSendSelectLayout(context.getApplicationContext());
-                    if (selectCnt == 1) {
+                    if (MainActivity.selectCnt == 1) {
                         dynamicLinearLayout.addView(dynamicSendSelectLayout);
                         SendTabFragment.viewPager.setPagingEnabled(false);
                         for(int i = 0; i < SendTabFragment.tabStrip.getChildCount(); i++) {
@@ -76,7 +75,7 @@ public class SendFileRecyclerViewAdapter extends RecyclerView.Adapter<SendFileRe
                     }
 
                     holder.selectCntTextView = (TextView) dynamicLinearLayout.findViewById(R.id.dynamic_send_select_cnt);
-                    holder.selectCntTextView.setText(selectCnt + "개 선택");
+                    holder.selectCntTextView.setText(MainActivity.selectCnt + "개 선택");
 
                     holder.selectSendButton = (Button) dynamicLinearLayout.findViewById(R.id.dynamic_send_select_btn);
                     holder.selectSendButton.setOnClickListener(MainActivity.btnEventListener);
@@ -90,10 +89,10 @@ public class SendFileRecyclerViewAdapter extends RecyclerView.Adapter<SendFileRe
                         Log.e("remove idx? ", Integer.toString(MainActivity.selectList.get(k).getFileIdx()));
                         k++;
                     }
-                    selectCnt--;
+                    MainActivity.selectCnt--;
                     MainActivity.selectList.remove(k);
-                    holder.selectCntTextView.setText(selectCnt + "개 선택");
-                    if(selectCnt==0){
+                    holder.selectCntTextView.setText(MainActivity.selectCnt + "개 선택");
+                    if(MainActivity.selectCnt==0){
                         dynamicLinearLayout.removeAllViews();
                         SendTabFragment.viewPager.setPagingEnabled(true);
                         for(int i = 0; i < SendTabFragment.tabStrip.getChildCount(); i++) {
@@ -142,7 +141,6 @@ public class SendFileRecyclerViewAdapter extends RecyclerView.Adapter<SendFileRe
             super(itemView);
 
             cardView = (CardView)itemView.findViewById(R.id.send_file_cardview);
-//            checkBox = (CheckBox)itemView.findViewById(R.id.send_file_checkbox);
             imageView = (ImageView)itemView.findViewById(R.id.send_file_image);
             filename = (TextView)itemView.findViewById(R.id.send_file_filename);
             date = (TextView)itemView.findViewById(R.id.send_file_date);
@@ -168,42 +166,5 @@ public class SendFileRecyclerViewAdapter extends RecyclerView.Adapter<SendFileRe
             date.setText(item.getDate());
 
         }
-
-//        @Override
-//        public void onClick(View v) {
-//            int pos = getAdapterPosition();
-//            Log.d("clickListener", "listen!");
-//            if(pos != RecyclerView.NO_POSITION){
-//                Log.d("aa", "god");
-//                if(!checkBox.isChecked()) {
-//                    checkBox.setChecked(true);
-//                    sendFiles.get(pos).setCheck(true);
-//                    selectCnt++;
-//                    MainActivity.selectList.add(new FileNode(sendFiles.get(pos).getFilepath(), 3));
-////                    MainActivity.selectList.add(sendFiles.get(pos).getFilepath());
-////                    MainActivity.selectList.add(MainActivity.imageList.get(sendRecents.get(pos).getIndex()).getFile());
-//                    dynamicSendSelectLayout = new DynamicSendSelectLayout(context.getApplicationContext());
-//                    if(selectCnt==1){
-//                        dynamicLinearLayout.addView(dynamicSendSelectLayout);
-//                    }
-//                    selectCntTextView = (TextView)dynamicLinearLayout.findViewById(R.id.dynamic_send_select_cnt);
-//                    selectCntTextView.setText(selectCnt + "개 선택");
-//
-//                    selectSendButton = (Button)dynamicLinearLayout.findViewById(R.id.dynamic_send_select_btn);
-//                    selectSendButton.setOnClickListener(MainActivity.btnEventListener);
-//                }
-//                else{
-//                    checkBox.setChecked(false);
-//                    sendFiles.get(pos).setCheck(false);
-//                    selectCnt--;
-//                    MainActivity.selectList.remove(sendFiles.get(pos));
-//                    selectCntTextView.setText(selectCnt + "개 선택");
-////                    MainActivity.selectList.remove(MainActivity.imageList.get(sendRecents.get(pos).getIndex()));
-//                    if(selectCnt==0){
-//                        dynamicLinearLayout.removeAllViews();
-//                    }
-//                }
-//            }
-//        }
     }
 }

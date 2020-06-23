@@ -7,4 +7,5 @@
     <color name="layout_border_color">#FF111111</color>
     <color name="selectItem">#3000BFFF</color>
     <color name="unselectItem">#00000000</color>
+    <color name="cardView_shairAir_background">#FFFFFF</color>
 </resources>

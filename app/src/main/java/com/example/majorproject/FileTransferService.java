@@ -10,9 +10,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -54,7 +58,6 @@ public class FileTransferService extends IntentService {
     //    public ArrayList<String> EXTRAS_FILE_PATH = new ArrayList<>();
     public String EXTRAS_GROUP_OWNER_ADDRESS = "go_host";
     public String EXTRAS_GROUP_OWNER_PORT = "go_port";
-    public String deviceName = "deviceName";
     public int FILE_COUNT = 0;
     public int port;
 
@@ -75,9 +78,6 @@ public class FileTransferService extends IntentService {
     }
     void setEXTRAS_FILE_EXTENSION(String EXTRAS_FILE_EXTENSION){
         this.EXTRAS_FILE_EXTENSION = EXTRAS_FILE_EXTENSION;
-    }
-    void setDeviceName(String deviceName){
-        this.deviceName = deviceName;
     }
     void setFILE_COUNT(int FILE_COUNT){
         this.FILE_COUNT = FILE_COUNT;
@@ -144,8 +144,8 @@ public class FileTransferService extends IntentService {
     public void connectionSocket() {
         int i = 0;
         while(i < MainActivity.selectList.size()) {
-            uriString.add(getUriFromPath(MainActivity.selectList.get(i).getFilePath(), MainActivity.selectList.get(i).getFileKind()).toString());
-            Log.e("FILE_LIST", "connectionSocket: " + MainActivity.selectList.get(i).getFilePath());
+            uriString.add(getUriFromPath(MainActivity.selectList.get(i).getFilePath(), MainActivity.selectList.get(i).getFileTab()-1).toString());
+
             i++;
         }
 //        Log.e("JSch-Path", EXTRAS_FILE_PATH);
@@ -177,12 +177,12 @@ public class FileTransferService extends IntentService {
             // 파일 개수 전송
             stream.writeInt(FILE_COUNT);
             Log.e("", "FILE_COUNT: "+ String.valueOf(FILE_COUNT));
-            int result;
+            int result = 0, i;
             Date current;
-            SimpleDateFormat dateFormat;
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             String date;
             HistoryDatabase helper;
-            for(int i = 0; i < FILE_COUNT; i++) {
+            for(i = 0; i < FILE_COUNT; i++) {
                 // 파일 경로와 파일 확장자 설정
                 result = 0;
                 setEXTRAS_FILE_PATH(uriString.get(i));
@@ -208,13 +208,12 @@ public class FileTransferService extends IntentService {
                         stream.flush();
                     }
                     current = new Date();
-                    dateFormat = new SimpleDateFormat("yyyy/MM/dd");
                     date = dateFormat.format(current);
                     Log.e("", "threadConnect: " + date);
                     Log.d(WiFiDirectActivity.TAG, "Client: Data written");
                     helper = new HistoryDatabase(context, MainActivity.dbName, null, 3);
                     Log.e("", "doInBackground: " + "test point" );
-                    helper.insert_values(date, deviceName, f.getName(), 0, 1);
+                    helper.insert_values(date, "Device", f.getName(), 0, 1);
                     result = dis.readInt();
                     if(result != 1)
                         break;
@@ -222,15 +221,45 @@ public class FileTransferService extends IntentService {
                     Log.d(WiFiDirectActivity.TAG, e.toString());
                 }
                 Log.e("", "threadConnect: " + Integer.toString(result) );
-                if(result != 1){
-                    current = new Date();
-                    dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-                    date = dateFormat.format(current);
-                    helper = new HistoryDatabase(context, MainActivity.dbName, null, 3);
-                    helper.insert_values(date, deviceName, f.getName(), 0, 0);
-                }
             }
+            Handler mHandler = new Handler(Looper.getMainLooper());
+            if(result != 1 && FILE_COUNT != (i+1)){
+                // file transfer fail
+                current = new Date();
+                date = dateFormat.format(current);
+                helper = new HistoryDatabase(context, MainActivity.dbName, null, 3);
+                int false_count = FILE_COUNT - i;
+                for(int j = 0; j < false_count; j++) {
+                    String false_filename = MainActivity.selectList.get(i).getFilePath();
+                    helper.insert_values(date, "Device", false_filename, 0, 0);
+                    i++;
+                }
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 사용하고자 하는 코드
+                        Toast.makeText(context, "File Transfer Fail ", Toast.LENGTH_SHORT).show();
+                    }
+                }, 0);
+            } else {
+                // file transfer success
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 사용하고자 하는 코드
+                        Toast.makeText(context, "File Transfer Success ", Toast.LENGTH_SHORT).show();
+                    }
+                }, 0);
+            }
+
+            dis.close();
+            stream.close();
             socket.close();
+            MainActivity.wifiActivity.customDisconnect();
+//            MainActivity.wifiActivity.finish();
+//            MainActivity.selectList.clear();
+//            MainActivity.selectCnt = 0;
+            MainActivity.wifiActivity.finish();
         } catch (IOException e) {
             Log.e(WiFiDirectActivity.TAG, e.getMessage());
 

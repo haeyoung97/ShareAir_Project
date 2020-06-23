@@ -98,7 +98,6 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
 
             cardView = (CardView)itemView.findViewById(R.id.history_cardview);
             imageView = (ImageView)itemView.findViewById(R.id.history_image);
-//            checkBox = (CheckBox)itemView.findViewById(R.id.history_checkbox);
             deviceName = (TextView)itemView.findViewById(R.id.history_device);
             fileName = (TextView)itemView.findViewById(R.id.history_filename);
             kind = (TextView)itemView.findViewById(R.id.history_kind);
@@ -106,30 +105,41 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
             date = (TextView)itemView.findViewById(R.id.history_date);
 
 
-//            itemView.setOnClickListener(this);
         }
 
         public void setItem(HistoryDBArray item){
             deviceName.setText(item.getDeviceName());
             fileName.setText(item.getFileName());
+            int index = item.getFileName().lastIndexOf(".");
+            String extension = item.getFileName().substring(index + 1);
+            Log.e("", "setItem: extension " + extension );
+            if(extension.equals("jpg") || extension.equals("jpeg")){
+                imageView.setImageResource(R.drawable.jpg);
+            } else if(extension.equals("pdf")){
+                imageView.setImageResource(R.drawable.pdf);
+            } else if(extension.equals("hwp")){
+                imageView.setImageResource(R.drawable.hwp);
+            } else if(extension.equals("ppt") || extension.equals("pptx")){
+                imageView.setImageResource(R.drawable.ppt);
+            } else if(extension.equals("doc") || extension.equals("docx")){
+                imageView.setImageResource(R.drawable.doc);
+            } else if(extension.equals("xls") || extension.equals("xlsx")){
+                imageView.setImageResource(R.drawable.xls);
+            } else if(extension.equals("xml")){
+                imageView.setImageResource(R.drawable.xml);
+            } else if(extension.equals("mp3")){
+                imageView.setImageResource(R.drawable.mp3);
+            } else if(extension.equals("mp4")){
+                imageView.setImageResource(R.drawable.mp4);
+            } else if(extension.equals("png")){
+                imageView.setImageResource(R.drawable.png);
+            } else {
+                imageView.setImageResource(R.drawable.extra);
+            }
             kind.setText(item.getKind());
             sucOrFail.setText(item.getSucOrFail());
             date.setText(item.getDate());
         }
-//
-//        @Override
-//        public void onClick(View v) {
-//            int pos = getAdapterPosition();
-//            if(pos != RecyclerView.NO_POSITION){
-//                if(!checkBox.isChecked()){
-//                    checkBox.setChecked(true);
-//                    historyDBArrays.get(pos).setCheck(true);
-//                }
-//                else{
-//                    checkBox.setChecked(false);
-//                    historyDBArrays.get(pos).setCheck(false);
-//                }
-//            }
-//        }
+
     }
 }

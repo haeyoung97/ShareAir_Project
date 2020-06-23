@@ -35,7 +35,6 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
     private Context context;
     private LinearLayout dynamicLinearLayout;
     private DynamicSendSelectLayout dynamicSendSelectLayout;
-    private int selectCnt;
 
     public SendRecentRecyclerViewAdapter(ArrayList<SendRecent> sendRecents, Context context) {
         this.sendRecents = sendRecents;
@@ -46,7 +45,7 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
         this.sendRecents = sendRecents;
         this.context = context;
         this.dynamicLinearLayout = dynamicLinearLayout;
-        selectCnt = 0;
+        MainActivity.selectCnt = 0;
         Log.e("dynamic recent", "view");
     }
 
@@ -67,7 +66,10 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
         final SendRecent item = sendRecents.get(position);
         holder.setItem(item);
         if(MainActivity.selectList.size() == 0){
-            item.setSelected(false);
+            if(item.isSelected()){
+                item.setSelected(!item.isSelected());
+            }
+            Log.e("recent : ", "0");
         }
 
 //        int l = 0;
@@ -94,10 +96,10 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
                 if(item.isSelected()){
                     item.setIndex(position);
 //                    selectIdx++;
-                    selectCnt++;
+                    MainActivity.selectCnt++;
                     MainActivity.selectList.add(new FileNode(item.getFilePath(), item.getFileExtNum(), item.getIndex(), 1));
                     dynamicSendSelectLayout = new DynamicSendSelectLayout(context.getApplicationContext());
-                    if (selectCnt == 1) {
+                    if (MainActivity.selectCnt == 1) {
                         dynamicLinearLayout.addView(dynamicSendSelectLayout);
                         SendTabFragment.viewPager.setPagingEnabled(false);
                         for(int i = 0; i < SendTabFragment.tabStrip.getChildCount(); i++) {
@@ -106,13 +108,14 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
                     }
 
                     holder.selectCntTextView = (TextView) dynamicLinearLayout.findViewById(R.id.dynamic_send_select_cnt);
-                    holder.selectCntTextView.setText(selectCnt + "개 선택");
+                    holder.selectCntTextView.setText(MainActivity.selectCnt + "개 선택");
 
                     holder.selectSendButton = (Button) dynamicLinearLayout.findViewById(R.id.dynamic_send_select_btn);
                     holder.selectSendButton.setOnClickListener(MainActivity.btnEventListener);
+//                    holder.selectSendButton.setOnClickListener(new ButtonEventListener(MainActivity.static_mainActivity, context, sendRecents));
 
                 }
-                else{
+                else if(MainActivity.selectList.size() != 0){
                     int k = 0;
                     while(true){
                         if((MainActivity.selectList.get(k).getFileTab() == 1) && (MainActivity.selectList.get(k).getFileIdx() == item.getIndex())){
@@ -121,10 +124,10 @@ public class SendRecentRecyclerViewAdapter extends RecyclerView.Adapter<SendRece
                         Log.e("remove idx? ", Integer.toString(MainActivity.selectList.get(k).getFileIdx()));
                         k++;
                     }
-                    selectCnt--;
+                    MainActivity.selectCnt--;
                     MainActivity.selectList.remove(k);
-                    holder.selectCntTextView.setText(selectCnt + "개 선택");
-                    if(selectCnt==0){
+                    holder.selectCntTextView.setText(MainActivity.selectCnt + "개 선택");
+                    if(MainActivity.selectCnt==0){
                         dynamicLinearLayout.removeAllViews();
                         SendTabFragment.viewPager.setPagingEnabled(true);
                         for(int i = 0; i < SendTabFragment.tabStrip.getChildCount(); i++) {

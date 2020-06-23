@@ -28,7 +28,7 @@ public class SendVideoRecyclerViewAdapter extends RecyclerView.Adapter<SendVideo
     private Context context;
     private LinearLayout dynamicLinearLayout;
     private DynamicSendSelectLayout dynamicSendSelectLayout;
-    private int selectCnt;
+
 
     public SendVideoRecyclerViewAdapter(ArrayList<SendVideo> sendVideos, Context context) {
         this.sendVideos = sendVideos;
@@ -68,10 +68,10 @@ public class SendVideoRecyclerViewAdapter extends RecyclerView.Adapter<SendVideo
                 if (item.isSelected()) {
                     item.setIndex(position);
 //                    selectIdx++;
-                    selectCnt++;
+                    MainActivity.selectCnt++;
                     MainActivity.selectList.add(new FileNode(item.getFilepath(), 7, item.getIndex(), 3));
                     dynamicSendSelectLayout = new DynamicSendSelectLayout(context.getApplicationContext());
-                    if (selectCnt == 1) {
+                    if (MainActivity.selectCnt == 1) {
                         dynamicLinearLayout.addView(dynamicSendSelectLayout);
                         SendTabFragment.viewPager.setPagingEnabled(false);
                         for(int i = 0; i < SendTabFragment.tabStrip.getChildCount(); i++) {
@@ -80,12 +80,12 @@ public class SendVideoRecyclerViewAdapter extends RecyclerView.Adapter<SendVideo
                     }
 
                     holder.selectCntTextView = (TextView) dynamicLinearLayout.findViewById(R.id.dynamic_send_select_cnt);
-                    holder.selectCntTextView.setText(selectCnt + "개 선택");
+                    holder.selectCntTextView.setText(MainActivity.selectCnt + "개 선택");
 
                     holder.selectSendButton = (Button) dynamicLinearLayout.findViewById(R.id.dynamic_send_select_btn);
                     holder.selectSendButton.setOnClickListener(MainActivity.btnEventListener);
 
-                } else {
+                } else if(MainActivity.selectList.size() != 0){
                     int k = 0;
                     while (true) {
                         if ((MainActivity.selectList.get(k).getFileTab() == 3) && (MainActivity.selectList.get(k).getFileIdx() == item.getIndex())) {
@@ -94,10 +94,10 @@ public class SendVideoRecyclerViewAdapter extends RecyclerView.Adapter<SendVideo
                         Log.e("remove idx? ", Integer.toString(MainActivity.selectList.get(k).getFileIdx()));
                         k++;
                     }
-                    selectCnt--;
+                    MainActivity.selectCnt--;
                     MainActivity.selectList.remove(k);
-                    holder.selectCntTextView.setText(selectCnt + "개 선택");
-                    if (selectCnt == 0) {
+                    holder.selectCntTextView.setText(MainActivity.selectCnt + "개 선택");
+                    if (MainActivity.selectCnt == 0) {
                         dynamicLinearLayout.removeAllViews();
                         SendTabFragment.viewPager.setPagingEnabled(true);
                         for(int i = 0; i < SendTabFragment.tabStrip.getChildCount(); i++) {
@@ -159,6 +159,7 @@ public class SendVideoRecyclerViewAdapter extends RecyclerView.Adapter<SendVideo
                         .into(imageView);
 
             filename.setText(item.getFilename());
+            imageView.setImageResource(R.drawable.mp4);
             date.setText(item.getDate());
             timeLength.setText(item.getTimeLength());
 

@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:background="#aabdbdbd"/>
+            android:background="@color/cardView_shairAir_background"/>
 
 <!--        <CheckBox-->
 <!--            android:id="@+id/send_photo_cardview_check"-->

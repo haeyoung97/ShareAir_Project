@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -27,7 +29,9 @@ public class MainActivity extends AppCompatActivity {
     private SendTabFragment sendTabFragment = new SendTabFragment(this);
     private HistoryTabFragment historyTabFragment = new HistoryTabFragment();
     private FragmentTransaction transaction;
-
+    static MainActivity static_mainActivity;
+    static WiFiDirectActivity wifiActivity;
+    static int selectCnt;
 
     //db 생성 파일 이름
     final static String dbName = "historyDB.db";
@@ -66,8 +70,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        static_mainActivity = this;
 
         setContentView(R.layout.activity_main);
+        Log.e("", "onCreate: " + "restart");
+        if(SendTabFragment.dynamicLinearLayout != null)
+            SendTabFragment.dynamicLinearLayout.removeAllViews();
+        MainActivity.selectList.clear();
+        Log.e("", "onCreate: " + MainActivity.selectList.size());
+
         BottomNavigationView bottomNavView = findViewById(R.id.bottom_nav_view);
 
         btnEventListener= new ButtonEventListener(this, this.getApplicationContext());

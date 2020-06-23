@@ -1,6 +1,7 @@
 package com.example.majorproject;
 
 import android.database.Cursor;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -52,16 +53,44 @@ public class SendTabVideoFragment extends Fragment {
         videoRecyclerViewAdapter.notifyDataSetChanged();
         return view;
     }
-    private String convertDuration(long duration){
-//        int hour = duration/3600;
-//        int minute = (duration%3600)/60;
-//        int second = duration%60;
-        return String.format("%d:%d",
-                TimeUnit.MILLISECONDS.toMinutes(duration),
-                TimeUnit.MILLISECONDS.toSeconds(duration) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration))
-        );
-  }
+    private String getPlayTime(String path) {
+        String result;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(path);
+        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        long timeInmillisec = Long.parseLong( time );
+        long duration = timeInmillisec / 1000;
+        long hours = duration / 3600;
+        long minutes = (duration - hours * 3600) / 60;
+        long seconds = duration - (hours * 3600 + minutes * 60);
+        String h, m, s;
+        if(hours == 0){
+            h = "";
+        }else if(hours < 10){
+            h = "0" + hours + " : ";
+        }else{
+            h = String.valueOf(hours) + " : ";
+        }
+
+        if(minutes == 0){
+            m = "00" + " : ";
+        }else if(minutes < 10){
+            m = "0" + minutes + " : ";
+        }else{
+            m = String.valueOf(minutes) + " : ";
+        }
+
+        if(seconds == 0){
+            s = "00";
+        }else if(seconds < 10){
+            s = "0" + seconds;
+        }else{
+            s = String.valueOf(seconds);
+        }
+        result = h + m + s;
+        return result;
+    }
+
 
     private ArrayList<SendVideo> queryAllVideo(){
         ArrayList<SendVideo> result = new ArrayList<>();
@@ -73,7 +102,6 @@ public class SendTabVideoFragment extends Fragment {
         int colDataIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
         int colNameIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
         int colDateIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_ADDED);
-        long colTLIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
 
         pictureCount = 0;
         while(cursor.moveToNext())
@@ -81,7 +109,7 @@ public class SendTabVideoFragment extends Fragment {
             String path = cursor.getString(colDataIndex);
             String displayName = cursor.getString(colNameIndex);
             String outDate = cursor.getString(colDateIndex);
-            String duration = convertDuration(colTLIndex);
+            String duration = getPlayTime(path);
             String addedDate = dateFormat.format(new Date(new Long(outDate).longValue()*1000L));
 
             if(!TextUtils.isEmpty(path)){
