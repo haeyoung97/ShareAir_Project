@@ -38,6 +38,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -103,6 +104,14 @@ public class WiFiDirectActivity extends Activity implements ChannelListener, Dev
 
         setContentView(R.layout.main);
         context = getApplicationContext();
+        TextView textTitle = (TextView)this.findViewById(R.id.main_frame_title);
+        if(ButtonEventListener.isSendOrRecvBtn == 1){
+            textTitle.setText("Wifi Direct Sender");
+        }
+        else{
+            textTitle.setText("Wifi Direct Receiver");
+        }
+
 
         // add necessary intent values to be matched.
 
