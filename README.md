@@ -16,3 +16,41 @@
 > * 전송 기록은 Android platform에서 제공하는 SQLite Database API를 통해 전송 내역을 저장하고 사용자에게 보여주는 기능을 제공하고 있다.
 
 ### 프로젝트 기간
+2019.09.01 - 2020.09.14
+</br>
+
+### Result
+* Sender
+> <img src="./img/imageselect.jpg" width="200" height="412">
+> <img src="./img/sender.jpg" width="200" height="412">
+</br>
+</br>
+
+### 
+* Reciever
+> <img src="./img/receiver.jpg" width="200" height="412">
+> <img src="./img/receiveDeviceList.jpg" width="200" height="412">
+</br>
+</br>
+
+###
+> * Connecting
+> <img src="./img/permit.jpg" width="200" height="412">
+> <img src="./img/connecting.jpg" width="200" height="412">
+</br>
+</br>
+
+###
+> * History
+> <img src="./img/history.png" width="200" height="412">
+</br>
+</br>
+
+### Feature
+* No Internet
+> + Wi-fi가 Active한 상태라면 언제든지 파일을 서로 주고받을 수 있다.
+* 기기 연결의 안정성 향상
+> + 최근 블루투스 보안의 취약점이 발견되어 기기의 전화번호가 유출될 수 있다는 분석이 나왔다. </br>
+> + 또한 단순히 블루투스를 통해 파일을 전송할 경우 Wi-fi Direct에 비해 속도가 10배 느려진다. </br>
+> + 더불어 블루투스는 암호화 방식이 AES-128bit이기 때문에 보안 측면에서도 불리하다. </br>
+> + 본 서비스는 연결 가능한 기기 목록 뿐만 아니라 파일을 전송하는 것 모두 Wi-fi Direct를 이용하므로 빠르고 안전하게 서비스를 이용할 수 있다.
