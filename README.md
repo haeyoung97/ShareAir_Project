@@ -27,7 +27,7 @@
 </br>
 
 ### 
-* Reciever
+* Receiver
 > <img src="./img/receiver.jpg" width="200" height="412">
 > <img src="./img/receiveDeviceList.jpg" width="200" height="412">
 </br>
